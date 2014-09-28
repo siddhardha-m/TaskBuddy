@@ -1,4 +1,4 @@
-package com.TaskBuddy;
+package com.TaskBuddy.db;
 
 public class ConnectionManager {
 

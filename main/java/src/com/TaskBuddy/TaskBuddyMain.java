@@ -1,6 +1,6 @@
 package com.TaskBuddy;
 
-public class Main {
+public class TaskBuddyMain {
 
 	public static void main(String[] args) {
 
