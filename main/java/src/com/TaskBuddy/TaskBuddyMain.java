@@ -1,5 +1,7 @@
 package com.TaskBuddy;
 
+import com.TaskBuddy.db.ConnectionManager;
+
 /**
  * @author Siddhardha
  *
@@ -15,7 +17,12 @@ public class TaskBuddyMain {
 	 */
 	public static void main(String[] args) {
 
+		//opening connection to MySQL database
+		ConnectionManager.getInstance().openConnection();
+
 		
 		
+		//closing connection to MySQL database
+		ConnectionManager.getInstance().closeConnection();
 	}
 }

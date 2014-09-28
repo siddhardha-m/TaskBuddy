@@ -47,17 +47,20 @@ public class ConnectionManager {
 	/**
 	 * 
 	 * Opens connection to MySQL database.
-	 * Throws exception if open connection fails.
-	 * 
-	 * @throws SQLException
+	 * Error message is printed if open connection fails.
 	 * 
 	 */
-	public void openConnection() throws SQLException
+	public void openConnection()
 	{
 		System.out.println("Opening connection...");
 		if (conn == null) {
-			conn = DriverManager.getConnection(CONN_STRING, USERNAME, PASSWORD);
-			System.out.println("Connection opened.");
+			try {
+				conn = DriverManager.getConnection(CONN_STRING, USERNAME, PASSWORD);
+				System.out.println("Connection opened.");
+			} catch (SQLException e) {
+				System.err.println("Error message: " + e.getMessage());
+				System.out.println("Connection open failed.");
+			}
 			return;
 		}
 		System.out.println("Connection is already opened.");
@@ -67,13 +70,12 @@ public class ConnectionManager {
 	 * 
 	 * Returns connection to MySQL database.
 	 * If connection is null, then a new connection is opened and returned.
-	 * Throws exception if open connection fails.
+	 * Error message is printed if open connection fails.
 	 * 
 	 * @return Connection object
-	 * @throws SQLException
 	 * 
 	 */
-	public Connection getConnection() throws SQLException
+	public Connection getConnection()
 	{
 		if (conn == null) {
 			openConnection();
@@ -84,18 +86,21 @@ public class ConnectionManager {
 	/**
 	 * 
 	 * Closes connection to MySQL database.
-	 * Throws exception if close connection fails.
-	 * 
-	 * @throws SQLException
+	 * Error message is printed if close connection fails.
 	 * 
 	 */
-	public void closeConnection() throws SQLException
+	public void closeConnection()
 	{
 		System.out.println("Closing connection...");
 		if (conn != null) {
-			conn.close();
-			conn = null;
-			System.out.println("Connection closed.");
+			try {
+				conn.close();
+				conn = null;
+				System.out.println("Connection closed.");
+			} catch (SQLException e) {
+				System.err.println("Error message: " + e.getMessage());
+				System.out.println("Connection close failed.");
+			}
 			return;
 		}
 		System.out.println("Connection is already closed.");
