@@ -13,6 +13,7 @@ public class Login {
 	private int userId;
 	private String userName;
 	private String userPassWord;
+	private String userRole;
 	
 	public int getLoginId() {
 		return loginId;
@@ -37,5 +38,11 @@ public class Login {
 	}
 	public void setUserPassWord(String userPassWord) {
 		this.userPassWord = userPassWord;
+	}
+	public String getUserRole() {
+		return userRole;
+	}
+	public void setUserRole(String userRole) {
+		this.userRole = userRole;
 	}
 }

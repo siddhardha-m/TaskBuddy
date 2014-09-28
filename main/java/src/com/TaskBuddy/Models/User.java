@@ -14,7 +14,6 @@ public class User {
 	private int userId;
 	private String userFirstName;
 	private String userLastName;
-	private String userRole;
 	private String userImage;
 	private Date userCreatedDate;
 	private boolean isUserDeleted;
@@ -38,12 +37,6 @@ public class User {
 	}
 	public void setUserLastName(String userLastName) {
 		this.userLastName = userLastName;
-	}
-	public String getUserRole() {
-		return userRole;
-	}
-	public void setUserRole(String userRole) {
-		this.userRole = userRole;
 	}
 	public String getUserImage() {
 		return userImage;

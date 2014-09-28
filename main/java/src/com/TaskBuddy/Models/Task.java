@@ -15,6 +15,7 @@ public class Task {
 	private String taskTitle;
 	private String taskDescription;
 	private int taskPointValue;
+	private int taskCreatedBy;
 	private Date taskCreatedDate;
 	private Date taskDueDate;
 	private boolean isTaskCompleted;
@@ -43,6 +44,12 @@ public class Task {
 	}
 	public void setTaskPointValue(int taskPointValue) {
 		this.taskPointValue = taskPointValue;
+	}
+	public int getTaskCreatedBy() {
+		return taskCreatedBy;
+	}
+	public void setTaskCreatedBy(int taskCreatedBy) {
+		this.taskCreatedBy = taskCreatedBy;
 	}
 	public Date getTaskCreatedDate() {
 		return taskCreatedDate;

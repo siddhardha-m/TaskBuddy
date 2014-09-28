@@ -1,5 +1,7 @@
 package com.TaskBuddy.Models;
 
+import java.util.Date;
+
 /**
  * @author Siddhardha
  * 
@@ -11,6 +13,7 @@ package com.TaskBuddy.Models;
 public class UserTask {
 	private int userId;
 	private int taskId;
+	private Date taskAssignedDate;
 	
 	public int getUserId() {
 		return userId;
@@ -23,5 +26,11 @@ public class UserTask {
 	}
 	public void setTaskId(int taskId) {
 		this.taskId = taskId;
+	}
+	public Date getTaskAssignedDate() {
+		return taskAssignedDate;
+	}
+	public void setTaskAssignedDate(Date taskAssignedDate) {
+		this.taskAssignedDate = taskAssignedDate;
 	}
 }

@@ -22,8 +22,8 @@ public class DbConnectionTest {
 		String sqlQuery = null;
 		
 		int maxId = 3;
-		sqlQuery = "SELECT id, name FROM User WHERE id <= " + maxId;
-//		sqlQuery = "SELECT * FROM User";
+		sqlQuery = "SELECT user_id, user_first_name FROM Users WHERE user_id <= " + maxId;
+//		sqlQuery = "SELECT * FROM Users";
 		
 		try 
 			(
@@ -48,11 +48,11 @@ public class DbConnectionTest {
 			
 			rs.beforeFirst();
 			while(rs.next()){
-//				id = rs.getObject("id", Integer.class);
-//				name = rs.getObject("name", String.class);
+//				id = rs.getObject("user_id", Integer.class);
+//				name = rs.getObject("user_first_name", String.class);
 
-				id = rs.getInt("id");
-				name = rs.getString("name");
+				id = rs.getInt("user_id");
+				name = rs.getString("user_first_name");
 
 				System.out.println("ID: " + id + ", Name: " + name);
 			}

@@ -14,6 +14,7 @@ public class GroupMembership {
 	private int groupId;
 	private int userId;
 	private Date userJoinedDate;
+	private boolean hasUserUnjoined;
 	
 	public int getGroupId() {
 		return groupId;
@@ -32,5 +33,11 @@ public class GroupMembership {
 	}
 	public void setUserJoinedDate(Date userJoinedDate) {
 		this.userJoinedDate = userJoinedDate;
+	}
+	public boolean isHasUserUnjoined() {
+		return hasUserUnjoined;
+	}
+	public void setHasUserUnjoined(boolean hasUserUnjoined) {
+		this.hasUserUnjoined = hasUserUnjoined;
 	}
 }
