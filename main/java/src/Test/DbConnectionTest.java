@@ -55,8 +55,6 @@ public class DbConnectionTest {
 				name = rs.getString("name");
 
 				System.out.println("ID: " + id + ", Name: " + name);
-				
-				
 			}
 
 		} catch (SQLException e) {
