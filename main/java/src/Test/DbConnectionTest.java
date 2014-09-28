@@ -20,7 +20,10 @@ public class DbConnectionTest {
 //		Statement stmt = null;
 //		ResultSet rs = null;
 		String sqlQuery = null;
-		sqlQuery = "SELECT * FROM User";
+		
+		int maxId = 3;
+		sqlQuery = "SELECT id, name FROM User WHERE id <= " + maxId;
+//		sqlQuery = "SELECT * FROM User";
 		
 		try 
 			(
@@ -37,13 +40,25 @@ public class DbConnectionTest {
 			
 //			rs = stmt.executeQuery(sqlQuery);
 			
-//			while(rs.next()){
-//				System.out.println("ID: " + rs.getInt("id") + ", Name: " + rs.getString("name"));
-//			}
-			
 			rs.last();
 			System.out.println("Number of rows: " + rs.getRow());
 			
+			int id;
+			String name = null;
+			
+			rs.beforeFirst();
+			while(rs.next()){
+//				id = rs.getObject("id", Integer.class);
+//				name = rs.getObject("name", String.class);
+
+				id = rs.getInt("id");
+				name = rs.getString("name");
+
+				System.out.println("ID: " + id + ", Name: " + name);
+				
+				
+			}
+
 		} catch (SQLException e) {
 			System.err.println("Error message: " + e.getMessage());
 		} 
