@@ -2,6 +2,14 @@ package com.TaskBuddy.Models;
 
 import java.util.Date;
 
+/**
+ * @author Siddhardha
+ * 
+ * Model class for the table 'GroupMemberships'.
+ * Each private member represents a column of the table.
+ * The private members must be accessed using the public getter and setter methods. 
+ *
+ */
 public class GroupMembership {
 	private int groupId;
 	private int userId;

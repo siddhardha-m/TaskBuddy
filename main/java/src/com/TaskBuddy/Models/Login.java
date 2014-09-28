@@ -1,5 +1,13 @@
 package com.TaskBuddy.Models;
 
+/**
+ * @author Siddhardha
+ * 
+ * Model class for the table 'Logins'.
+ * Each private member represents a column of the table.
+ * The private members must be accessed using the public getter and setter methods. 
+ *
+ */
 public class Login {
 	private int loginId;
 	private int userId;

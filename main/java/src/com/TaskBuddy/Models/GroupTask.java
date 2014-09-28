@@ -1,5 +1,13 @@
 package com.TaskBuddy.Models;
 
+/**
+ * @author Siddhardha
+ * 
+ * Model class for the table 'GroupTasks'.
+ * Each private member represents a column of the table.
+ * The private members must be accessed using the public getter and setter methods. 
+ *
+ */
 public class GroupTask {
 	private int groupId;
 	private int taskId;
