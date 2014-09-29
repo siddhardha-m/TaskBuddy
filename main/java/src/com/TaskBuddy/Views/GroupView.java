@@ -8,4 +8,6 @@ package com.TaskBuddy.Views;
  */
 public class GroupView {
 
+	private GroupView() {
+	}
 }
