@@ -47,19 +47,7 @@ public class TaskController {
 			ArrayList<Task> tasksList = new ArrayList<Task>();
 			
 			while (rs.next()) {
-				Task taskRow = new Task();
-				
-				taskRow.setTaskId(rs.getInt("task_id"));
-				taskRow.setTaskTitle(rs.getString("task_title"));
-				taskRow.setTaskDescription(rs.getString("task_description"));
-				taskRow.setTaskPointValue(rs.getInt("task_point_value"));
-				taskRow.setTaskCreatedBy(rs.getInt("task_created_by"));
-				taskRow.setTaskCreatedDate(rs.getDate("task_created_date"));
-				taskRow.setTaskDueDate(rs.getDate("task_due_date"));
-				taskRow.setTaskCompleted(rs.getBoolean("is_task_completed"));
-				taskRow.setTaskDeleted(rs.getBoolean("is_task_deleted"));
-				
-				tasksList.add(taskRow);
+				tasksList.add(processResultSetIntoTaskRow(rs));
 			}
 			
 			return tasksList;
@@ -92,20 +80,7 @@ public class TaskController {
 			rs = stmt.executeQuery();
 			
 			if (rs.next()) {
-				Task taskRow = new Task();
-				
-				taskRow.setTaskId(taskId);
-				taskRow.setTaskTitle(rs.getString("task_title"));
-				taskRow.setTaskDescription(rs.getString("task_description"));
-				taskRow.setTaskPointValue(rs.getInt("task_point_value"));
-				taskRow.setTaskCreatedBy(rs.getInt("task_created_by"));
-				taskRow.setTaskCreatedDate(rs.getDate("task_created_date"));
-				taskRow.setTaskDueDate(rs.getDate("task_due_date"));
-				taskRow.setTaskCompleted(rs.getBoolean("is_task_completed"));
-				taskRow.setTaskDeleted(rs.getBoolean("is_task_deleted"));
-				
-				return taskRow;
-				
+				return processResultSetIntoTaskRow(rs);
 			} else {
 				return null;
 			}
@@ -214,5 +189,30 @@ public class TaskController {
 	 */
 	public static boolean save(Task taskRow) throws SQLException {
 		return taskRow.getTaskId() > 0 ? updateTask(taskRow) : insertTask(taskRow);
+	}
+	
+	/**
+	 * 
+	 * Method to Convert ResultSet into Task instance
+	 * 
+	 * @param ResultSet instance rs
+	 * @return Task instance
+	 * @throws SQLException
+	 * 
+	 */
+	protected static Task processResultSetIntoTaskRow(ResultSet rs) throws SQLException {
+		Task taskRow = new Task();
+		
+		taskRow.setTaskId(rs.getInt("task_id"));
+		taskRow.setTaskTitle(rs.getString("task_title"));
+		taskRow.setTaskDescription(rs.getString("task_description"));
+		taskRow.setTaskPointValue(rs.getInt("task_point_value"));
+		taskRow.setTaskCreatedBy(rs.getInt("task_created_by"));
+		taskRow.setTaskCreatedDate(rs.getDate("task_created_date"));
+		taskRow.setTaskDueDate(rs.getDate("task_due_date"));
+		taskRow.setTaskCompleted(rs.getBoolean("is_task_completed"));
+		taskRow.setTaskDeleted(rs.getBoolean("is_task_deleted"));
+		
+		return taskRow;
 	}
 }

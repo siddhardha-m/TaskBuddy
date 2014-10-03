@@ -46,15 +46,7 @@ public class LoginController {
 			ArrayList<Login> loginsList = new ArrayList<Login>();
 			
 			while (rs.next()) {
-				Login loginRow = new Login();
-				
-				loginRow.setLoginId(rs.getInt("login_id"));
-				loginRow.setUserId(rs.getInt("user_id"));
-				loginRow.setUserName(rs.getString("username"));
-				loginRow.setUserPassWord(rs.getString("user_password"));
-				loginRow.setUserRole(rs.getString("user_role"));
-				
-				loginsList.add(loginRow);
+				loginsList.add(processResultSetIntoLoginRow(rs));
 			}
 			
 			return loginsList;
@@ -87,16 +79,7 @@ public class LoginController {
 			rs = stmt.executeQuery();
 			
 			if (rs.next()) {
-				Login loginRow = new Login();
-				
-				loginRow.setLoginId(loginId);
-				loginRow.setUserId(rs.getInt("user_id"));
-				loginRow.setUserName(rs.getString("username"));
-				loginRow.setUserPassWord(rs.getString("user_password"));
-				loginRow.setUserRole(rs.getString("user_role"));
-				
-				return loginRow;
-				
+				return processResultSetIntoLoginRow(rs);
 			} else {
 				return null;
 			}
@@ -197,5 +180,26 @@ public class LoginController {
 	 */
 	public static boolean save(Login loginRow) throws SQLException {
 		return loginRow.getLoginId() > 0 ? updateLogin(loginRow) : insertLogin(loginRow);
+	}
+	
+	/**
+	 * 
+	 * Method to Convert ResultSet into Login instance
+	 * 
+	 * @param ResultSet instance rs
+	 * @return Login instance
+	 * @throws SQLException
+	 * 
+	 */
+	protected static Login processResultSetIntoLoginRow(ResultSet rs) throws SQLException {
+		Login loginRow = new Login();
+		
+		loginRow.setLoginId(rs.getInt("login_id"));
+		loginRow.setUserId(rs.getInt("user_id"));
+		loginRow.setUserName(rs.getString("username"));
+		loginRow.setUserPassWord(rs.getString("user_password"));
+		loginRow.setUserRole(rs.getString("user_role"));
+		
+		return loginRow;
 	}
 }

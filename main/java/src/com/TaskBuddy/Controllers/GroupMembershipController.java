@@ -47,14 +47,7 @@ public class GroupMembershipController {
 			ArrayList<GroupMembership> groupMembershipsList = new ArrayList<GroupMembership>();
 			
 			while (rs.next()) {
-				GroupMembership groupMembershipRow = new GroupMembership();
-				
-				groupMembershipRow.setGroupId(rs.getInt("group_id"));
-				groupMembershipRow.setUserId(rs.getInt("user_id"));
-				groupMembershipRow.setUserJoinedDate(rs.getDate("user_joined_date"));
-				groupMembershipRow.setHasUserUnjoined(rs.getBoolean("has_user_unjoined"));
-				
-				groupMembershipsList.add(groupMembershipRow);
+				groupMembershipsList.add(processResultSetIntoGroupMembershipRow(rs));
 			}
 			
 			return groupMembershipsList;
@@ -89,14 +82,7 @@ public class GroupMembershipController {
 			ArrayList<GroupMembership> groupMembershipsList = new ArrayList<GroupMembership>();
 			
 			while (rs.next()) {
-				GroupMembership groupMembershipRow = new GroupMembership();
-				
-				groupMembershipRow.setGroupId(rs.getInt("group_id"));
-				groupMembershipRow.setUserId(rs.getInt("user_id"));
-				groupMembershipRow.setUserJoinedDate(rs.getDate("user_joined_date"));
-				groupMembershipRow.setHasUserUnjoined(rs.getBoolean("has_user_unjoined"));
-				
-				groupMembershipsList.add(groupMembershipRow);
+				groupMembershipsList.add(processResultSetIntoGroupMembershipRow(rs));
 			} 
 			
 			return groupMembershipsList;
@@ -134,14 +120,7 @@ public class GroupMembershipController {
 			ArrayList<GroupMembership> groupMembershipsList = new ArrayList<GroupMembership>();
 			
 			while (rs.next()) {
-				GroupMembership groupMembershipRow = new GroupMembership();
-				
-				groupMembershipRow.setGroupId(rs.getInt("group_id"));
-				groupMembershipRow.setUserId(rs.getInt("user_id"));
-				groupMembershipRow.setUserJoinedDate(rs.getDate("user_joined_date"));
-				groupMembershipRow.setHasUserUnjoined(rs.getBoolean("has_user_unjoined"));
-				
-				groupMembershipsList.add(groupMembershipRow);
+				groupMembershipsList.add(processResultSetIntoGroupMembershipRow(rs));
 			} 
 			
 			return groupMembershipsList;
@@ -178,15 +157,7 @@ public class GroupMembershipController {
 			rs = stmt.executeQuery();
 			
 			if (rs.next()) {
-				GroupMembership groupMembershipRow = new GroupMembership();
-				
-				groupMembershipRow.setGroupId(rs.getInt("group_id"));
-				groupMembershipRow.setUserId(rs.getInt("user_id"));
-				groupMembershipRow.setUserJoinedDate(rs.getDate("user_joined_date"));
-				groupMembershipRow.setHasUserUnjoined(rs.getBoolean("has_user_unjoined"));
-				
-				return groupMembershipRow;
-				
+				return processResultSetIntoGroupMembershipRow(rs);
 			} else {
 				return null;
 			}
@@ -276,5 +247,25 @@ public class GroupMembershipController {
 	 */
 	public static boolean save(GroupMembership groupMembershipRow) throws SQLException {
 		return getGroupMembershipByUserIdAndGroupId(groupMembershipRow.getUserId(), groupMembershipRow.getGroupId()) != null ? updateGroupMembership(groupMembershipRow) : insertGroupMembership(groupMembershipRow); 
+	}
+	
+	/**
+	 * 
+	 * Method to Convert ResultSet into GroupMembership instance
+	 * 
+	 * @param ResultSet instance rs
+	 * @return GroupMembership instance
+	 * @throws SQLException
+	 * 
+	 */
+	protected static GroupMembership processResultSetIntoGroupMembershipRow(ResultSet rs) throws SQLException {
+		GroupMembership groupMembershipRow = new GroupMembership();
+		
+		groupMembershipRow.setGroupId(rs.getInt("group_id"));
+		groupMembershipRow.setUserId(rs.getInt("user_id"));
+		groupMembershipRow.setUserJoinedDate(rs.getDate("user_joined_date"));
+		groupMembershipRow.setHasUserUnjoined(rs.getBoolean("has_user_unjoined"));
+		
+		return groupMembershipRow;
 	}
 }

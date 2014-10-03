@@ -45,12 +45,7 @@ public class GroupTaskController {
 			ArrayList<GroupTask> groupTasksList = new ArrayList<GroupTask>();
 			
 			while (rs.next()) {
-				GroupTask groupTaskRow = new GroupTask();
-				
-				groupTaskRow.setGroupId(rs.getInt("group_id"));
-				groupTaskRow.setTaskId(rs.getInt("task_id"));
-				
-				groupTasksList.add(groupTaskRow);
+				groupTasksList.add(processResultSetIntoGroupTaskRow(rs));
 			}
 			
 			return groupTasksList;
@@ -84,12 +79,7 @@ public class GroupTaskController {
 			ArrayList<GroupTask> groupTasksList = new ArrayList<GroupTask>();
 			
 			while (rs.next()) {
-				GroupTask groupTaskRow = new GroupTask();
-				
-				groupTaskRow.setGroupId(rs.getInt("group_id"));
-				groupTaskRow.setTaskId(rs.getInt("task_id"));
-				
-				groupTasksList.add(groupTaskRow);
+				groupTasksList.add(processResultSetIntoGroupTaskRow(rs));
 			}
 			
 			return groupTasksList;
@@ -124,13 +114,7 @@ public class GroupTaskController {
 			rs = stmt.executeQuery();
 			
 			if (rs.next()) {
-				GroupTask groupTaskRow = new GroupTask();
-				
-				groupTaskRow.setGroupId(rs.getInt("group_id"));
-				groupTaskRow.setTaskId(rs.getInt("task_id"));
-				
-				return groupTaskRow;
-				
+				return processResultSetIntoGroupTaskRow(rs);
 			} else {
 				return null;
 			}
@@ -182,5 +166,23 @@ public class GroupTaskController {
 	 */
 	public static boolean save(GroupTask groupTaskRow) throws SQLException {
 		return insertGroupTask(groupTaskRow);
+	}
+	
+	/**
+	 * 
+	 * Method to Convert ResultSet into GroupTask instance
+	 * 
+	 * @param ResultSet instance rs
+	 * @return GroupTask instance
+	 * @throws SQLException
+	 * 
+	 */
+	protected static GroupTask processResultSetIntoGroupTaskRow(ResultSet rs) throws SQLException {
+		GroupTask groupTaskRow = new GroupTask();
+		
+		groupTaskRow.setGroupId(rs.getInt("group_id"));
+		groupTaskRow.setTaskId(rs.getInt("task_id"));
+		
+		return groupTaskRow;
 	}
 }

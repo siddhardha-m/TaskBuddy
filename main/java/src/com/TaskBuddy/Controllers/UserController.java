@@ -48,18 +48,7 @@ public class UserController {
 			ArrayList<User> usersList = new ArrayList<User>();
 			
 			while (rs.next()) {
-				User userRow = new User();
-				
-				userRow.setUserId(rs.getInt("user_id"));
-				userRow.setUserFirstName(rs.getString("user_first_name"));
-				userRow.setUserLastName(rs.getString("user_last_name"));
-				userRow.setUserImage(rs.getString("user_image"));
-				userRow.setUserCreatedDate(rs.getDate("user_created_date"));
-				userRow.setUserDeleted(rs.getBoolean("is_user_deleted"));
-				userRow.setTotalScore(rs.getInt("total_score"));
-				userRow.setCurrentScore(rs.getInt("current_score"));
-				
-				usersList.add(userRow);
+				usersList.add(processResultSetIntoUserRow(rs));
 			}
 			
 			return usersList;
@@ -92,19 +81,7 @@ public class UserController {
 			rs = stmt.executeQuery();
 			
 			if (rs.next()) {
-				User userRow = new User();
-				
-				userRow.setUserId(userId);
-				userRow.setUserFirstName(rs.getString("user_first_name"));
-				userRow.setUserLastName(rs.getString("user_last_name"));
-				userRow.setUserImage(rs.getString("user_image"));
-				userRow.setUserCreatedDate(rs.getDate("user_created_date"));
-				userRow.setUserDeleted(rs.getBoolean("is_user_deleted"));
-				userRow.setTotalScore(rs.getInt("total_score"));
-				userRow.setCurrentScore(rs.getInt("current_score"));
-				
-				return userRow;
-				
+				return processResultSetIntoUserRow(rs);
 			} else {
 				return null;
 			}
@@ -211,5 +188,29 @@ public class UserController {
 	 */
 	public static boolean save(User userRow) throws SQLException {
 		return userRow.getUserId() > 0 ? updateUser(userRow) : insertUser(userRow);
+	}
+	
+	/**
+	 * 
+	 * Method to Convert ResultSet into User instance
+	 * 
+	 * @param ResultSet instance rs
+	 * @return User instance
+	 * @throws SQLException
+	 * 
+	 */
+	protected static User processResultSetIntoUserRow(ResultSet rs) throws SQLException {
+		User userRow = new User();
+		
+		userRow.setUserId(rs.getInt("user_id"));
+		userRow.setUserFirstName(rs.getString("user_first_name"));
+		userRow.setUserLastName(rs.getString("user_last_name"));
+		userRow.setUserImage(rs.getString("user_image"));
+		userRow.setUserCreatedDate(rs.getDate("user_created_date"));
+		userRow.setUserDeleted(rs.getBoolean("is_user_deleted"));
+		userRow.setTotalScore(rs.getInt("total_score"));
+		userRow.setCurrentScore(rs.getInt("current_score"));
+		
+		return userRow;
 	}
 }

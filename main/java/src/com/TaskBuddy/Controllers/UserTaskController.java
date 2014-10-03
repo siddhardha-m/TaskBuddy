@@ -47,14 +47,7 @@ public class UserTaskController {
 			ArrayList<UserTask> userTasksList = new ArrayList<UserTask>();
 			
 			while (rs.next()) {
-				UserTask userTaskRow = new UserTask();
-				
-				userTaskRow.setUserId(rs.getInt("user_id"));
-				userTaskRow.setTaskId(rs.getInt("task_id"));
-				userTaskRow.setTaskAssignedDate(rs.getDate("task_assigned_date"));
-				userTaskRow.setTaskAssigned(rs.getBoolean("is_task_assigned"));
-				
-				userTasksList.add(userTaskRow);
+				userTasksList.add(processResultSetIntoUserTaskRow(rs));
 			}
 			
 			return userTasksList;
@@ -89,14 +82,7 @@ public class UserTaskController {
 			ArrayList<UserTask> userTasksList = new ArrayList<UserTask>();
 			
 			while (rs.next()) {
-				UserTask userTaskRow = new UserTask();
-				
-				userTaskRow.setUserId(rs.getInt("user_id"));
-				userTaskRow.setTaskId(rs.getInt("task_id"));
-				userTaskRow.setTaskAssignedDate(rs.getDate("task_assigned_date"));
-				userTaskRow.setTaskAssigned(rs.getBoolean("is_task_assigned"));
-				
-				userTasksList.add(userTaskRow);
+				userTasksList.add(processResultSetIntoUserTaskRow(rs));
 			}
 			
 			return userTasksList;
@@ -134,14 +120,7 @@ public class UserTaskController {
 			ArrayList<UserTask> userTasksList = new ArrayList<UserTask>();
 			
 			while (rs.next()) {
-				UserTask userTaskRow = new UserTask();
-				
-				userTaskRow.setUserId(rs.getInt("user_id"));
-				userTaskRow.setTaskId(rs.getInt("task_id"));
-				userTaskRow.setTaskAssignedDate(rs.getDate("task_assigned_date"));
-				userTaskRow.setTaskAssigned(rs.getBoolean("is_task_assigned"));
-				
-				userTasksList.add(userTaskRow);
+				userTasksList.add(processResultSetIntoUserTaskRow(rs));
 			}
 			
 			return userTasksList;
@@ -178,15 +157,7 @@ public class UserTaskController {
 			rs = stmt.executeQuery();
 			
 			if (rs.next()) {
-				UserTask userTaskRow = new UserTask();
-				
-				userTaskRow.setUserId(rs.getInt("user_id"));
-				userTaskRow.setTaskId(rs.getInt("task_id"));
-				userTaskRow.setTaskAssignedDate(rs.getDate("task_assigned_date"));
-				userTaskRow.setTaskAssigned(rs.getBoolean("is_task_assigned"));
-				
-				return userTaskRow;
-				
+				return processResultSetIntoUserTaskRow(rs);
 			} else {
 				return null;
 			}
@@ -275,5 +246,25 @@ public class UserTaskController {
 	 */
 	public static boolean save(UserTask userTaskRow) throws SQLException {
 		return getUserTaskByUserIdAndTaskId(userTaskRow.getUserId(), userTaskRow.getTaskId()) != null ? updateUserTask(userTaskRow) : insertUserTask(userTaskRow);
+	}
+	
+	/**
+	 * 
+	 * Method to Convert ResultSet into UserTask instance
+	 * 
+	 * @param ResultSet instance rs
+	 * @return UserTask instance
+	 * @throws SQLException
+	 * 
+	 */
+	protected static UserTask processResultSetIntoUserTaskRow(ResultSet rs) throws SQLException {
+		UserTask userTaskRow = new UserTask();
+		
+		userTaskRow.setUserId(rs.getInt("user_id"));
+		userTaskRow.setTaskId(rs.getInt("task_id"));
+		userTaskRow.setTaskAssignedDate(rs.getDate("task_assigned_date"));
+		userTaskRow.setTaskAssigned(rs.getBoolean("is_task_assigned"));
+		
+		return userTaskRow;
 	}
 }

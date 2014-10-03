@@ -47,16 +47,7 @@ public class GroupController {
 			ArrayList<Group> groupsList = new ArrayList<Group>();
 			
 			while (rs.next()) {
-				Group groupRow = new Group();
-				
-				groupRow.setGroupId(rs.getInt("group_id"));
-				groupRow.setGroupName(rs.getString("group_name"));
-				groupRow.setGroupAdminUserId(rs.getInt("group_admin_user_id"));
-				groupRow.setGroupImage(rs.getString("group_image"));
-				groupRow.setGroupCreatedDate(rs.getDate("group_created_date"));
-				groupRow.setGroupDeleted(rs.getBoolean("is_group_deleted"));
-				
-				groupsList.add(groupRow);
+				groupsList.add(processResultSetIntoGroupRow(rs));
 			}
 			
 			return groupsList;
@@ -89,17 +80,7 @@ public class GroupController {
 			rs = stmt.executeQuery();
 			
 			if (rs.next()) {
-				Group groupRow = new Group();
-				
-				groupRow.setGroupId(groupId);
-				groupRow.setGroupName(rs.getString("group_name"));
-				groupRow.setGroupAdminUserId(rs.getInt("group_admin_user_id"));
-				groupRow.setGroupImage(rs.getString("group_image"));
-				groupRow.setGroupCreatedDate(rs.getDate("group_created_date"));
-				groupRow.setGroupDeleted(rs.getBoolean("is_group_deleted"));
-				
-				return groupRow;
-				
+				return processResultSetIntoGroupRow(rs);
 			} else {
 				return null;
 			}
@@ -202,5 +183,27 @@ public class GroupController {
 	 */
 	public static boolean save(Group groupRow) throws SQLException {
 		return groupRow.getGroupId() > 0 ? updateGroup(groupRow) : insertGroup(groupRow);
+	}
+	
+	/**
+	 * 
+	 * Method to Convert ResultSet into Group instance
+	 * 
+	 * @param ResultSet instance rs
+	 * @return Group instance
+	 * @throws SQLException
+	 * 
+	 */
+	protected static Group processResultSetIntoGroupRow(ResultSet rs) throws SQLException {
+		Group groupRow = new Group();
+		
+		groupRow.setGroupId(rs.getInt("group_id"));
+		groupRow.setGroupName(rs.getString("group_name"));
+		groupRow.setGroupAdminUserId(rs.getInt("group_admin_user_id"));
+		groupRow.setGroupImage(rs.getString("group_image"));
+		groupRow.setGroupCreatedDate(rs.getDate("group_created_date"));
+		groupRow.setGroupDeleted(rs.getBoolean("is_group_deleted"));
+		
+		return groupRow;
 	}
 }
