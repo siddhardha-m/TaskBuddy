@@ -14,6 +14,7 @@ public class UserTask {
 	private int userId;
 	private int taskId;
 	private Date taskAssignedDate;
+	private boolean isTaskAssigned;
 	
 	public int getUserId() {
 		return userId;
@@ -32,5 +33,11 @@ public class UserTask {
 	}
 	public void setTaskAssignedDate(Date taskAssignedDate) {
 		this.taskAssignedDate = taskAssignedDate;
+	}
+	public boolean isTaskAssigned() {
+		return isTaskAssigned;
+	}
+	public void setTaskAssigned(boolean isTaskAssigned) {
+		this.isTaskAssigned = isTaskAssigned;
 	}
 }

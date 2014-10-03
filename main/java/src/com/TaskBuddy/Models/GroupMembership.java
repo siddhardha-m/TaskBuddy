@@ -34,7 +34,7 @@ public class GroupMembership {
 	public void setUserJoinedDate(Date userJoinedDate) {
 		this.userJoinedDate = userJoinedDate;
 	}
-	public boolean isHasUserUnjoined() {
+	public boolean hasUserUnjoined() {
 		return hasUserUnjoined;
 	}
 	public void setHasUserUnjoined(boolean hasUserUnjoined) {
