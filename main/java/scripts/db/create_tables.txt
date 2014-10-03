@@ -127,7 +127,7 @@ user_id int NOT NULL,
 task_id int NOT NULL,
 task_assigned_date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 is_task_assigned boolean NOT NULL DEFAULT true,
-PRIMARY KEY (task_id),
+PRIMARY KEY (task_id, user_id),
 FOREIGN KEY (user_id) REFERENCES Users(user_id),
 FOREIGN KEY (task_id) REFERENCES Tasks(task_id)
 );
