@@ -176,6 +176,7 @@ public class UserController {
 				"user_first_name = ?, user_last_name = ?, user_image = ?, " +
 				"user_created_date = ?, is_user_deleted = ?, total_score = ?, current_score = ?" +
 				" WHERE user_id = ?";
+		
 		try (
 				PreparedStatement stmt = conn.prepareStatement(sql);
 			){
