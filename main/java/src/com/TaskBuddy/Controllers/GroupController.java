@@ -118,7 +118,7 @@ public class GroupController {
 	 * @throws SQLException
 	 * 
 	 */
-	public static boolean insertGroup(Group groupRow) throws SQLException {
+	private static boolean insertGroup(Group groupRow) throws SQLException {
 		
 		String sql = "INSERT INTO Groups (group_name, group_admin_user_id, group_image, " +
 				"group_created_date, is_group_deleted) " +
@@ -163,7 +163,7 @@ public class GroupController {
 	 * @throws SQLException
 	 * 
 	 */
-	public static boolean updateGroup(Group groupRow) throws SQLException {
+	private static boolean updateGroup(Group groupRow) throws SQLException {
 		
 		String sql = "UPDATE Groups SET " +
 				"group_name = ?, group_admin_user_id = ?, group_image = ?, " +
@@ -189,5 +189,18 @@ public class GroupController {
 				return false;
 			}
 		}
+	}
+	
+	/**
+	 * 
+	 * Method to save Group row
+	 * 
+	 * @param groupRow
+	 * @return boolean of whether or not the row is saved successfully
+	 * @throws SQLException
+	 * 
+	 */
+	public static boolean save(Group groupRow) throws SQLException {
+		return groupRow.getGroupId() > 0 ? updateGroup(groupRow) : insertGroup(groupRow);
 	}
 }

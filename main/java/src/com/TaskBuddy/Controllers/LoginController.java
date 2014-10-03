@@ -115,7 +115,7 @@ public class LoginController {
 	 * @throws SQLException
 	 * 
 	 */
-	public static boolean insertLogin(Login loginRow) throws SQLException {
+	private static boolean insertLogin(Login loginRow) throws SQLException {
 		
 		String sql = "INSERT INTO Logins (user_id, " +
 				"username, user_password, user_role) " +
@@ -159,7 +159,7 @@ public class LoginController {
 	 * @throws SQLException
 	 * 
 	 */
-	public static boolean updateLogin(Login loginRow) throws SQLException {
+	private static boolean updateLogin(Login loginRow) throws SQLException {
 		
 		String sql = "UPDATE Logins SET " +
 				"user_id = ?, " +
@@ -184,5 +184,18 @@ public class LoginController {
 				return false;
 			}
 		}
+	}
+	
+	/**
+	 * 
+	 * Method to save Login row
+	 * 
+	 * @param loginRow
+	 * @return boolean of whether or not the row is saved successfully
+	 * @throws SQLException
+	 * 
+	 */
+	public static boolean save(Login loginRow) throws SQLException {
+		return loginRow.getLoginId() > 0 ? updateLogin(loginRow) : insertLogin(loginRow);
 	}
 }

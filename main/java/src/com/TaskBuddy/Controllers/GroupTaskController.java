@@ -149,7 +149,7 @@ public class GroupTaskController {
 	 * @throws SQLException
 	 * 
 	 */
-	public static boolean insertGroupTask(GroupTask groupTaskRow) throws SQLException {
+	private static boolean insertGroupTask(GroupTask groupTaskRow) throws SQLException {
 		
 		String sql = "INSERT INTO GroupTasks (group_id, task_id) " +
 				"VALUES (?, ?)";
@@ -169,5 +169,18 @@ public class GroupTaskController {
 				return false;
 			}
 		}
+	}
+	
+	/**
+	 * 
+	 * Method to save GroupTask row
+	 * 
+	 * @param groupTaskRow
+	 * @return boolean of whether or not the row is saved successfully
+	 * @throws SQLException
+	 * 
+	 */
+	public static boolean save(GroupTask groupTaskRow) throws SQLException {
+		return insertGroupTask(groupTaskRow);
 	}
 }

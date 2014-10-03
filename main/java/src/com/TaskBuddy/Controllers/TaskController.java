@@ -124,7 +124,7 @@ public class TaskController {
 	 * @throws SQLException
 	 * 
 	 */
-	public static boolean insertTask(Task taskRow) throws SQLException {
+	private static boolean insertTask(Task taskRow) throws SQLException {
 		
 		String sql = "INSERT INTO Tasks (task_title, task_description, task_point_value, task_created_by, " +
 				"task_created_date, task_due_date, is_task_completed, is_task_deleted) " +
@@ -172,7 +172,7 @@ public class TaskController {
 	 * @throws SQLException
 	 * 
 	 */
-	public static boolean updateTask(Task taskRow) throws SQLException {
+	private static boolean updateTask(Task taskRow) throws SQLException {
 		
 		String sql = "UPDATE Tasks SET " +
 				"task_title = ?, task_description = ?, task_point_value = ?, task_created_by = ?, " +
@@ -201,5 +201,18 @@ public class TaskController {
 				return false;
 			}
 		}
+	}
+	
+	/**
+	 * 
+	 * Method to save Task row
+	 * 
+	 * @param taskRow
+	 * @return boolean of whether or not the row is saved successfully
+	 * @throws SQLException
+	 * 
+	 */
+	public static boolean save(Task taskRow) throws SQLException {
+		return taskRow.getTaskId() > 0 ? updateTask(taskRow) : insertTask(taskRow);
 	}
 }

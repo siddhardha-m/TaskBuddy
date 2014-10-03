@@ -123,7 +123,7 @@ public class UserController {
 	 * @throws SQLException
 	 * 
 	 */
-	public static boolean insertUser(User userRow) throws SQLException {
+	private static boolean insertUser(User userRow) throws SQLException {
 		
 		String sql = "INSERT INTO Users (user_first_name, user_last_name, user_image, " +
 				"user_created_date, is_user_deleted, total_score, current_score) " +
@@ -170,7 +170,7 @@ public class UserController {
 	 * @throws SQLException
 	 * 
 	 */
-	public static boolean updateUser(User userRow) throws SQLException {
+	private static boolean updateUser(User userRow) throws SQLException {
 		
 		String sql = "UPDATE Users SET " +
 				"user_first_name = ?, user_last_name = ?, user_image = ?, " +
@@ -198,5 +198,18 @@ public class UserController {
 				return false;
 			}
 		}
+	}
+	
+	/**
+	 * 
+	 * Method to save User row
+	 * 
+	 * @param userRow
+	 * @return boolean of whether or not the row is saved successfully
+	 * @throws SQLException
+	 * 
+	 */
+	public static boolean save(User userRow) throws SQLException {
+		return userRow.getUserId() > 0 ? updateUser(userRow) : insertUser(userRow);
 	}
 }

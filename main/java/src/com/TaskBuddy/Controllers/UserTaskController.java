@@ -153,6 +153,51 @@ public class UserTaskController {
 	
 	/**
 	 * 
+	 * Method to return UserTask for the given userId and taskId
+	 * 
+	 * @param userId, taskId
+	 * @return UserTask instance
+	 * @throws SQLException
+	 * 
+	 */
+	public static UserTask getUserTaskByUserIdAndTaskId(int userId, int taskId) throws SQLException {
+		
+		String sql = "SELECT " +
+				"user_id, task_id, " +
+				"task_assigned_date, is_task_assigned" +
+				" FROM UserTasks" +
+				" WHERE user_id = ? AND task_id = ? ";
+		ResultSet rs = null;
+		
+		try (
+				PreparedStatement stmt = conn.prepareStatement(sql);
+			){
+			
+			stmt.setInt(1, userId);
+			stmt.setInt(2, taskId);
+			rs = stmt.executeQuery();
+			
+			if (rs.next()) {
+				UserTask userTaskRow = new UserTask();
+				
+				userTaskRow.setUserId(rs.getInt("user_id"));
+				userTaskRow.setTaskId(rs.getInt("task_id"));
+				userTaskRow.setTaskAssignedDate(rs.getDate("task_assigned_date"));
+				userTaskRow.setTaskAssigned(rs.getBoolean("is_task_assigned"));
+				
+				return userTaskRow;
+				
+			} else {
+				return null;
+			}
+			
+		} finally {
+			if (rs != null) rs.close(); 
+		}
+	}
+	
+	/**
+	 * 
 	 * Method to insert new UserTask row
 	 * 
 	 * @param userTaskRow
@@ -160,7 +205,7 @@ public class UserTaskController {
 	 * @throws SQLException
 	 * 
 	 */
-	public static boolean insertUserTask(UserTask userTaskRow) throws SQLException {
+	private static boolean insertUserTask(UserTask userTaskRow) throws SQLException {
 		
 		String sql = "INSERT INTO UserTasks (user_id, task_id, " +
 				"task_assigned_date, is_task_assigned) " +
@@ -194,7 +239,7 @@ public class UserTaskController {
 	 * @throws SQLException
 	 * 
 	 */
-	public static boolean updateUserTask(UserTask userTaskRow) throws SQLException {
+	private static boolean updateUserTask(UserTask userTaskRow) throws SQLException {
 		
 		String sql = "UPDATE UserTasks SET " +
 				"task_assigned_date = ?, is_task_assigned = ?" +
@@ -217,5 +262,18 @@ public class UserTaskController {
 				return false;
 			}
 		}
+	}
+	
+	/**
+	 * 
+	 * Method to save UserTask row
+	 * 
+	 * @param userTaskRow
+	 * @return boolean of whether or not the row is saved successfully
+	 * @throws SQLException
+	 * 
+	 */
+	public static boolean save(UserTask userTaskRow) throws SQLException {
+		return getUserTaskByUserIdAndTaskId(userTaskRow.getUserId(), userTaskRow.getTaskId()) != null ? updateUserTask(userTaskRow) : insertUserTask(userTaskRow);
 	}
 }

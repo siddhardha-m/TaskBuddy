@@ -153,6 +153,52 @@ public class GroupMembershipController {
 	
 	/**
 	 * 
+	 * Method to return GroupMembership for the given userId and groupId
+	 * 
+	 * @param userId, groupId
+	 * @return GroupMembership instance
+	 * @throws SQLException
+	 * 
+	 */
+	public static GroupMembership getGroupMembershipByUserIdAndGroupId(int userId, int groupId) throws SQLException {
+		
+		String sql = "SELECT " +
+				"group_id, user_id, " +
+				"user_joined_date, has_user_unjoined" +
+				" FROM GroupMemberships" +
+				" WHERE user_id = ? AND group_id = ? ";
+		ResultSet rs = null;
+		
+		try (
+				PreparedStatement stmt = conn.prepareStatement(sql);
+			){
+			
+			stmt.setInt(1, userId);
+			stmt.setInt(2, groupId);
+			rs = stmt.executeQuery();
+			
+			if (rs.next()) {
+				GroupMembership groupMembershipRow = new GroupMembership();
+				
+				groupMembershipRow.setGroupId(rs.getInt("group_id"));
+				groupMembershipRow.setUserId(rs.getInt("user_id"));
+				groupMembershipRow.setUserJoinedDate(rs.getDate("user_joined_date"));
+				groupMembershipRow.setHasUserUnjoined(rs.getBoolean("has_user_unjoined"));
+				
+				return groupMembershipRow;
+				
+			} else {
+				return null;
+			}
+			
+			
+		} finally {
+			if (rs != null) rs.close(); 
+		}
+	}
+	
+	/**
+	 * 
 	 * Method to insert new GroupMembership row
 	 * 
 	 * @param groupMembershipRow
@@ -160,7 +206,7 @@ public class GroupMembershipController {
 	 * @throws SQLException
 	 * 
 	 */
-	public static boolean insertGroupMembership(GroupMembership groupMembershipRow) throws SQLException {
+	private static boolean insertGroupMembership(GroupMembership groupMembershipRow) throws SQLException {
 		
 		String sql = "INSERT INTO GroupMemberships (group_id, user_id, " +
 				"user_joined_date, has_user_unjoined) " +
@@ -194,7 +240,7 @@ public class GroupMembershipController {
 	 * @throws SQLException
 	 * 
 	 */
-	public static boolean updateGroupMembership(GroupMembership groupMembershipRow) throws SQLException {
+	private static boolean updateGroupMembership(GroupMembership groupMembershipRow) throws SQLException {
 		
 		String sql = "UPDATE GroupMemberships SET " +
 				"user_joined_date = ?, has_user_unjoined = ?" +
@@ -217,5 +263,18 @@ public class GroupMembershipController {
 				return false;
 			}
 		}
+	}
+	
+	/**
+	 * 
+	 * Method to save GroupMembership row
+	 * 
+	 * @param groupMembershipRow
+	 * @return boolean of whether or not the row is saved successfully
+	 * @throws SQLException
+	 * 
+	 */
+	public static boolean save(GroupMembership groupMembershipRow) throws SQLException {
+		return getGroupMembershipByUserIdAndGroupId(groupMembershipRow.getUserId(), groupMembershipRow.getGroupId()) != null ? updateGroupMembership(groupMembershipRow) : insertGroupMembership(groupMembershipRow); 
 	}
 }
