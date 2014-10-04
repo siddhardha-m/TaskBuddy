@@ -1,10 +1,17 @@
 package com.TaskBuddy.Views;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import com.TaskBuddy.Controllers.UserController;
+import com.TaskBuddy.Models.User;
+import com.TaskBuddy.db.ConnectionManager;
 
 /**
  * @author Siddhardha
@@ -18,5 +25,25 @@ public class UserView {
 	public UserView() {
 	}
 	
-	
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public ArrayList<User> getAllUsers() {
+		try {
+			
+			ConnectionManager.getInstance().openConnection();
+			
+			ArrayList<User> usersList = UserController.getAllUsers();
+			
+			return usersList;
+			
+		} catch (SQLException e) {
+			
+			System.err.println("Error message: " + e.getMessage());
+			
+			return null;
+			
+		} finally {
+			ConnectionManager.getInstance().closeConnection();
+		}
+	}
 }
