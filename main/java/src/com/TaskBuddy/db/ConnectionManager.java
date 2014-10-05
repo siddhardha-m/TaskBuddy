@@ -55,9 +55,10 @@ public class ConnectionManager {
 		System.out.println("Opening connection...");
 		if (conn == null) {
 			try {
+				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection(CONN_STRING, USERNAME, PASSWORD);
 				System.out.println("Connection opened.");
-			} catch (SQLException e) {
+			} catch (SQLException | ClassNotFoundException e) {
 				System.err.println("Error message: " + e.getMessage());
 				System.out.println("Connection open failed.");
 			}
