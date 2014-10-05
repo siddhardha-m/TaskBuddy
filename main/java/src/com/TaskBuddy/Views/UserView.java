@@ -26,7 +26,7 @@ public class UserView {
 	}
 	
 	@GET
-	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Produces({ MediaType.APPLICATION_JSON})
 	public ArrayList<User> getAllUsers() {
 		try {
 			
