@@ -11,7 +11,6 @@ import javax.ws.rs.core.MediaType;
 
 import com.TaskBuddy.Controllers.UserController;
 import com.TaskBuddy.Models.User;
-import com.TaskBuddy.db.ConnectionManager;
 
 /**
  * @author Siddhardha
@@ -30,11 +29,7 @@ public class UserView {
 	public ArrayList<User> getAllUsers() {
 		try {
 			
-			ConnectionManager.getInstance().openConnection();
-			
-			ArrayList<User> usersList = UserController.getAllUsers();
-			
-			return usersList;
+			return UserController.getAllUsers();
 			
 		} catch (SQLException e) {
 			
@@ -42,8 +37,6 @@ public class UserView {
 			
 			return null;
 			
-		} finally {
-			ConnectionManager.getInstance().closeConnection();
 		}
 	}
 }
