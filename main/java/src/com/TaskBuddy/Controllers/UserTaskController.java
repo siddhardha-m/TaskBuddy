@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.TaskBuddy.Models.UserTask;
 import com.TaskBuddy.db.ConnectionManager;
 
@@ -17,6 +19,7 @@ import com.TaskBuddy.db.ConnectionManager;
  * Controller class for UserTasks table
  *
  */
+@XmlRootElement
 public class UserTaskController {
 
 	private static Connection conn = ConnectionManager.getInstance().getConnection();

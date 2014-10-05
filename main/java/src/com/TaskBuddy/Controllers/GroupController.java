@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.TaskBuddy.Models.Group;
 import com.TaskBuddy.db.ConnectionManager;
 
@@ -17,6 +19,7 @@ import com.TaskBuddy.db.ConnectionManager;
  * Controller class for Groups table
  *
  */
+@XmlRootElement
 public class GroupController {
 
 	private static Connection conn = ConnectionManager.getInstance().getConnection();
