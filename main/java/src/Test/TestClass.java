@@ -1,11 +1,16 @@
 package Test;
 
+import org.apache.log4j.Logger;
+
 public class TestClass {
+	
+	private static final Logger log = Logger.getLogger(TestClass.class);
+	
 	public static void main(String[] args) {
-		System.out.println("Welcome to TaskBuddy site!!!");
+		log.info("Welcome to TaskBuddy site!!!");
 		
-		System.out.println("Hi");
+		log.info("Hi");
 		
-		System.out.println("Hello User");
+		log.info("Hello User");
 	}
 }

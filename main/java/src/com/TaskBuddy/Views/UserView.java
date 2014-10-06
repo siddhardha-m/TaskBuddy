@@ -9,6 +9,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.Logger;
+
 import com.TaskBuddy.Controllers.UserController;
 import com.TaskBuddy.Models.User;
 
@@ -20,12 +22,20 @@ import com.TaskBuddy.Models.User;
  */
 @Path("/users")
 public class UserView {
+	
+	private static final Logger log = Logger.getLogger(UserView.class);
 
 	public UserView() {
 	}
 	
+	/**
+	 * 
+	 * This method is invoked on GET
+	 * @return ArrayList of all Users in JSON format
+	 * 
+	 */
 	@GET
-	@Produces({ MediaType.APPLICATION_JSON})
+	@Produces({ MediaType.APPLICATION_JSON })
 	public ArrayList<User> getAllUsers() {
 		try {
 			
@@ -33,7 +43,7 @@ public class UserView {
 			
 		} catch (SQLException e) {
 			
-			System.err.println("Error message: " + e.getMessage());
+			log.error("Error message: " + e.getMessage());
 			
 			return null;
 			

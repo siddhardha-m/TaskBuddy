@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Siddhardha
  * 
@@ -14,6 +16,8 @@ import java.sql.SQLException;
 public class ConnectionManager {
 	
 	private static ConnectionManager instance = null;
+	
+	private static final Logger log = Logger.getLogger(ConnectionManager.class);
 	
 	private static final String SERVER_NAME = "localhost";
 	private static final String DB_NAME = "taskbuddy";
@@ -52,19 +56,19 @@ public class ConnectionManager {
 	 */
 	public void openConnection()
 	{
-		System.out.println("Opening connection...");
+		log.info("Opening connection...");
 		if (conn == null) {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection(CONN_STRING, USERNAME, PASSWORD);
-				System.out.println("Connection opened.");
+				log.info("Connection opened.");
 			} catch (SQLException | ClassNotFoundException e) {
-				System.err.println("Error message: " + e.getMessage());
-				System.out.println("Connection open failed.");
+				log.error("Error message: " + e.getMessage());
+				log.info("Connection open failed.");
 			}
 			return;
 		}
-		System.out.println("Connection is already opened.");
+		log.info("Connection is already opened.");
 	}
 	
 	/**
@@ -92,18 +96,18 @@ public class ConnectionManager {
 	 */
 	public void closeConnection()
 	{
-		System.out.println("Closing connection...");
+		log.info("Closing connection...");
 		if (conn != null) {
 			try {
 				conn.close();
 				conn = null;
-				System.out.println("Connection closed.");
+				log.info("Connection closed.");
 			} catch (SQLException e) {
-				System.err.println("Error message: " + e.getMessage());
-				System.out.println("Connection close failed.");
+				log.error("Error message: " + e.getMessage());
+				log.info("Connection close failed.");
 			}
 			return;
 		}
-		System.out.println("Connection is already closed.");
+		log.info("Connection is already closed.");
 	}
 }

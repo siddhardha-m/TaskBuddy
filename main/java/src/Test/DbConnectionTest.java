@@ -6,7 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.log4j.Logger;
+
 public class DbConnectionTest {
+	
+	private static final Logger log = Logger.getLogger(DbConnectionTest.class);
 
 	private static final String SERVER_NAME = "localhost";
 	private static final String DB_NAME = "taskbuddy";
@@ -34,14 +38,14 @@ public class DbConnectionTest {
 		{
 //			conn = DriverManager.getConnection(CONN_STRING, USERNAME, PASSWORD);
 			
-			System.out.println("Connected to DB");
+			log.info("Connected to DB");
 			
 //			stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			
 //			rs = stmt.executeQuery(sqlQuery);
 			
 			rs.last();
-			System.out.println("Number of rows: " + rs.getRow());
+			log.info("Number of rows: " + rs.getRow());
 			
 			int id;
 			String name = null;
@@ -54,11 +58,11 @@ public class DbConnectionTest {
 				id = rs.getInt("user_id");
 				name = rs.getString("user_first_name");
 
-				System.out.println("ID: " + id + ", Name: " + name);
+				log.info("ID: " + id + ", Name: " + name);
 			}
 
 		} catch (SQLException e) {
-			System.err.println("Error message: " + e.getMessage());
+			log.error("Error message: " + e.getMessage());
 		} 
 //		finally {
 //			if (rs != null){
