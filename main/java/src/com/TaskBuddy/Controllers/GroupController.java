@@ -1,11 +1,11 @@
 package com.TaskBuddy.Controllers;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -116,7 +116,7 @@ public class GroupController {
 			stmt.setString(1, groupRow.getGroupName());
 			stmt.setInt(2, groupRow.getGroupAdminUserId());
 			stmt.setString(3, groupRow.getGroupImage());
-			stmt.setDate(4, (Date) groupRow.getGroupCreatedDate());
+			stmt.setTimestamp(4, (Timestamp) groupRow.getGroupCreatedDate());
 			stmt.setBoolean(5, groupRow.isGroupDeleted());
 			
 			int affected_rows = stmt.executeUpdate();
@@ -161,7 +161,7 @@ public class GroupController {
 			stmt.setString(1, groupRow.getGroupName());
 			stmt.setInt(2, groupRow.getGroupAdminUserId());
 			stmt.setString(3, groupRow.getGroupImage());
-			stmt.setDate(4, (Date) groupRow.getGroupCreatedDate());
+			stmt.setTimestamp(4, (Timestamp) groupRow.getGroupCreatedDate());
 			stmt.setBoolean(5, groupRow.isGroupDeleted());
 			stmt.setInt(6, groupRow.getGroupId());
 			
@@ -204,7 +204,7 @@ public class GroupController {
 		groupRow.setGroupName(rs.getString("group_name"));
 		groupRow.setGroupAdminUserId(rs.getInt("group_admin_user_id"));
 		groupRow.setGroupImage(rs.getString("group_image"));
-		groupRow.setGroupCreatedDate(rs.getDate("group_created_date"));
+		groupRow.setGroupCreatedDate(rs.getTimestamp("group_created_date"));
 		groupRow.setGroupDeleted(rs.getBoolean("is_group_deleted"));
 		
 		return groupRow;

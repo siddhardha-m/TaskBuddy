@@ -1,11 +1,11 @@
 package com.TaskBuddy.Controllers;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -192,7 +192,7 @@ public class GroupMembershipController {
 			
 			stmt.setInt(1, groupMembershipRow.getGroupId());
 			stmt.setInt(2, groupMembershipRow.getUserId());
-			stmt.setDate(3, (Date) groupMembershipRow.getUserJoinedDate());
+			stmt.setTimestamp(3, (Timestamp) groupMembershipRow.getUserJoinedDate());
 			stmt.setBoolean(4, groupMembershipRow.hasUserUnjoined());
 			
 			int affected_rows = stmt.executeUpdate();
@@ -224,7 +224,7 @@ public class GroupMembershipController {
 				PreparedStatement stmt = conn.prepareStatement(sql);
 			){
 			
-			stmt.setDate(1, (Date) groupMembershipRow.getUserJoinedDate());
+			stmt.setTimestamp(1, (Timestamp) groupMembershipRow.getUserJoinedDate());
 			stmt.setBoolean(2, groupMembershipRow.hasUserUnjoined());
 			stmt.setInt(3, groupMembershipRow.getGroupId());
 			stmt.setInt(4, groupMembershipRow.getUserId());
@@ -266,7 +266,7 @@ public class GroupMembershipController {
 		
 		groupMembershipRow.setGroupId(rs.getInt("group_id"));
 		groupMembershipRow.setUserId(rs.getInt("user_id"));
-		groupMembershipRow.setUserJoinedDate(rs.getDate("user_joined_date"));
+		groupMembershipRow.setUserJoinedDate(rs.getTimestamp("user_joined_date"));
 		groupMembershipRow.setHasUserUnjoined(rs.getBoolean("has_user_unjoined"));
 		
 		return groupMembershipRow;

@@ -1,11 +1,11 @@
 package com.TaskBuddy.Controllers;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -117,8 +117,8 @@ public class TaskController {
 			stmt.setString(2, taskRow.getTaskDescription());
 			stmt.setInt(3, taskRow.getTaskPointValue());
 			stmt.setInt(4, taskRow.getTaskCreatedBy());
-			stmt.setDate(5, (Date) taskRow.getTaskCreatedDate());
-			stmt.setDate(6, (Date) taskRow.getTaskDueDate());
+			stmt.setTimestamp(5, (Timestamp) taskRow.getTaskCreatedDate());
+			stmt.setTimestamp(6, (Timestamp) taskRow.getTaskDueDate());
 			stmt.setBoolean(7, taskRow.isTaskCompleted());
 			stmt.setBoolean(8, taskRow.isTaskDeleted());
 			
@@ -165,8 +165,8 @@ public class TaskController {
 			stmt.setString(2, taskRow.getTaskDescription());
 			stmt.setInt(3, taskRow.getTaskPointValue());
 			stmt.setInt(4, taskRow.getTaskCreatedBy());
-			stmt.setDate(5, (Date) taskRow.getTaskCreatedDate());
-			stmt.setDate(6, (Date) taskRow.getTaskDueDate());
+			stmt.setTimestamp(5, (Timestamp) taskRow.getTaskCreatedDate());
+			stmt.setTimestamp(6, (Timestamp) taskRow.getTaskDueDate());
 			stmt.setBoolean(7, taskRow.isTaskCompleted());
 			stmt.setBoolean(8, taskRow.isTaskDeleted());
 			stmt.setInt(9, taskRow.getTaskId());
@@ -211,8 +211,8 @@ public class TaskController {
 		taskRow.setTaskDescription(rs.getString("task_description"));
 		taskRow.setTaskPointValue(rs.getInt("task_point_value"));
 		taskRow.setTaskCreatedBy(rs.getInt("task_created_by"));
-		taskRow.setTaskCreatedDate(rs.getDate("task_created_date"));
-		taskRow.setTaskDueDate(rs.getDate("task_due_date"));
+		taskRow.setTaskCreatedDate(rs.getTimestamp("task_created_date"));
+		taskRow.setTaskDueDate(rs.getTimestamp("task_due_date"));
 		taskRow.setTaskCompleted(rs.getBoolean("is_task_completed"));
 		taskRow.setTaskDeleted(rs.getBoolean("is_task_deleted"));
 		

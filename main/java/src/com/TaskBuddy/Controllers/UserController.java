@@ -1,11 +1,11 @@
 package com.TaskBuddy.Controllers;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -117,7 +117,7 @@ public class UserController {
 			stmt.setString(1, userRow.getUserFirstName());
 			stmt.setString(2, userRow.getUserLastName());
 			stmt.setString(3, userRow.getUserImage());
-			stmt.setDate(4, (Date) userRow.getUserCreatedDate());
+			stmt.setTimestamp(4, (Timestamp) userRow.getUserCreatedDate());
 			stmt.setBoolean(5, userRow.isUserDeleted());
 			stmt.setInt(6, userRow.getTotalScore());
 			stmt.setInt(7, userRow.getCurrentScore());
@@ -164,7 +164,7 @@ public class UserController {
 			stmt.setString(1, userRow.getUserFirstName());
 			stmt.setString(2, userRow.getUserLastName());
 			stmt.setString(3, userRow.getUserImage());
-			stmt.setDate(4, (Date) userRow.getUserCreatedDate());
+			stmt.setTimestamp(4, (Timestamp) userRow.getUserCreatedDate());
 			stmt.setBoolean(5, userRow.isUserDeleted());
 			stmt.setInt(6, userRow.getTotalScore());
 			stmt.setInt(7, userRow.getCurrentScore());
@@ -209,7 +209,7 @@ public class UserController {
 		userRow.setUserFirstName(rs.getString("user_first_name"));
 		userRow.setUserLastName(rs.getString("user_last_name"));
 		userRow.setUserImage(rs.getString("user_image"));
-		userRow.setUserCreatedDate(rs.getDate("user_created_date"));
+		userRow.setUserCreatedDate(rs.getTimestamp("user_created_date"));
 		userRow.setUserDeleted(rs.getBoolean("is_user_deleted"));
 		userRow.setTotalScore(rs.getInt("total_score"));
 		userRow.setCurrentScore(rs.getInt("current_score"));

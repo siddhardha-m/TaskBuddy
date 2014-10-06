@@ -1,11 +1,11 @@
 package com.TaskBuddy.Controllers;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -191,7 +191,7 @@ public class UserTaskController {
 			
 			stmt.setInt(1, userTaskRow.getUserId());
 			stmt.setInt(2, userTaskRow.getTaskId());
-			stmt.setDate(3, (Date) userTaskRow.getTaskAssignedDate());
+			stmt.setTimestamp(3, (Timestamp) userTaskRow.getTaskAssignedDate());
 			stmt.setBoolean(4, userTaskRow.isTaskAssigned());
 			
 			int affected_rows = stmt.executeUpdate();
@@ -223,7 +223,7 @@ public class UserTaskController {
 				PreparedStatement stmt = conn.prepareStatement(sql);
 			){
 			
-			stmt.setDate(1, (Date) userTaskRow.getTaskAssignedDate());
+			stmt.setTimestamp(1, (Timestamp) userTaskRow.getTaskAssignedDate());
 			stmt.setBoolean(2, userTaskRow.isTaskAssigned());
 			stmt.setInt(3, userTaskRow.getUserId());
 			stmt.setInt(4, userTaskRow.getTaskId());
@@ -265,7 +265,7 @@ public class UserTaskController {
 		
 		userTaskRow.setUserId(rs.getInt("user_id"));
 		userTaskRow.setTaskId(rs.getInt("task_id"));
-		userTaskRow.setTaskAssignedDate(rs.getDate("task_assigned_date"));
+		userTaskRow.setTaskAssignedDate(rs.getTimestamp("task_assigned_date"));
 		userTaskRow.setTaskAssigned(rs.getBoolean("is_task_assigned"));
 		
 		return userTaskRow;
