@@ -24,6 +24,11 @@ public class GroupMembershipController {
 
 	private static Connection conn = ConnectionManager.getInstance().getConnection();
 	
+	private static String selectSQL = "SELECT " +
+			"group_id, user_id, " +
+			"user_joined_date, has_user_unjoined" +
+			" FROM GroupMemberships ";
+	
 	private GroupMembershipController() {
 	}
 	
@@ -37,10 +42,7 @@ public class GroupMembershipController {
 	 */
 	public static ArrayList<GroupMembership> getAllGroupMemberships() throws SQLException {
 		
-		String sql = "SELECT " +
-				"group_id, user_id, " +
-				"user_joined_date, has_user_unjoined" +
-				" FROM GroupMemberships";
+		String sql = selectSQL;
 		
 		try (
 				Statement stmt = conn.createStatement();
@@ -68,10 +70,7 @@ public class GroupMembershipController {
 	 */
 	public static ArrayList<GroupMembership> getAllUsersByGroupId(int groupId) throws SQLException {
 		
-		String sql = "SELECT " +
-				"group_id, user_id, " +
-				"user_joined_date, has_user_unjoined" +
-				" FROM GroupMemberships" +
+		String sql = selectSQL +
 				" WHERE group_id = ? ";
 		ResultSet rs = null;
 		
@@ -106,10 +105,7 @@ public class GroupMembershipController {
 	 */
 	public static ArrayList<GroupMembership> getAllGroupsByUserId(int userId) throws SQLException {
 		
-		String sql = "SELECT " +
-				"group_id, user_id, " +
-				"user_joined_date, has_user_unjoined" +
-				" FROM GroupMemberships" +
+		String sql = selectSQL +
 				" WHERE user_id = ? ";
 		ResultSet rs = null;
 		
@@ -144,10 +140,7 @@ public class GroupMembershipController {
 	 */
 	public static GroupMembership getGroupMembershipByUserIdAndGroupId(int userId, int groupId) throws SQLException {
 		
-		String sql = "SELECT " +
-				"group_id, user_id, " +
-				"user_joined_date, has_user_unjoined" +
-				" FROM GroupMemberships" +
+		String sql = selectSQL +
 				" WHERE user_id = ? AND group_id = ? ";
 		ResultSet rs = null;
 		

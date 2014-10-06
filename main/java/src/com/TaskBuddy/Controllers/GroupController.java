@@ -24,6 +24,11 @@ public class GroupController {
 
 	private static Connection conn = ConnectionManager.getInstance().getConnection();
 	
+	private static String selectSQL = "SELECT " +
+			"group_id, group_name, group_admin_user_id, group_image, " +
+			"group_created_date, is_group_deleted" +
+			" FROM Groups ";
+	
 	private GroupController() {
 	}
 	
@@ -37,10 +42,7 @@ public class GroupController {
 	 */
 	public static ArrayList<Group> getAllGroups() throws SQLException {
 		
-		String sql = "SELECT " +
-				"group_id, group_name, group_admin_user_id, group_image, " +
-				"group_created_date, is_group_deleted" +
-				" FROM Groups";
+		String sql = selectSQL;
 		
 		try (
 				Statement stmt = conn.createStatement();
@@ -68,10 +70,7 @@ public class GroupController {
 	 */
 	public static Group getGroupById(int groupId) throws SQLException {
 		
-		String sql = "SELECT " +
-				"group_id, group_name, group_admin_user_id, group_image, " +
-				"group_created_date, is_group_deleted" +
-				" FROM Groups" +
+		String sql = selectSQL +
 				" WHERE group_id = ? ";
 		ResultSet rs = null;
 		

@@ -23,6 +23,11 @@ public class LoginController {
 
 	private static Connection conn = ConnectionManager.getInstance().getConnection();
 	
+	private static String selectSQL = "SELECT " +
+			"login_id, user_id, " +
+			"username, user_password, user_role" +
+			" FROM Logins ";
+	
 	private LoginController() {
 	}
 	
@@ -36,10 +41,7 @@ public class LoginController {
 	 */
 	public static ArrayList<Login> getAllLogins() throws SQLException {
 		
-		String sql = "SELECT " +
-				"login_id, user_id, " +
-				"username, user_password, user_role" +
-				" FROM Logins";
+		String sql = selectSQL;
 		
 		try (
 				Statement stmt = conn.createStatement();
@@ -67,10 +69,7 @@ public class LoginController {
 	 */
 	public static Login getLoginById(int loginId) throws SQLException {
 		
-		String sql = "SELECT " +
-				"login_id, user_id, " +
-				"username, user_password, user_role" +
-				" FROM Logins" +
+		String sql = selectSQL +
 				" WHERE login_id = ? ";
 		ResultSet rs = null;
 		

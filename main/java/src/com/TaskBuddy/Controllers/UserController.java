@@ -25,6 +25,11 @@ public class UserController {
 
 	private static Connection conn = ConnectionManager.getInstance().getConnection();
 	
+	private static String selectSQL = "SELECT " +
+			"user_id, user_first_name, user_last_name, user_image, " +
+			"user_created_date, is_user_deleted, total_score, current_score" +
+			" FROM Users ";
+	
 	private UserController() {
 	}
 	
@@ -38,10 +43,7 @@ public class UserController {
 	 */
 	public static ArrayList<User> getAllUsers() throws SQLException {
 		
-		String sql = "SELECT " +
-				"user_id, user_first_name, user_last_name, user_image, " +
-				"user_created_date, is_user_deleted, total_score, current_score" +
-				" FROM Users";
+		String sql = selectSQL;
 		
 		try (
 				Statement stmt = conn.createStatement();
@@ -69,10 +71,7 @@ public class UserController {
 	 */
 	public static User getUserById(int userId) throws SQLException {
 		
-		String sql = "SELECT " +
-				"user_id, user_first_name, user_last_name, user_image, " +
-				"user_created_date, is_user_deleted, total_score, current_score" +
-				" FROM Users" +
+		String sql = selectSQL +
 				" WHERE user_id = ? ";
 		ResultSet rs = null;
 		

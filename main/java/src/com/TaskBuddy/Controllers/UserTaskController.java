@@ -24,6 +24,11 @@ public class UserTaskController {
 
 	private static Connection conn = ConnectionManager.getInstance().getConnection();
 	
+	private static String selectSQL = "SELECT " +
+			"user_id, task_id, " +
+			"task_assigned_date, is_task_assigned" +
+			" FROM UserTasks ";
+	
 	private UserTaskController() {
 	}
 	
@@ -37,10 +42,7 @@ public class UserTaskController {
 	 */
 	public static ArrayList<UserTask> getAllUserTasks() throws SQLException {
 		
-		String sql = "SELECT " +
-				"user_id, task_id, " +
-				"task_assigned_date, is_task_assigned" +
-				" FROM UserTasks";
+		String sql = selectSQL;
 		
 		try (
 				Statement stmt = conn.createStatement();
@@ -68,10 +70,7 @@ public class UserTaskController {
 	 */
 	public static ArrayList<UserTask> getAllUsersByTaskId(int taskId) throws SQLException {
 		
-		String sql = "SELECT " +
-				"user_id, task_id, " +
-				"task_assigned_date, is_task_assigned" +
-				" FROM UserTasks" +
+		String sql = selectSQL +
 				" WHERE task_id = ? ";
 		ResultSet rs = null;
 		
@@ -106,10 +105,7 @@ public class UserTaskController {
 	 */
 	public static ArrayList<UserTask> getAllTasksByUserId(int userId) throws SQLException {
 		
-		String sql = "SELECT " +
-				"user_id, task_id, " +
-				"task_assigned_date, is_task_assigned" +
-				" FROM UserTasks" +
+		String sql = selectSQL +
 				" WHERE user_id = ? ";
 		ResultSet rs = null;
 		
@@ -144,10 +140,7 @@ public class UserTaskController {
 	 */
 	public static UserTask getUserTaskByUserIdAndTaskId(int userId, int taskId) throws SQLException {
 		
-		String sql = "SELECT " +
-				"user_id, task_id, " +
-				"task_assigned_date, is_task_assigned" +
-				" FROM UserTasks" +
+		String sql = selectSQL +
 				" WHERE user_id = ? AND task_id = ? ";
 		ResultSet rs = null;
 		

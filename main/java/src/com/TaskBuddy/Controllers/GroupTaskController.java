@@ -23,6 +23,10 @@ public class GroupTaskController {
 
 	private static Connection conn = ConnectionManager.getInstance().getConnection();
 	
+	private static String selectSQL = "SELECT " +
+			"group_id, task_id" +
+			" FROM GroupTasks ";
+	
 	private GroupTaskController() {
 	}
 	
@@ -36,9 +40,7 @@ public class GroupTaskController {
 	 */
 	public static ArrayList<GroupTask> getAllGroupTasks() throws SQLException {
 		
-		String sql = "SELECT " +
-				"group_id, task_id" +
-				" FROM GroupTasks";
+		String sql = selectSQL;
 		
 		try (
 				Statement stmt = conn.createStatement();
@@ -66,9 +68,7 @@ public class GroupTaskController {
 	 */
 	public static ArrayList<GroupTask> getAllTasksByGroupId(int groupId) throws SQLException {
 		
-		String sql = "SELECT " +
-				"group_id, task_id" +
-				" FROM GroupTasks" +
+		String sql = selectSQL +
 				" WHERE group_id = ? ";
 		ResultSet rs = null;
 		
@@ -103,9 +103,7 @@ public class GroupTaskController {
 	 */
 	public static GroupTask getGroupByTaskId(int taskId) throws SQLException {
 		
-		String sql = "SELECT " +
-				"group_id, task_id" +
-				" FROM GroupTasks" +
+		String sql = selectSQL +
 				" WHERE task_id = ? ";
 		ResultSet rs = null;
 		
