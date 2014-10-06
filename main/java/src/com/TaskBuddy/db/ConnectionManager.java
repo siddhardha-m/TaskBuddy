@@ -56,19 +56,19 @@ public class ConnectionManager {
 	 */
 	public void openConnection()
 	{
-		log.info("Opening connection...");
+		log.info("Opening MySQL connection...");
 		if (conn == null) {
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				conn = DriverManager.getConnection(CONN_STRING, USERNAME, PASSWORD);
-				log.info("Connection opened.");
+				log.info("MySQL Connection opened.");
 			} catch (SQLException | ClassNotFoundException e) {
 				log.error("Error message: " + e.getMessage());
-				log.info("Connection open failed.");
+				log.info("MySQL Connection open failed.");
 			}
 			return;
 		}
-		log.info("Connection is already opened.");
+		log.info("MySQL Connection is already opened.");
 	}
 	
 	/**
@@ -96,18 +96,18 @@ public class ConnectionManager {
 	 */
 	public void closeConnection()
 	{
-		log.info("Closing connection...");
+		log.info("Closing MySQL connection...");
 		if (conn != null) {
 			try {
 				conn.close();
 				conn = null;
-				log.info("Connection closed.");
+				log.info("MySQL Connection closed.");
 			} catch (SQLException e) {
 				log.error("Error message: " + e.getMessage());
-				log.info("Connection close failed.");
+				log.info("MySQL Connection close failed.");
 			}
 			return;
 		}
-		log.info("Connection is already closed.");
+		log.info("MySQL Connection is already closed.");
 	}
 }
