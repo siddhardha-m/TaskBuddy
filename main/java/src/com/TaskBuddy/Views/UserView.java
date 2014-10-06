@@ -36,7 +36,7 @@ public class UserView {
 	 */
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ArrayList<User> getAllUsers() {
+	public static ArrayList<User> getAllUsers() {
 		try {
 			
 			return UserController.getAllUsers();

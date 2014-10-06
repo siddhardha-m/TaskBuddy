@@ -36,7 +36,7 @@ public class TaskView {
 	 */
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ArrayList<Task> getAllTasks() {
+	public static ArrayList<Task> getAllTasks() {
 		try {
 			
 			return TaskController.getAllTasks();

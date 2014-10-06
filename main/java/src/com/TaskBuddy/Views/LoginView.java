@@ -36,7 +36,7 @@ public class LoginView {
 	 */
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ArrayList<Login> getAllLogins() {
+	public static ArrayList<Login> getAllLogins() {
 		try {
 			
 			return LoginController.getAllLogins();

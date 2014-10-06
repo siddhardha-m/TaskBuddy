@@ -36,7 +36,7 @@ public class GroupView {
 	 */
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ArrayList<Group> getAllGroups() {
+	public static ArrayList<Group> getAllGroups() {
 		try {
 			
 			return GroupController.getAllGroups();
