@@ -491,24 +491,24 @@ projects.fetch({success: function() {
 
 
 /*
- * Attaching to "Add project" button
+ * Attaching to "Add User" button
  */
-$('#add-project').click(function(e) {
+$('#add-user').click(function(e) {
 	var view = new ProjectDialog({model: new Project()});
 	view.show();
 	return false;
 });
 
 /*
- * Attaching to "Delete project (X)" button
+ * Attaching to "Delete User" button
  */
-$('#remove-project').click(function(e) {
+$('#delete-user').click(function(e) {
 	projects.get(currentProjectId).destroy();
 	return false;	
 });
 
 /*
- * Attaching to "Add task" button
+ * Attaching to "Add Task" button
  */
 $('#add-task').click(function(e) {
 	var view = new TaskDialog({model: new Task()});

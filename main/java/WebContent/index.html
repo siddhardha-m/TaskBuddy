@@ -2,6 +2,8 @@
 <html lang="en">
   <head>
     <title>Task Buddy</title>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon"/>
+    
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link href="css/tasks.css" rel="stylesheet">
@@ -22,20 +24,20 @@
         <div class="span3">
           <div class="well sidebar-nav">
             <ul class="nav nav-list" id="projects">
-              <li class="nav-header">Users</li>
+              <li class="nav-header"><h6>Users</h6></li>
             </ul>
           </div>
-          <a href="#new-project" id="add-project" class="btn pull-right"><i class="icon-folder-open"></i>&nbsp;&nbsp;Add User</a>
+          <a href="#add-user" id="add-project" class="btn pull-right"><i class="icon-user"></i>&nbsp;&nbsp;Add User</a>
+          <a href="#delete-user" id="remove-project" role="button" class="btn pull-right offset-right"><i class="icon-trash"></i>&nbsp;&nbsp;Delete User</a>
         </div>
         <div class="span9 main-content">
           <div class="page-header">
             <div class="row-fluid">
                 <div class="span9">
-                  <h3 id="project-title"><span>Project</span> tasks</h3>
+                  <h3 id="project-title"><span>User</span>'s Tasks</h3>
                 </div>
                 <div class="span3">
-                  <a href="#new-task" id="add-task" role="button" class="btn pull-right" data-toggle="modal"><i class="icon-tasks"></i>&nbsp;&nbsp;Add task</a>
-                  <a href="#delete-project" id="remove-project" role="button" class="btn pull-right offset-right"><i class="icon-remove"></i></a>
+                  <a href="#add-task" id="add-task" role="button" class="btn pull-right" data-toggle="modal"><i class="icon-tasks"></i>&nbsp;&nbsp;Add Task</a>
                 </div>
             </div>
           </div>
@@ -43,8 +45,9 @@
             <thead>
               <tr>
                 <th class="status-col">Status</th>
-                <th>Task</th>
-                <th class="date-col">Due date</th>
+                <th>Task Name</th>
+                <th class="date-col">Due Date</th>
+                <th class="action-col">&nbsp;</th>
                 <th class="action-col">&nbsp;</th>          
               </tr>
             </thead>
@@ -70,7 +73,7 @@
 	      </div>
 	      <div class="modal-body">
 	        <form class="form-inline">
-	          <input type="text" name="name" class="input-block-level project-title" placeholder="User name" value="<%= name %>">
+	          <input type="text" name="name" class="input-block-level project-title" placeholder="First Name" value="<%= name %>">
 	        </form>
 	      </div>
 	      <div class="modal-footer">
@@ -87,13 +90,13 @@
 		<div class="modal in fade" tabindex="-1" role="dialog" aria-labelledby="Create task" aria-hidden="true">
 	      <div class="modal-header">
 	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-	        <h3 id="myModalLabel">Create task</h3>
+	        <h3 id="myModalLabel">Create Task</h3>
 	      </div>
 	      <div class="modal-body">
 	        <form class="form-inline">
-	          <input type="text" name="task" class="input-xlarge input-task" placeholder="Task name" value="<%= task %>">
+	          <input type="text" name="task" class="input-xlarge input-task" placeholder="Task Name" value="<%= task %>">
 	          <div id="dp1" class="input-append date">
-	          	<input class="input-medium" name="date_due" value="<%= date_due %>" data-format="yyyy-MM-dd hh:mm:ss" type="text" placeholder="Due date">
+	          	<input class="input-medium" name="date_due" value="<%= date_due %>" data-format="yyyy-MM-dd hh:mm:ss" type="text" placeholder="Due Date">
 	          	<span class="add-on">
 	          		<i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
 	          	</span>
@@ -115,8 +118,13 @@
 		<td<% if (status == 1) { %> class="finished" <% } %>><%= taskDueDate %></td>
        
 		<td class="center-col">
-			<a href="#delete" class="delete-action">
-				<i class="icon-remove"></i>
+			<a href="#edit-task" class="edit-action">
+				<i class="icon-edit"></i>
+			</a>
+		</td>
+		<td>
+			<a href="#delete-task" class="delete-action">
+				<i class="icon-trash"></i>
 			</a>
 		</td>
 	</script>
