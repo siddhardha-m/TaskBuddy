@@ -3,9 +3,12 @@ package com.TaskBuddy.Views;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -47,6 +50,54 @@ public class GroupView {
 			
 			return null;
 			
+		}
+	}
+	
+	@GET @Path("{groupId}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public static Group getGroupById(@PathParam("groupId") int groupId) {
+		try {
+			
+			return GroupController.getGroupById(groupId);
+			
+		} catch (SQLException e) {
+			
+			log.error("Error message: " + e.getMessage());
+			
+			return null;
+			
+		}
+	}
+	
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public static boolean insertGroup(Group groupRow) {
+		try {
+			
+			return GroupController.save(groupRow);
+			
+		} catch (SQLException e) {
+			
+			log.error("Error message: " + e.getMessage());
+			
+			return false;
+		}
+	}
+	
+	@PUT @Path("{groupId}")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public static boolean updateGroup(Group groupRow) {
+		try {
+			
+			return GroupController.save(groupRow);
+			
+		} catch (SQLException e) {
+			
+			log.error("Error message: " + e.getMessage());
+			
+			return false;
 		}
 	}
 }
