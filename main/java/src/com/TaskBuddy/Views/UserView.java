@@ -3,9 +3,12 @@ package com.TaskBuddy.Views;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -47,6 +50,54 @@ public class UserView {
 			
 			return null;
 			
+		}
+	}
+	
+	@GET @Path("{userId}")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public static User getUserById(@PathParam("userId") int userId) {
+		try {
+			
+			return UserController.getUserById(userId);
+			
+		} catch (SQLException e) {
+			
+			log.error("Error message: " + e.getMessage());
+			
+			return null;
+			
+		}
+	}
+	
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public static boolean insertUser(User userRow) {
+		try {
+			
+			return UserController.save(userRow);
+			
+		} catch (SQLException e) {
+			
+			log.error("Error message: " + e.getMessage());
+			
+			return false;
+		}
+	}
+	
+	@PUT @Path("{userId}")
+	@Consumes({ MediaType.APPLICATION_JSON })
+	@Produces({ MediaType.APPLICATION_JSON })
+	public static boolean updateUser(User userRow) {
+		try {
+			
+			return UserController.save(userRow);
+			
+		} catch (SQLException e) {
+			
+			log.error("Error message: " + e.getMessage());
+			
+			return false;
 		}
 	}
 }
