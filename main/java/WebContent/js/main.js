@@ -51,6 +51,7 @@ UserItem = Backbone.View.extend({
 		/*
 		 * We are attaching context to render method
 		 */
+		console.log('user item created');
 		this.render = _.bind(this.render, this);
 
 		/*
@@ -111,16 +112,21 @@ UserItem = Backbone.View.extend({
 		 */
 		$tasks.empty();
 
+		currentUserId = this.model.get('userId');
+
+		console.log("user id "+ currentUserId);
+
 		/*
 		 * We'll initialize new task collection
 		 */
-		tasks = new TaskCollection();
+
+		tasks = new TaskCollection({id: currentUserId});
 
 		/*
 		 * We'll assign current user ID to "global" variable as we need it on several other places
 		 */
-		currentUserId = this.model.userId;
 
+		//console.log("user id "+ currentUserId);
 		/*
 		 * Lets fetch tasks for currently selected user (we can access currently selected user through this.model)
 		 * processData param here only informs the system that params provided through data param needs to be added to URL as GET params
@@ -309,21 +315,28 @@ Task = Backbone.Model.extend({
 	/*
 	 * This is the URI where the Backbone will communicate with our server part
 	 */
-	urlRoot: serverUrl + 'tasks'
+	urlRoot: serverUrl + 'tasks' 
+ 
 });
 
 /*
  * We also need a collection object which will hold our models (so it will be able to communicate with Backbone views more easily)
  */
 TaskCollection = Backbone.Collection.extend({
+	
+	initialize: function(options){
+		console.log(options.id);
+		this.url= serverUrl + 'tasks' + '/user/' + options.id
+
+	},
 	/*
 	 * Model which this collection will hold and manipulate
 	 */
-	model: Task,
+	
+	model: Task
 	/*
 	 * URI for fetching the tasks
 	 */
-	url: serverUrl + 'tasks'
 });
 
 
@@ -475,6 +488,8 @@ TaskDialog = Backbone.View.extend({
 		this.remove();
 	}
 });
+
+
 
 users = new UserCollection();
 /*
