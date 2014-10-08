@@ -22,6 +22,7 @@ import com.TaskBuddy.db.ConnectionManager;
 @XmlRootElement
 public class TaskController {
 
+	
 	private static Connection conn = ConnectionManager.getInstance().getConnection();
 	
 	private static String selectSQL = "SELECT " +
