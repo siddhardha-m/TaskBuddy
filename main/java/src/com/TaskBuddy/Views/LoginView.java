@@ -1,6 +1,5 @@
 package com.TaskBuddy.Views;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.ws.rs.Consumes;
@@ -44,7 +43,7 @@ public class LoginView {
 			
 			return LoginController.getAllLogins();
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			
 			log.error("Error message: " + e.getMessage());
 			
@@ -60,7 +59,7 @@ public class LoginView {
 			
 			return LoginController.getLoginById(loginId);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			
 			log.error("Error message: " + e.getMessage());
 			
@@ -77,7 +76,7 @@ public class LoginView {
 			
 			return LoginController.save(loginRow);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			
 			log.error("Error message: " + e.getMessage());
 			
@@ -93,7 +92,7 @@ public class LoginView {
 			
 			return LoginController.save(loginRow);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			
 			log.error("Error message: " + e.getMessage());
 			

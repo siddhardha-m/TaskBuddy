@@ -1,6 +1,5 @@
 package com.TaskBuddy.Views;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.ws.rs.Consumes;
@@ -18,6 +17,7 @@ import com.TaskBuddy.Controllers.TaskController;
 import com.TaskBuddy.Controllers.UserTaskController;
 import com.TaskBuddy.Models.Task;
 import com.TaskBuddy.Models.UserTask;
+import com.TaskBuddy.ViewObjects.TaskViewObject;
 
 /**
  * @author Siddhardha
@@ -33,20 +33,80 @@ public class TaskView {
 	public TaskView() {
 	}
 	
+	private static TaskViewObject createTaskViewObject(Task taskRow, UserTask userTaskRow) {
+		TaskViewObject taskViewRow = new TaskViewObject();
+		
+		taskViewRow.setTaskId(taskRow.getTaskId());
+		taskViewRow.setTaskTitle(taskRow.getTaskTitle());
+		taskViewRow.setTaskDescription(taskRow.getTaskDescription());
+		taskViewRow.setTaskPointValue(taskRow.getTaskPointValue());
+		taskViewRow.setTaskCreatedBy(taskRow.getTaskCreatedBy());
+		taskViewRow.setTaskCreatedDate(taskRow.getTaskCreatedDate());
+		taskViewRow.setTaskDueDate(taskRow.getTaskDueDate());
+		taskViewRow.setTaskCompleted(taskRow.isTaskCompleted());
+		taskViewRow.setTaskDeleted(taskRow.isTaskDeleted());
+		taskViewRow.setUserId(userTaskRow.getUserId());
+		taskViewRow.setTaskAssignedDate(userTaskRow.getTaskAssignedDate());
+		taskViewRow.setTaskAssigned(userTaskRow.isTaskAssigned());
+		
+		return taskViewRow;
+	}
+	
+	private static Task getTaskFromTaskViewObject(TaskViewObject taskViewRow) {
+		Task taskRow = new Task();
+		
+		taskRow.setTaskId(taskViewRow.getTaskId());
+		taskRow.setTaskTitle(taskViewRow.getTaskTitle());
+		taskRow.setTaskDescription(taskViewRow.getTaskDescription());
+		taskRow.setTaskPointValue(taskViewRow.getTaskPointValue());
+		taskRow.setTaskCreatedBy(taskViewRow.getTaskCreatedBy());
+		taskRow.setTaskCreatedDate(taskViewRow.getTaskCreatedDate());
+		taskRow.setTaskDueDate(taskViewRow.getTaskDueDate());
+		taskRow.setTaskCompleted(taskViewRow.isTaskCompleted());
+		taskRow.setTaskDeleted(taskViewRow.isTaskDeleted());
+		
+		return taskRow;
+	}
+	
+	private static UserTask getUserTaskFromTaskViewObject(TaskViewObject taskViewRow) {
+		UserTask userTaskRow = new UserTask();
+		
+		userTaskRow.setUserId(taskViewRow.getUserId());
+		userTaskRow.setTaskId(taskViewRow.getTaskId());
+		userTaskRow.setTaskAssignedDate(taskViewRow.getTaskAssignedDate());
+		userTaskRow.setTaskAssigned(taskViewRow.isTaskAssigned());
+		
+		return userTaskRow;
+	}
+	
 	/**
 	 * 
 	 * This method is invoked on GET
-	 * @return ArrayList of all Tasks in JSON format
+	 * @return ArrayList of all TaskViewObjects in JSON format
 	 * 
 	 */
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	public static ArrayList<Task> getAllTasks() {
+	public static ArrayList<TaskViewObject> getAllTaskViews() {
 		try {
 			
-			return TaskController.getAllTasks();
+			ArrayList<TaskViewObject> taskViewList = new ArrayList<TaskViewObject>();
 			
-		} catch (SQLException e) {
+			ArrayList<Task> tasksList = TaskController.getAllTasks();
+			
+			for (Task taskRow : tasksList) {
+				
+				ArrayList<UserTask> userTasksList = UserTaskController.getAllUsersByTaskId(taskRow.getTaskId());
+				
+				for (UserTask  userTaskRow : userTasksList) {
+					taskViewList.add(createTaskViewObject(taskRow, userTaskRow));
+				}
+				
+			}
+			
+			return taskViewList;
+			
+		} catch (Exception e) {
 			
 			log.error("Error message: " + e.getMessage());
 			
@@ -57,20 +117,23 @@ public class TaskView {
 	
 	@GET @Path("user/{userId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public static ArrayList<Task> getAllTasksByUserId(@PathParam("userId") int userId) {
+	public static ArrayList<TaskViewObject> getAllTaskViewsByUserId(@PathParam("userId") int userId) {
 		try {
 			
 			ArrayList<UserTask> userTasksList = UserTaskController.getAllTasksByUserId(userId);
 			
-			ArrayList<Task> tasksList = new ArrayList<Task>();
+			ArrayList<TaskViewObject> taskViewList = new ArrayList<TaskViewObject>();
 			
 			for (UserTask userTaskRow : userTasksList) {
-				tasksList.add(TaskController.getTaskById(userTaskRow.getTaskId()));
+				
+				Task taskRow = TaskController.getTaskById(userTaskRow.getTaskId());
+				
+				taskViewList.add(createTaskViewObject(taskRow, userTaskRow));
 			}
 			
-			return tasksList;
+			return taskViewList;
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			
 			log.error("Error message: " + e.getMessage());
 			
@@ -81,12 +144,22 @@ public class TaskView {
 	
 	@GET @Path("{taskId}")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public static Task getTaskById(@PathParam("taskId") int taskId) {
+	public static TaskViewObject getTaskViewByTaskId(@PathParam("taskId") int taskId) {
 		try {
 			
-			return TaskController.getTaskById(taskId);
+			Task taskRow = TaskController.getTaskById(taskId);
 			
-		} catch (SQLException e) {
+			ArrayList<UserTask> userTasksList = UserTaskController.getAllUsersByTaskId(taskId);
+			
+			UserTask userTaskRow = new UserTask();
+			
+			for (UserTask userTaskRowInternal : userTasksList) {
+				userTaskRow = userTaskRowInternal;
+			}
+			
+			return createTaskViewObject(taskRow, userTaskRow);
+			
+		} catch (Exception e) {
 			
 			log.error("Error message: " + e.getMessage());
 			
@@ -98,12 +171,21 @@ public class TaskView {
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public static boolean insertTask(Task taskRow) {
+	public static boolean insertTaskView(TaskViewObject taskViewRow) {
 		try {
+			Task taskRow = getTaskFromTaskViewObject(taskViewRow);
+			UserTask userTaskRow = getUserTaskFromTaskViewObject(taskViewRow);
 			
-			return TaskController.save(taskRow);
+			boolean taskSaved = TaskController.save(taskRow);
+			boolean userTaskSaved = UserTaskController.save(userTaskRow);
 			
-		} catch (SQLException e) {
+			if(taskSaved && userTaskSaved) {
+				return true;
+			} else {
+				return false;
+			}
+			
+		} catch (Exception e) {
 			
 			log.error("Error message: " + e.getMessage());
 			
@@ -114,12 +196,21 @@ public class TaskView {
 	@PUT @Path("{taskId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public static boolean updateTask(Task taskRow) {
+	public static boolean updateTaskView(TaskViewObject taskViewRow) {
 		try {
+			Task taskRow = getTaskFromTaskViewObject(taskViewRow);
+			UserTask userTaskRow = getUserTaskFromTaskViewObject(taskViewRow);
 			
-			return TaskController.save(taskRow);
+			boolean taskSaved = TaskController.save(taskRow);
+			boolean userTaskSaved = UserTaskController.save(userTaskRow);
 			
-		} catch (SQLException e) {
+			if(taskSaved && userTaskSaved) {
+				return true;
+			} else {
+				return false;
+			}
+			
+		} catch (Exception e) {
 			
 			log.error("Error message: " + e.getMessage());
 			

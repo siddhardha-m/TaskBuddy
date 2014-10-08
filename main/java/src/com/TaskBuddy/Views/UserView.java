@@ -1,6 +1,5 @@
 package com.TaskBuddy.Views;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.ws.rs.Consumes;
@@ -44,7 +43,7 @@ public class UserView {
 			
 			return UserController.getAllUsers();
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			
 			log.error("Error message: " + e.getMessage());
 			
@@ -60,7 +59,7 @@ public class UserView {
 			
 			return UserController.getUserById(userId);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			
 			log.error("Error message: " + e.getMessage());
 			
@@ -77,7 +76,7 @@ public class UserView {
 			
 			return UserController.save(userRow);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			
 			log.error("Error message: " + e.getMessage());
 			
@@ -93,7 +92,7 @@ public class UserView {
 			
 			return UserController.save(userRow);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			
 			log.error("Error message: " + e.getMessage());
 			
