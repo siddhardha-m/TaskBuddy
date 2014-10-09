@@ -184,7 +184,7 @@ public class UserTaskController {
 			
 			stmt.setInt(1, userTaskRow.getUserId());
 			stmt.setInt(2, userTaskRow.getTaskId());
-			stmt.setTimestamp(3, (Timestamp) userTaskRow.getTaskAssignedDate());
+			stmt.setTimestamp(3, new Timestamp(userTaskRow.getTaskAssignedDate().getTime()));
 			stmt.setBoolean(4, userTaskRow.isTaskAssigned());
 			
 			int affected_rows = stmt.executeUpdate();
@@ -216,7 +216,7 @@ public class UserTaskController {
 				PreparedStatement stmt = conn.prepareStatement(sql);
 			){
 			
-			stmt.setTimestamp(1, (Timestamp) userTaskRow.getTaskAssignedDate());
+			stmt.setTimestamp(1, new Timestamp(userTaskRow.getTaskAssignedDate().getTime()));
 			stmt.setBoolean(2, userTaskRow.isTaskAssigned());
 			stmt.setInt(3, userTaskRow.getUserId());
 			stmt.setInt(4, userTaskRow.getTaskId());

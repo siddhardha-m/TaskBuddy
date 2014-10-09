@@ -185,7 +185,7 @@ public class GroupMembershipController {
 			
 			stmt.setInt(1, groupMembershipRow.getGroupId());
 			stmt.setInt(2, groupMembershipRow.getUserId());
-			stmt.setTimestamp(3, (Timestamp) groupMembershipRow.getUserJoinedDate());
+			stmt.setTimestamp(3, new Timestamp(groupMembershipRow.getUserJoinedDate().getTime()));
 			stmt.setBoolean(4, groupMembershipRow.hasUserUnjoined());
 			
 			int affected_rows = stmt.executeUpdate();
@@ -217,7 +217,7 @@ public class GroupMembershipController {
 				PreparedStatement stmt = conn.prepareStatement(sql);
 			){
 			
-			stmt.setTimestamp(1, (Timestamp) groupMembershipRow.getUserJoinedDate());
+			stmt.setTimestamp(1, new Timestamp(groupMembershipRow.getUserJoinedDate().getTime()));
 			stmt.setBoolean(2, groupMembershipRow.hasUserUnjoined());
 			stmt.setInt(3, groupMembershipRow.getGroupId());
 			stmt.setInt(4, groupMembershipRow.getUserId());

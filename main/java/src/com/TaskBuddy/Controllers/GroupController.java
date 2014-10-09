@@ -115,7 +115,7 @@ public class GroupController {
 			stmt.setString(1, groupRow.getGroupName());
 			stmt.setInt(2, groupRow.getGroupAdminUserId());
 			stmt.setString(3, groupRow.getGroupImage());
-			stmt.setTimestamp(4, (Timestamp) groupRow.getGroupCreatedDate());
+			stmt.setTimestamp(4, new Timestamp(groupRow.getGroupCreatedDate().getTime()));
 			stmt.setBoolean(5, groupRow.isGroupDeleted());
 			
 			int affected_rows = stmt.executeUpdate();
@@ -160,7 +160,7 @@ public class GroupController {
 			stmt.setString(1, groupRow.getGroupName());
 			stmt.setInt(2, groupRow.getGroupAdminUserId());
 			stmt.setString(3, groupRow.getGroupImage());
-			stmt.setTimestamp(4, (Timestamp) groupRow.getGroupCreatedDate());
+			stmt.setTimestamp(4, new Timestamp(groupRow.getGroupCreatedDate().getTime()));
 			stmt.setBoolean(5, groupRow.isGroupDeleted());
 			stmt.setInt(6, groupRow.getGroupId());
 			

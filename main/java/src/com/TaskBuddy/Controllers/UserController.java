@@ -116,7 +116,7 @@ public class UserController {
 			stmt.setString(1, userRow.getUserFirstName());
 			stmt.setString(2, userRow.getUserLastName());
 			stmt.setString(3, userRow.getUserImage());
-			stmt.setTimestamp(4, (Timestamp) userRow.getUserCreatedDate());
+			stmt.setTimestamp(4, new Timestamp(userRow.getUserCreatedDate().getTime()));
 			stmt.setBoolean(5, userRow.isUserDeleted());
 			stmt.setInt(6, userRow.getTotalScore());
 			stmt.setInt(7, userRow.getCurrentScore());
@@ -163,7 +163,7 @@ public class UserController {
 			stmt.setString(1, userRow.getUserFirstName());
 			stmt.setString(2, userRow.getUserLastName());
 			stmt.setString(3, userRow.getUserImage());
-			stmt.setTimestamp(4, (Timestamp) userRow.getUserCreatedDate());
+			stmt.setTimestamp(4, new Timestamp(userRow.getUserCreatedDate().getTime()));
 			stmt.setBoolean(5, userRow.isUserDeleted());
 			stmt.setInt(6, userRow.getTotalScore());
 			stmt.setInt(7, userRow.getCurrentScore());

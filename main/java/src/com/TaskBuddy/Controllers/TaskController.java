@@ -117,8 +117,8 @@ public class TaskController {
 			stmt.setString(2, taskRow.getTaskDescription());
 			stmt.setInt(3, taskRow.getTaskPointValue());
 			stmt.setInt(4, taskRow.getTaskCreatedBy());
-			stmt.setTimestamp(5, (Timestamp) taskRow.getTaskCreatedDate());
-			stmt.setTimestamp(6, (Timestamp) taskRow.getTaskDueDate());
+			stmt.setTimestamp(5, new  Timestamp(taskRow.getTaskCreatedDate().getTime()));
+			stmt.setTimestamp(6, new Timestamp(taskRow.getTaskDueDate().getTime()));
 			stmt.setBoolean(7, taskRow.isTaskCompleted());
 			stmt.setBoolean(8, taskRow.isTaskDeleted());
 			
@@ -165,8 +165,8 @@ public class TaskController {
 			stmt.setString(2, taskRow.getTaskDescription());
 			stmt.setInt(3, taskRow.getTaskPointValue());
 			stmt.setInt(4, taskRow.getTaskCreatedBy());
-			stmt.setTimestamp(5, (Timestamp) taskRow.getTaskCreatedDate());
-			stmt.setTimestamp(6, (Timestamp) taskRow.getTaskDueDate());
+			stmt.setTimestamp(5, new Timestamp(taskRow.getTaskCreatedDate().getTime()));
+			stmt.setTimestamp(6, new Timestamp(taskRow.getTaskDueDate().getTime()));
 			stmt.setBoolean(7, taskRow.isTaskCompleted());
 			stmt.setBoolean(8, taskRow.isTaskDeleted());
 			stmt.setInt(9, taskRow.getTaskId());
