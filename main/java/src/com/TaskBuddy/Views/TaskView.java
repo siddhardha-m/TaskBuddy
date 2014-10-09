@@ -177,6 +177,7 @@ public class TaskView {
 			UserTask userTaskRow = getUserTaskFromTaskViewObject(taskViewRow);
 			
 			boolean taskSaved = TaskController.save(taskRow);
+			userTaskRow.setTaskId(taskRow.getTaskId());
 			boolean userTaskSaved = UserTaskController.save(userTaskRow);
 			
 			if(taskSaved && userTaskSaved) {
