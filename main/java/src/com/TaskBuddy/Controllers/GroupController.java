@@ -27,7 +27,8 @@ public class GroupController {
 	private static String selectSQL = "SELECT " +
 			"group_id, group_name, group_admin_user_id, group_image, " +
 			"group_created_date, is_group_deleted" +
-			" FROM Groups ";
+			" FROM Groups "
+			+ " WHERE is_group_deleted = false ";
 	
 	private GroupController() {
 	}
@@ -71,7 +72,7 @@ public class GroupController {
 	public static Group getGroupById(int groupId) throws SQLException {
 		
 		String sql = selectSQL +
-				" WHERE group_id = ? ";
+				" AND group_id = ? ";
 		ResultSet rs = null;
 		
 		try (

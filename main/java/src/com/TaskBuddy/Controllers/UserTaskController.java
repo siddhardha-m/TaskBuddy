@@ -27,7 +27,8 @@ public class UserTaskController {
 	private static String selectSQL = "SELECT " +
 			"user_id, task_id, " +
 			"task_assigned_date, is_task_assigned" +
-			" FROM UserTasks ";
+			" FROM UserTasks "
+			+ " WHERE is_task_assigned = true ";
 	
 	private UserTaskController() {
 	}
@@ -71,7 +72,7 @@ public class UserTaskController {
 	public static ArrayList<UserTask> getAllUsersByTaskId(int taskId) throws SQLException {
 		
 		String sql = selectSQL +
-				" WHERE task_id = ? ";
+				" AND task_id = ? ";
 		ResultSet rs = null;
 		
 		try (
@@ -106,7 +107,7 @@ public class UserTaskController {
 	public static ArrayList<UserTask> getAllTasksByUserId(int userId) throws SQLException {
 		
 		String sql = selectSQL +
-				" WHERE user_id = ? ";
+				" AND user_id = ? ";
 		ResultSet rs = null;
 		
 		try (
@@ -141,7 +142,7 @@ public class UserTaskController {
 	public static UserTask getUserTaskByUserIdAndTaskId(int userId, int taskId) throws SQLException {
 		
 		String sql = selectSQL +
-				" WHERE user_id = ? AND task_id = ? ";
+				" AND user_id = ? AND task_id = ? ";
 		ResultSet rs = null;
 		
 		try (
@@ -241,7 +242,47 @@ public class UserTaskController {
 	 * 
 	 */
 	public static boolean save(UserTask userTaskRow) throws SQLException {
-		return getUserTaskByUserIdAndTaskId(userTaskRow.getUserId(), userTaskRow.getTaskId()) != null ? updateUserTask(userTaskRow) : insertUserTask(userTaskRow);
+		return checkUserTaskExists(userTaskRow.getUserId(), userTaskRow.getTaskId()) != null ? updateUserTask(userTaskRow) : insertUserTask(userTaskRow);
+	}
+	
+	/**
+	 * 
+	 * Method to check if userTaskRow exists
+	 * 
+	 * Code is duplicated from getUserTaskByUserIdAndTaskId(int, int) 
+	 * to include records having is_task_assigned both true and false 
+	 * 
+	 * @param userId, taskId
+	 * @return UserTask instance
+	 * @throws SQLException
+	 * 
+	 */
+	public static UserTask checkUserTaskExists(int userId, int taskId) throws SQLException {
+		
+		String sql = "SELECT " +
+				"user_id, task_id, " +
+				"task_assigned_date, is_task_assigned" +
+				" FROM UserTasks "
+				+ " WHERE user_id = ? AND task_id = ? ";
+		ResultSet rs = null;
+		
+		try (
+				PreparedStatement stmt = conn.prepareStatement(sql);
+			){
+			
+			stmt.setInt(1, userId);
+			stmt.setInt(2, taskId);
+			rs = stmt.executeQuery();
+			
+			if (rs.next()) {
+				return processResultSetIntoUserTaskRow(rs);
+			} else {
+				return null;
+			}
+			
+		} finally {
+			if (rs != null) rs.close(); 
+		}
 	}
 	
 	/**

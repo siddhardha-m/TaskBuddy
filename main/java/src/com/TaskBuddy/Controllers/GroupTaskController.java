@@ -25,7 +25,8 @@ public class GroupTaskController {
 	
 	private static String selectSQL = "SELECT " +
 			"group_id, task_id" +
-			" FROM GroupTasks ";
+			" FROM GroupTasks "
+			+ " WHERE 1=1 ";
 	
 	private GroupTaskController() {
 	}
@@ -69,7 +70,7 @@ public class GroupTaskController {
 	public static ArrayList<GroupTask> getAllTasksByGroupId(int groupId) throws SQLException {
 		
 		String sql = selectSQL +
-				" WHERE group_id = ? ";
+				" AND group_id = ? ";
 		ResultSet rs = null;
 		
 		try (
@@ -104,7 +105,7 @@ public class GroupTaskController {
 	public static GroupTask getGroupByTaskId(int taskId) throws SQLException {
 		
 		String sql = selectSQL +
-				" WHERE task_id = ? ";
+				" AND task_id = ? ";
 		ResultSet rs = null;
 		
 		try (

@@ -27,7 +27,8 @@ public class GroupMembershipController {
 	private static String selectSQL = "SELECT " +
 			"group_id, user_id, " +
 			"user_joined_date, has_user_unjoined" +
-			" FROM GroupMemberships ";
+			" FROM GroupMemberships "
+			+ " WHERE has_user_unjoined = false ";
 	
 	private GroupMembershipController() {
 	}
@@ -71,7 +72,7 @@ public class GroupMembershipController {
 	public static ArrayList<GroupMembership> getAllUsersByGroupId(int groupId) throws SQLException {
 		
 		String sql = selectSQL +
-				" WHERE group_id = ? ";
+				" AND group_id = ? ";
 		ResultSet rs = null;
 		
 		try (
@@ -106,7 +107,7 @@ public class GroupMembershipController {
 	public static ArrayList<GroupMembership> getAllGroupsByUserId(int userId) throws SQLException {
 		
 		String sql = selectSQL +
-				" WHERE user_id = ? ";
+				" AND user_id = ? ";
 		ResultSet rs = null;
 		
 		try (
@@ -141,7 +142,7 @@ public class GroupMembershipController {
 	public static GroupMembership getGroupMembershipByUserIdAndGroupId(int userId, int groupId) throws SQLException {
 		
 		String sql = selectSQL +
-				" WHERE user_id = ? AND group_id = ? ";
+				" AND user_id = ? AND group_id = ? ";
 		ResultSet rs = null;
 		
 		try (
@@ -242,7 +243,48 @@ public class GroupMembershipController {
 	 * 
 	 */
 	public static boolean save(GroupMembership groupMembershipRow) throws SQLException {
-		return getGroupMembershipByUserIdAndGroupId(groupMembershipRow.getUserId(), groupMembershipRow.getGroupId()) != null ? updateGroupMembership(groupMembershipRow) : insertGroupMembership(groupMembershipRow); 
+		return checkGroupMembershipExists(groupMembershipRow.getUserId(), groupMembershipRow.getGroupId()) != null ? updateGroupMembership(groupMembershipRow) : insertGroupMembership(groupMembershipRow); 
+	}
+	
+	/**
+	 * 
+	 * Method to check if groupMembershipRow exists
+	 * 
+	 * Code is duplicated from getGroupMembershipByUserIdAndGroupId(int, int) 
+	 * to include records having has_user_unjoined both true and false 
+	 * 
+	 * @param userId, groupId
+	 * @return GroupMembership instance
+	 * @throws SQLException
+	 * 
+	 */
+	public static GroupMembership checkGroupMembershipExists(int userId, int groupId) throws SQLException {
+		
+		String sql = "SELECT " +
+				"group_id, user_id, " +
+				"user_joined_date, has_user_unjoined" +
+				" FROM GroupMemberships "
+				+ " WHERE user_id = ? AND group_id = ? ";
+		ResultSet rs = null;
+		
+		try (
+				PreparedStatement stmt = conn.prepareStatement(sql);
+			){
+			
+			stmt.setInt(1, userId);
+			stmt.setInt(2, groupId);
+			rs = stmt.executeQuery();
+			
+			if (rs.next()) {
+				return processResultSetIntoGroupMembershipRow(rs);
+			} else {
+				return null;
+			}
+			
+			
+		} finally {
+			if (rs != null) rs.close(); 
+		}
 	}
 	
 	/**

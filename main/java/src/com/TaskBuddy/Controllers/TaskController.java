@@ -28,7 +28,8 @@ public class TaskController {
 	private static String selectSQL = "SELECT " +
 			"task_id, task_title, task_description, task_point_value, task_created_by, " +
 			"task_created_date, task_due_date, is_task_completed, is_task_deleted" +
-			" FROM Tasks ";
+			" FROM Tasks "
+			+ " WHERE is_task_deleted = false ";
 	
 	private TaskController() {
 	}
@@ -72,7 +73,7 @@ public class TaskController {
 	public static Task getTaskById(int taskId) throws SQLException {
 		
 		String sql = selectSQL +
-				" WHERE task_id = ? ";
+				" AND task_id = ? ";
 		ResultSet rs = null;
 		
 		try (

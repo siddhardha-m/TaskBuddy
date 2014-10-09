@@ -28,7 +28,8 @@ public class UserController {
 	private static String selectSQL = "SELECT " +
 			"user_id, user_first_name, user_last_name, user_image, " +
 			"user_created_date, is_user_deleted, total_score, current_score" +
-			" FROM Users ";
+			" FROM Users "
+			+ " WHERE is_user_deleted = false ";
 	
 	private UserController() {
 	}
@@ -72,7 +73,7 @@ public class UserController {
 	public static User getUserById(int userId) throws SQLException {
 		
 		String sql = selectSQL +
-				" WHERE user_id = ? ";
+				" AND user_id = ? ";
 		ResultSet rs = null;
 		
 		try (

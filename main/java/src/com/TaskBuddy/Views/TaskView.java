@@ -202,6 +202,17 @@ public class TaskView {
 			Task taskRow = getTaskFromTaskViewObject(taskViewRow);
 			UserTask userTaskRow = getUserTaskFromTaskViewObject(taskViewRow);
 			
+			ArrayList<UserTask> userTasksList = UserTaskController.getAllUsersByTaskId(taskRow.getTaskId());
+			
+			for (UserTask userTaskRowObj : userTasksList) {
+				userTaskRowObj.setTaskAssigned(false);
+				UserTaskController.save(userTaskRowObj);
+			}
+			
+			if (taskRow.isTaskDeleted() == true) {
+				userTaskRow.setTaskAssigned(false);
+			}
+			
 			boolean taskSaved = TaskController.save(taskRow);
 			boolean userTaskSaved = UserTaskController.save(userTaskRow);
 			

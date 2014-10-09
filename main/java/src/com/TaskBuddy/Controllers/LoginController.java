@@ -26,7 +26,8 @@ public class LoginController {
 	private static String selectSQL = "SELECT " +
 			"login_id, user_id, " +
 			"username, user_password, user_role" +
-			" FROM Logins ";
+			" FROM Logins "
+			+ " WHERE 1=1 ";
 	
 	private LoginController() {
 	}
@@ -70,7 +71,7 @@ public class LoginController {
 	public static Login getLoginById(int loginId) throws SQLException {
 		
 		String sql = selectSQL +
-				" WHERE login_id = ? ";
+				" AND login_id = ? ";
 		ResultSet rs = null;
 		
 		try (
