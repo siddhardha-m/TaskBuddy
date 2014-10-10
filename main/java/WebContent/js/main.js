@@ -10,6 +10,7 @@ var $tasks 			= $('#tasks'),
 	taskListView 	= null,
 	today 			= new Date(),
 	tomorrow		= new Date(),
+	assignedUser   = null,
 	serverUrl		= 'http://localhost:8080/TaskBuddy/site/';
 /*
  * We'll add one day to the current date (we'll use it to pre-fill due date)
@@ -22,8 +23,13 @@ tomorrow.setDate(today.getDate()+1);
  */
 User = Backbone.Model.extend({
 	defaults: {
-		id: null,
-		name: ''
+		userId: null,
+		userFirstName:'',
+		userLastName:'',
+		userImage:'no image exists',
+		totalScore:0,
+		currentScore:0,
+		userCreatedDate:''
 	},
 	urlRoot: serverUrl + 'users'
 });
@@ -101,11 +107,14 @@ UserItem = Backbone.View.extend({
 		$users.find('li.active').removeClass('active');
 		this.$el.addClass('active');
 
+		
+		
+		
 		/*
 		 * We also need to update user title (above the tasks table)
 		 */
 		$('#user-title span').html(this.model.get('userFirstName'));
-		$('#user-title h3#score').html(this.model.get('totalScore'));
+		//$('#user-title h3#score').html(this.model.get('totalScore'));
 
 		/*
 		 * Cleaning bit, we'll remove tasks that was tied to user selected earlier
@@ -260,10 +269,32 @@ UserDialog = Backbone.View.extend({
 		/*
 		 * If this is new user it won't have the ID attribute defined
 		 */
-		if (null == this.model.id) {
+		
+		var that = this;
+
+		 
+		 
+		 
+		$.each(this.$el.find('input'), function(i, item) {
+			var attribute = {};
+			/*
+			 * Matching name and value
+			 */
+			attribute[item.name] = item.value;
+			that.model.set(attribute);
+			
+		});
+		
+		
+		
+		if (null == this.model.userId) {
 			/*
 			 * We are creating our model through its collection (this way we'll automatically update its views and persist it to DB)
-			 */
+			 */	
+			var todaydate = new Date(); 
+			 var milliseconds = todaydate.getTime();
+			 
+			 this.model.set({userCreatedDate: milliseconds});
 			users.create(this.model);
 		} else {
 			/*
@@ -304,19 +335,28 @@ Task = Backbone.Model.extend({
 	/*
 	 * We need to define default values which will be used in model creation (and to give Backbone some info what our model look like)
 	 */
+	
 	defaults: {
-		id: null,
-		date_created: today.getFullYear() + '-' + (1 + today.getMonth()) + '-' + today.getDate() + ' ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds(),
-		date_due: tomorrow.getFullYear() + '-' + (1 + tomorrow.getMonth()) + '-' + tomorrow.getDate() + ' ' + tomorrow.getHours() + ':' + tomorrow.getMinutes() + ':' + tomorrow.getSeconds(),
-		user_id : null,
-		status: 0,
-		task: ''
+		taskId: null,
+		taskCreatedDate: 1407385965000,
+		taskDueDate: tomorrow.getFullYear() + '-' + (1 + tomorrow.getMonth()) + '-' + tomorrow.getDate() + ' ' + tomorrow.getHours() + ':' + tomorrow.getMinutes() + ':' + tomorrow.getSeconds(),
+		userId : null,
+		taskCreatedBy: 1,
+		taskAssignedDate:1407385965000,
+		taskDeleted:false,
+		taskAssigned:'',
+		taskCompleted:false,
+		taskTitle: '',
+		taskPointValue: 0,
+		taskDescription: ''
+			
 	},
 	/*
 	 * This is the URI where the Backbone will communicate with our server part
 	 */
-	urlRoot: serverUrl + 'tasks' 
- 
+	
+	urlRoot : serverUrl + 'tasks' 
+
 });
 
 /*
@@ -355,6 +395,7 @@ TaskItem = Backbone.View.extend({
 	render: function() {
 		var currentTime = new Date(parseInt(this.model.get("taskDueDate") ));
 
+		console.log(" due date is "+currentTime);
 		var day = currentTime.getDate();
 		var month = currentTime.getMonth() + 1;
 		var year = currentTime.getFullYear();
@@ -416,6 +457,7 @@ TaskList = Backbone.View.extend({
 	add: function(task) {
 		var taskItem = new TaskItem({model: task});
 
+		
 		this._tasks.push(taskItem);
 
 		if (this._rendered) {
@@ -431,23 +473,71 @@ TaskDialog = Backbone.View.extend({
 	/*
 	 * As you may see we don't listen for change on input elements. We'll show a different strategy for fetching data here
 	 */
+		
 	events: {
 		'click .save-action': 'save',
+		"click a#userli": "selectUser",
+	    "click button#close": "closeModal",
 		'click .close,.close-action': 'close'
 	},
 	initialize: function() {
 		this.template = _.template($('#task-dialog').html());
 	},
-	render: function() {
-		this.$el.html(this.template(this.model.toJSON()));
+	render: function(list_of_users) {
+
+		this.$el.html(this.template(this.model.toJSON() , list_of_users ));
 		/*
 		 * We'll initialize datetime picker
 		 */
+		
+		
 		this.$el.find('#dp1').datetimepicker();
 		return this;
 	},
-	show: function() {
-		$(document.body).append(this.render().el);
+	
+
+	  closeModal: function(e){
+		  console.log("close");
+		  this.remove();
+		  
+	  },
+	  selectUser: function(e) {
+		  e.preventDefault();
+		  var selectedUserName = $(e.currentTarget).html();
+		  assignedUser = parseInt(e.currentTarget.attributes.title.value);
+	    this.$el.find('h4#displayUserName').html(selectedUserName);   
+	  },
+	  
+	/*  submit: function(e){
+		  console.log("inside save");
+
+		  var data = JSON.stringify($('taskForm').serializeObject());
+		  console.log("save butooon clicked"+data);
+		  this.remove();
+		
+		  var plainObject = new Object();
+		  myObject.name = "John";
+		  
+		  
+		  
+		  $.ajax({
+			    url:serverUrl,
+			    type:'POST',
+			    dataType:"json",
+			    data: plainObject,
+			    success:function (data) {             
+			    if(data.error) {  // If there is an error, show the error messages
+			            $('.alert-error').text(data.error.text).show();
+			        }            
+			    }
+			});
+		  
+		  
+	  },
+	 */ 
+	  
+	show: function(list_of_users) {
+		$(document.body).append(this.render(list_of_users).el);
 	},
 	close: function() {
 		this.remove();
@@ -464,24 +554,38 @@ TaskDialog = Backbone.View.extend({
 		/*
 		 * Traversing input elements in current dialog
 		 */
+		
+		
+		
 		$.each(this.$el.find('input'), function(i, item) {
 			var attribute = {};
 			/*
 			 * Matching name and value
 			 */
+			if(item.name !== "taskDueDate"){
 			attribute[item.name] = item.value;
 			that.model.set(attribute);
+			}
+			
+			if(item.name === 'taskDueDate'){
+				 var date = new Date(item.value); 
+				 var milliseconds = date.getTime();
+				 that.model.set({taskDueDate: milliseconds});
+			}
+			
 		});
 
 		/*
 		 * Same logic as in the user dialog, different approach for new and modified task
 		 */
-		if (null == this.model.id) {
+		if (null == this.model.taskId) {
 			/*
 			 * Adding user ID information read from "global" variable
 			 */
-			this.model.set({user_id: currentUserId});
-			tasks.create(this.model);
+			
+			this.model.set({userId: assignedUser,taskAssigned: true, taskCreatedBy: currentUserId });
+			
+			tasks.create(this.model,{ wait: true});
 		} else {
 			this.model.save();
 		}
@@ -531,7 +635,31 @@ $('#delete-user').click(function(e) {
  * Attaching to "Add Task" button
  */
 $('#add-task').click(function(e) {
+	list_of_users=new Array();
 	var view = new TaskDialog({model: new Task()});
-	view.show();
+
+	$.ajax({
+        url: serverUrl + 'users',
+        success:function(result){
+            //console.log(" user list after making ajax call"+JSON.stringify(result));
+           
+            
+        	
+            result.forEach(function(entry) {
+            	 var eachUser = {};
+            	 eachUser['userId'] = entry.userId;
+            	//console.log("entry "+entry.userFirstName);
+            	eachUser['name'] = entry.userFirstName+" "+entry.userLastName;
+            	list_of_users.push(eachUser);             	
+            	
+            });
+
+            view.show(list_of_users);
+        	
+  
+        }
+    });
+	
 	return false;
+	
 });

@@ -26,7 +26,7 @@
         <div class="span3">
         <div class="page-header">
             <div class="row-fluid" id="user-title">
-                  <h3><span>User</span>'s Score:</h3>&nbsp;&nbsp;<h3 id="score"></h3>
+                  <h3><span>User</span>'s Dashboard:</h3>&nbsp;&nbsp;<h3 id="score"></h3>
             </div>
           </div>
           <div class="well sidebar-nav">
@@ -82,8 +82,8 @@
 	      </div>
 	      <div class="modal-body">
 	        <form class="form-inline">
-				<input type="text" name="firstName" class="input-block-level user-firstName dialog-inputs" placeholder="First Name" value="<%= name %>">
-				<input type="text" name="lastName" class="input-block-level user-lastName dialog-inputs" placeholder="Last Name" value="<%= name %>">
+				<input type="text" name="userFirstName" class="input-block-level user-firstName dialog-inputs" placeholder="First Name" value="<%= userFirstName %>">
+				<input type="text" name="userLastName" class="input-block-level user-lastName dialog-inputs" placeholder="Last Name" value="<%= userLastName %>">
 	        </form>
 	      </div>
 	      <div class="modal-footer">
@@ -101,16 +101,33 @@
 	<script type="text/template" id="task-dialog">
 		<div class="modal in fade" tabindex="-1" role="dialog" aria-labelledby="Create Task" aria-hidden="true">
 	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+	        <button id="close" type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
 	        <h3 id="myModalLabel">Create Task</h3>
 	      </div>
 	      <div class="modal-body">
 	        <form class="form-inline">
-	          <input type="text" name="taskTitle" class="input-block-level input-taskTitle dialog-inputs" placeholder="Title" value="<%= task %>">
-	          <textarea type="text" name="taskDescription" class="input-block-level input-taskDescription dialog-inputs" placeholder="Description" value="<%= task %>"></textarea>
-	          <input type="text" name="taskPointValue" class="input-small input-taskPointValue dialog-inputs" placeholder="Points" value="<%= task %>">
+	          <input type="text" name="taskTitle" class="input-block-level input-taskTitle dialog-inputs" placeholder="Title" value="<%= taskTitle %>">
+	       <textarea type="text" name="taskDescription" class="input-block-level input-taskDescription dialog-inputs" placeholder="Description" value="<%= taskDescription %>"></textarea>
+        
+    
+<!-- Single button -->
+<div class="btn-group input-block-level ">
+  <button id="userButton" type="button" class="btn btn-default btn-lg dropdown-toggle dialog-inputs" data-toggle="dropdown">
+    Assign user <span class="caret"></span>
+  </button>
+ <%= console.log("list of users"+JSON.stringify(list_of_users)) %>
+  <ul class="dropdown-menu" role="menu">
+     <% _.each(list_of_users, function(eachUser){ %>
+    <li><a href="#" id="userli" title="<%= eachUser.userId %>"><%= eachUser.name %></a></li>
+    <% }); %>   
+  </ul>
+<h4 id="displayUserName"></h4>
+</div>
+
+
+	          <input type="text" name="taskPointValue" class="input-small input-taskPointValue dialog-inputs" placeholder="Points" value="<%= taskPointValue %>">
 	          <div id="dp1" class="input-append date dialog-inputs">
-	          	<input class="input-medium" name="taskDueDate" value="<%= date_due %>" data-format="yyyy-MM-dd hh:mm:ss" type="text" placeholder="Due Date">
+	          	<input class="input-medium" name="taskDueDate" value="<%= taskDueDate %>" data-format="yyyy-MM-dd hh:mm:ss" type="text" placeholder="Due Date">
 	          	<span class="add-on">
 	          		<i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
 	          	</span>
@@ -118,8 +135,8 @@
 	        </form>
 	      </div>
 	      <div class="modal-footer">
-	        <button class="btn close-action" data-dismiss="modal" aria-hidden="true">Cancel</button>
-	        <button class="btn btn-primary save-action">Save</button>
+	        <button id="close" class="btn close-action" data-dismiss="modal" aria-hidden="true">Cancel</button>
+	        <button id="save"class="btn btn-primary save-action">Save</button>
 	      </div>
 	    </div>
 	    <div class="modal-backdrop fade in"></div>
