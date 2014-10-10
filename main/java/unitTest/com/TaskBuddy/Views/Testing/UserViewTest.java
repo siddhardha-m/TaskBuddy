@@ -1,11 +1,9 @@
 package com.TaskBuddy.Views.Testing;
 
-import static com.jayway.restassured.RestAssured.get;
 import static com.jayway.restassured.RestAssured.expect;
 
 import org.junit.Test;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.nullValue;
 
 
 

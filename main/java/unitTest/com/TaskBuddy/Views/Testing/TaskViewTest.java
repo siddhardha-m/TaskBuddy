@@ -3,8 +3,6 @@ package com.TaskBuddy.Views.Testing;
 import static com.jayway.restassured.RestAssured.expect;
 import static org.hamcrest.Matchers.equalTo;
 
-import java.util.Date;
-
 import org.junit.Test;
 
 public class TaskViewTest {
