@@ -24,5 +24,4 @@ public class UserViewTest {
 		when().
 				get("/users/1");
 	}
-
 }

@@ -27,5 +27,24 @@
 	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/httpmime-4.2.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/tagsoup-1.2.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/rest-assured-1.7.2.jar"/>
+	<classpathentry kind="lib" path="libs/antlr-2.7.7.jar"/>
+	<classpathentry kind="lib" path="libs/asm-3.2.jar"/>
+	<classpathentry kind="lib" path="libs/asm-analysis-3.2.jar"/>
+	<classpathentry kind="lib" path="libs/asm-commons-3.2.jar"/>
+	<classpathentry kind="lib" path="libs/asm-tree-3.2.jar"/>
+	<classpathentry kind="lib" path="libs/asm-util-3.2.jar"/>
+	<classpathentry kind="lib" path="libs/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="libs/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="libs/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="libs/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="libs/groovy-1.8.4.jar"/>
+	<classpathentry kind="lib" path="libs/hamcrest-core-1.2.1.jar"/>
+	<classpathentry kind="lib" path="libs/hamcrest-library-1.2.1.jar"/>
+	<classpathentry kind="lib" path="libs/httpclient-4.2.1.jar"/>
+	<classpathentry kind="lib" path="libs/httpcore-4.2.1.jar"/>
+	<classpathentry kind="lib" path="libs/httpmime-4.2.1.jar"/>
+	<classpathentry kind="lib" path="libs/tagsoup-1.2.1.jar"/>
+	<classpathentry kind="lib" path="libs/httpunit.jar"/>
+	<classpathentry kind="lib" path="libs/rest-assured-1.7.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
