@@ -9,6 +9,8 @@ import org.junit.Test;
 import com.TaskBuddy.Controllers.TaskController;
 import com.TaskBuddy.db.ConnectionManager;
 
+
+
 public class TaskControllerTest {
 
 	@Test
@@ -16,6 +18,8 @@ public class TaskControllerTest {
 		assertNotNull("getAllTasks() is returning null", TaskController.getAllTasks());
 		
 		assertNotNull("Database Connection is Lost", ConnectionManager.getInstance().getConnection());
+		
+		assertEquals("", 2, 2);
 		
 	}
 

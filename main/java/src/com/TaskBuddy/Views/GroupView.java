@@ -52,6 +52,7 @@ public class GroupView {
 		}
 	}
 	
+	
 	@GET @Path("{groupId}")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public static Group getGroupById(@PathParam("groupId") int groupId) {

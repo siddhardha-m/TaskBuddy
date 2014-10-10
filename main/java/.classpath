@@ -9,5 +9,23 @@
 	<classpathentry kind="lib" path="libs/junit-4.11.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/antlr-2.7.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/asm-3.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/asm-analysis-3.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/asm-commons-3.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/asm-tree-3.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/asm-util-3.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/groovy-1.8.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/hamcrest-core-1.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/hamcrest-library-1.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/httpclient-4.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/httpcore-4.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/httpmime-4.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/tagsoup-1.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Saketh/Documents/Assignments/fall 2014/software engineering/RestAssuredJars/rest-assured-1.7.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
