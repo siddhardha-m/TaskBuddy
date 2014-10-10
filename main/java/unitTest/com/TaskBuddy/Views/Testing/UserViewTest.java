@@ -12,9 +12,9 @@ public class UserViewTest {
 	public void getUserByIdShouldReturnCorrectUser(){
 		expect().
 				body("userId", equalTo("1")).
-				body("userFirstName", equalTo("sa")).
-				body("userLastName", equalTo("ba")).
-				body("userImage", equalTo("ima")).
+				body("userFirstName", equalTo("shivtej")).
+				body("userLastName", equalTo("saripudi")).
+				body("userImage", equalTo("")).
 				body("userCreatedDate", equalTo("2014-10-07 01:02:49.0")).
 				body("isUserDeleted", equalTo("false")).
 				body("totalScore", equalTo("6")).
