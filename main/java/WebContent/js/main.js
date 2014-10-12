@@ -1,5 +1,5 @@
 /*
- * Lets initialize everything that we need
+ * Lets initialize the variables we need
  */
 var $tasks 			= $('#tasks'),
 	$users 			= $('#users'),
@@ -10,12 +10,16 @@ var $tasks 			= $('#tasks'),
 	taskListView 	= null,
 	today 			= new Date(),
 	tomorrow		= new Date(),
-	assignedUser   = null,
+	assignedUser    = null,
 	serverUrl		= 'http://localhost:8080/TaskBuddy/site/';
 /*
- * We'll add one day to the current date (we'll use it to pre-fill due date)
+ * We will add one day to the current date to pre-fill Due Date
  */
-tomorrow.setDate(today.getDate()+1);
+tomorrow.setDate(today.getDate() + 1);
+
+var months = {
+		'1' : 'Jan', '2' : 'Feb', '3' : 'March', '4' : 'April', '5' : 'May', '6' : 'June', '7' : 'July', '8' : 'Aug', '9' : 'Sept', '10' : 'Oct', '11' : 'Nov', '12' : 'Dec'
+};
 
 
 /*
@@ -24,18 +28,18 @@ tomorrow.setDate(today.getDate()+1);
 User = Backbone.Model.extend({
 	defaults: {
 		userId: null,
-		userFirstName:'',
-		userLastName:'',
-		userImage:'no image exists',
-		totalScore:0,
-		currentScore:0,
-		userCreatedDate:''
+		userFirstName: '',
+		userLastName: '',
+		userImage: null,
+		totalScore: 0,
+		currentScore: 0,
+		userCreatedDate: ''
 	},
 	urlRoot: serverUrl + 'users'
 });
 
 /*
- * User collection model
+ * User collection
  */
 UserCollection = Backbone.Collection.extend({
 	model: User,
@@ -43,7 +47,7 @@ UserCollection = Backbone.Collection.extend({
 });
 
 /*
- * View for single user item (LI)
+ * View for single user item (li)
  */
 UserItem = Backbone.View.extend({
 	/*
@@ -75,7 +79,7 @@ UserItem = Backbone.View.extend({
 	 */
 	events: {
 		'dblclick a': 'edit',
-		'click a': 'loadTasks'
+		'click a': 'loadUsers'
 	},
 	/*
 	 * Rendering template
@@ -99,16 +103,13 @@ UserItem = Backbone.View.extend({
 	/*
 	 * Method which loads currently selected user tasks
 	 */
-	loadTasks: function() {
+	loadUsers: function() {
 		/*
 		 * First lets handle visual side of selecting a user, we'll remove active class for user that was selected earlier and 
 		 * add class to currently selected user
 		 */
 		$users.find('li.active').removeClass('active');
 		this.$el.addClass('active');
-
-		
-		
 		
 		/*
 		 * We also need to update user title (above the tasks table)
@@ -271,9 +272,6 @@ UserDialog = Backbone.View.extend({
 		 */
 		
 		var that = this;
-
-		 
-		 
 		 
 		$.each(this.$el.find('input'), function(i, item) {
 			var attribute = {};
@@ -284,7 +282,6 @@ UserDialog = Backbone.View.extend({
 			that.model.set(attribute);
 			
 		});
-		
 		
 		
 		if (null == this.model.userId) {
@@ -320,41 +317,34 @@ UserDialog = Backbone.View.extend({
 	}
 });
 
-/*
- * Single task view
- */
-
-var months = {
-	    '1' : 'Jan', '2' : 'Feb', '3' : 'March',  '4' : 'April', '5' : 'May', '6' : 'June', '7' : 'July', '8' : 'Aug','9' : 'Sept','10' : 'Oct', '11': 'Nov', '12':'Dec'};
 
 
 /*
  * This is our Backbone model representation (as you can see attributes are the same as in the database table)
  */
 Task = Backbone.Model.extend({
+
 	/*
 	 * We need to define default values which will be used in model creation (and to give Backbone some info what our model look like)
 	 */
-	
 	defaults: {
 		taskId: null,
 		taskCreatedDate: 1407385965000,
 		taskDueDate: tomorrow.getFullYear() + '-' + (1 + tomorrow.getMonth()) + '-' + tomorrow.getDate() + ' ' + tomorrow.getHours() + ':' + tomorrow.getMinutes() + ':' + tomorrow.getSeconds(),
-		userId : null,
+		userId: null,
 		taskCreatedBy: 1,
-		taskAssignedDate:1407385965000,
-		taskDeleted:false,
-		taskAssigned:'',
-		taskCompleted:false,
+		taskAssignedDate: 1407385965000,
+		taskDeleted: false,
+		taskAssigned: '',
+		taskCompleted: false,
 		taskTitle: '',
 		taskPointValue: 0,
 		taskDescription: ''
-			
 	},
+	
 	/*
 	 * This is the URI where the Backbone will communicate with our server part
 	 */
-	
 	urlRoot : serverUrl + 'tasks' 
 
 });
@@ -364,22 +354,22 @@ Task = Backbone.Model.extend({
  */
 TaskCollection = Backbone.Collection.extend({
 	
-	initialize: function(options){
+	initialize: function(options) {
 		console.log(options.id);
-		this.url= serverUrl + 'tasks' + '/user/' + options.id
-
+		this.url = serverUrl + 'tasks' + '/user/' + options.id
 	},
+	
 	/*
 	 * Model which this collection will hold and manipulate
 	 */
-	
 	model: Task
-	/*
-	 * URI for fetching the tasks
-	 */
+
 });
 
 
+/*
+ * Single task view
+ */
 TaskItem = Backbone.View.extend({
 	tagName: 'tr',
 	initialize: function() {
@@ -404,7 +394,6 @@ TaskItem = Backbone.View.extend({
 		var date = (day < 10 ? '0' : '') + day  + "-" + months[month] + "-" + year + "  " + hour + ":" + (mins < 10 ? '0' : '') + mins ;
 
 		this.model.attributes["taskDueDate"] = date;
-		
 
 		this.$el.html(this.template(this.model.attributes));
 		return this;
@@ -494,7 +483,6 @@ TaskDialog = Backbone.View.extend({
 		this.$el.find('#dp1').datetimepicker();
 		return this;
 	},
-	
 
 	  closeModal: function(e){
 		  console.log("close");
@@ -519,7 +507,6 @@ TaskDialog = Backbone.View.extend({
 		  myObject.name = "John";
 		  
 		  
-		  
 		  $.ajax({
 			    url:serverUrl,
 			    type:'POST',
@@ -531,7 +518,6 @@ TaskDialog = Backbone.View.extend({
 			        }            
 			    }
 			});
-		  
 		  
 	  },
 	 */ 
@@ -554,8 +540,6 @@ TaskDialog = Backbone.View.extend({
 		/*
 		 * Traversing input elements in current dialog
 		 */
-		
-		
 		
 		$.each(this.$el.find('input'), function(i, item) {
 			var attribute = {};
@@ -643,7 +627,6 @@ $('#add-task').click(function(e) {
         success:function(result){
             //console.log(" user list after making ajax call"+JSON.stringify(result));
            
-            
         	
             result.forEach(function(entry) {
             	 var eachUser = {};
@@ -656,7 +639,6 @@ $('#add-task').click(function(e) {
 
             view.show(list_of_users);
         	
-  
         }
     });
 	

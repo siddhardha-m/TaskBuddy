@@ -63,3 +63,9 @@ td.center-col {
 textarea.dialog-inputs {
 	min-height: 100px;
 }
+.modal { overflow: visible; }
+.modal-body { overflow-y: visible; }
+.selected-user {
+	display:inline;
+	margin-left: 10px;
+}
