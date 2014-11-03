@@ -33,7 +33,8 @@ User = Backbone.Model.extend({
 		userImage: null,
 		totalScore: 0,
 		currentScore: 0,
-		userCreatedDate: ''
+		userCreatedDate: '',
+		fbId: 0
 	},
 	urlRoot: serverUrl + 'users'
 });

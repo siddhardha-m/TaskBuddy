@@ -9,6 +9,7 @@ app.User = Backbone.Model.extend({
 		"userCreatedDate": null,
 		"isUserDeleted": null,
 		"totalScore": null,
-		"currentScore": null
+		"currentScore": null,
+		"fbId": null
 	}
 });
