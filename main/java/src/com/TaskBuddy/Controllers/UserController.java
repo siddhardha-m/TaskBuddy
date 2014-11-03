@@ -121,7 +121,7 @@ public class UserController {
 			stmt.setBoolean(5, userRow.isUserDeleted());
 			stmt.setInt(6, userRow.getTotalScore());
 			stmt.setInt(7, userRow.getCurrentScore());
-			stmt.setLong(parameterIndex, x);
+			stmt.setLong(8, userRow.getFbId());
 			
 			int affected_rows = stmt.executeUpdate();
 			
@@ -155,7 +155,7 @@ public class UserController {
 		
 		String sql = "UPDATE Users SET " +
 				"user_first_name = ?, user_last_name = ?, user_image = ?, " +
-				"user_created_date = ?, is_user_deleted = ?, total_score = ?, current_score = ?" +
+				"user_created_date = ?, is_user_deleted = ?, total_score = ?, current_score = ?,fb_id=?" +
 				" WHERE user_id = ?";
 		
 		try (
@@ -170,7 +170,7 @@ public class UserController {
 			stmt.setInt(6, userRow.getTotalScore());
 			stmt.setInt(7, userRow.getCurrentScore());
 			stmt.setInt(8, userRow.getUserId());
-			
+			stmt.setLong(9, userRow.getFbId());
 			int affected_rows = stmt.executeUpdate();
 			
 			if (affected_rows == 1) {
@@ -214,6 +214,7 @@ public class UserController {
 		userRow.setUserDeleted(rs.getBoolean("is_user_deleted"));
 		userRow.setTotalScore(rs.getInt("total_score"));
 		userRow.setCurrentScore(rs.getInt("current_score"));
+		userRow.setFbId(rs.getLong("fb_id"));
 		
 		return userRow;
 	}
