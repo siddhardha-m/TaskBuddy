@@ -19,6 +19,8 @@ public class User {
 	private boolean isUserDeleted;
 	private int totalScore;
 	private int currentScore;
+	private long fbId;
+
 	
 	public int getUserId() {
 		return userId;
@@ -44,6 +46,7 @@ public class User {
 	public void setUserImage(String userImage) {
 		this.userImage = userImage;
 	}
+	
 	public Date getUserCreatedDate() {
 		return userCreatedDate;
 	}
@@ -67,5 +70,11 @@ public class User {
 	}
 	public void setCurrentScore(int currentScore) {
 		this.currentScore = currentScore;
+	}
+	public long getFbId(){
+		return fbId;
+	}
+	public void setFbId(long fbId){
+		this.fbId = fbId;	
 	}
 }
