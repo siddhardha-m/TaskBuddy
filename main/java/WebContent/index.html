@@ -12,7 +12,41 @@
   </head>
   
   <body>
+  <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '1491815327739701',
+          xfbml      : true,
+          version    : 'v2.2'
+        });
+        
+        FB.getLoginStatus(function(response) {
+        	 console.log(response);
+        	  if (response.status === 'connected') {
+        	    alert('Logged in.');
+        	  }
+        	  else {
+        	    FB.login();
+        	  }
+        	});
+        
+      };
 
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+      function welcomeUser(){
+    	  FB.api('/me', function(response){
+    		 alert(response.name); 
+    	  });
+    	  
+      }
+    </script>
+	
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
@@ -153,6 +187,7 @@
 		<td class="center-col"><a href="#edit-task" class="edit-action"><i class="icon-edit"></i></a></td>
 		<td class="center-col"><a href="#delete-task" class="delete-action"><i class="icon-trash"></i></a></td>
 	</script>
+	<fb:login-button onlogin="welcomeUser();"></fb:login-button>
 	
   </body>
 </html>
