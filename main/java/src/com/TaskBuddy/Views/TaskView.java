@@ -1,6 +1,8 @@
 package com.TaskBuddy.Views;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -204,6 +206,7 @@ public class TaskView {
 			Task taskRow = getTaskFromTaskViewObject(taskViewRow);
 			UserTask userTaskRow = getUserTaskFromTaskViewObject(taskViewRow);
 			
+			Task taskRowFromDB = TaskController.getTaskById(taskRow.getTaskId());
 			ArrayList<UserTask> userTasksList = UserTaskController.getAllUsersByTaskId(taskRow.getTaskId());
 			
 			for (UserTask userTaskRowObj : userTasksList) {
@@ -213,6 +216,69 @@ public class TaskView {
 			
 			if (taskRow.isTaskDeleted() == true) {
 				userTaskRow.setTaskAssigned(false);
+			}
+			
+			if(taskRow.isTaskCompleted() && !taskRowFromDB.isTaskCompleted() && taskRow.getTaskRepetition() != "NoRepeat") { //When a Repetition task is marked complete
+				
+				//Code block: Create new task with same values
+				Task taskRowNew = getTaskFromTaskViewObject(taskViewRow);
+				UserTask userTaskRowNew = getUserTaskFromTaskViewObject(taskViewRow);
+				
+				taskRowNew.setTaskId(-1);
+				taskRowNew.setTaskCreatedDate(new Date(System.currentTimeMillis()));
+				
+				if (taskRowNew.getTaskRepetition() == "Monthly") { //Add 1 month to due date until due date > current date
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(taskRowNew.getTaskDueDate());
+					
+					while (cal.getTime().after(new Date(System.currentTimeMillis()))) {
+						cal.add(Calendar.MONTH, 1);
+					}
+					
+					taskRowNew.setTaskDueDate(cal.getTime());
+				}
+				else if (taskRowNew.getTaskRepetition() == "Weekly") { //Add 7 days to due date until due date > current date
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(taskRowNew.getTaskDueDate());
+					
+					while (cal.getTime().after(new Date(System.currentTimeMillis()))) {
+						cal.add(Calendar.DATE, 7);
+					}
+					
+					taskRowNew.setTaskDueDate(cal.getTime());
+				}
+				else if (taskRowNew.getTaskRepetition() == "Daily") { //Add 1 day to due date until due date > current date
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(taskRowNew.getTaskDueDate());
+					
+					while (cal.getTime().after(new Date(System.currentTimeMillis()))) {
+						cal.add(Calendar.DATE, 1);
+					}
+					
+					taskRowNew.setTaskDueDate(cal.getTime());
+				}
+					
+				taskRowNew.setTaskCompleted(false);
+				
+				boolean taskNewSaved = TaskController.save(taskRowNew);
+				
+				userTaskRowNew.setTaskId(taskRowNew.getTaskId());
+				userTaskRowNew.setTaskAssignedDate(new Date(System.currentTimeMillis()));
+				
+				boolean userTaskNewSaved = UserTaskController.save(userTaskRowNew);
+				
+				//End of Code block: Create new task
+				
+				taskRow.setTaskRepetition("NoRepeat"); //Marking the completed task as Non repeatable
+				
+				if(taskNewSaved && userTaskNewSaved) {
+					return true;
+				} else {
+					return false;
+				}
+				
+			} else if(!taskRow.isTaskCompleted() && taskRowFromDB.isTaskCompleted() && taskRow.getTaskRepetition() != "NoRepeat") { //When a Repetition task is marked not complete
+				
 			}
 			
 			boolean taskSaved = TaskController.save(taskRow);
