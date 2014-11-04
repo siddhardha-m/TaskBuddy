@@ -20,6 +20,7 @@ public class Task {
 	private Date taskDueDate;
 	private boolean isTaskCompleted;
 	private boolean isTaskDeleted;
+	private String taskRepetition;
 	
 	public int getTaskId() {
 		return taskId;
@@ -74,5 +75,11 @@ public class Task {
 	}
 	public void setTaskDeleted(boolean isTaskDeleted) {
 		this.isTaskDeleted = isTaskDeleted;
+	}
+	public String getTaskRepetition() {
+		return taskRepetition;
+	}
+	public void setTaskRepetition(String taskRepetition) {
+		this.taskRepetition = taskRepetition;
 	}
 }
