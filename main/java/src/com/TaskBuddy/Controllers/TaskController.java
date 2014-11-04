@@ -27,7 +27,7 @@ public class TaskController {
 	
 	private static String selectSQL = "SELECT " +
 			"task_id, task_title, task_description, task_point_value, task_created_by, " +
-			"task_created_date, task_due_date, is_task_completed, is_task_deleted" +
+			"task_created_date, task_due_date, is_task_completed, is_task_deleted, task_repetition" +
 			" FROM Tasks "
 			+ " WHERE is_task_deleted = false ";
 	
@@ -106,8 +106,8 @@ public class TaskController {
 	private static boolean insertTask(Task taskRow) throws SQLException {
 		
 		String sql = "INSERT INTO Tasks (task_title, task_description, task_point_value, task_created_by, " +
-				"task_created_date, task_due_date, is_task_completed, is_task_deleted) " +
-				"VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+				"task_created_date, task_due_date, is_task_completed, is_task_deleted, task_repetition) " +
+				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		ResultSet rs = null;
 		
 		try (
@@ -122,6 +122,7 @@ public class TaskController {
 			stmt.setTimestamp(6, new Timestamp(taskRow.getTaskDueDate().getTime()));
 			stmt.setBoolean(7, taskRow.isTaskCompleted());
 			stmt.setBoolean(8, taskRow.isTaskDeleted());
+			stmt.setString(9, taskRow.getTaskRepetition());
 			
 			int affected_rows = stmt.executeUpdate();
 			
@@ -155,7 +156,7 @@ public class TaskController {
 		
 		String sql = "UPDATE Tasks SET " +
 				"task_title = ?, task_description = ?, task_point_value = ?, task_created_by = ?, " +
-				"task_created_date = ?, task_due_date = ?, is_task_completed = ?, is_task_deleted = ?" +
+				"task_created_date = ?, task_due_date = ?, is_task_completed = ?, is_task_deleted = ?, task_repetition = ?" +
 				" WHERE task_id = ?";
 		
 		try (
@@ -170,7 +171,8 @@ public class TaskController {
 			stmt.setTimestamp(6, new Timestamp(taskRow.getTaskDueDate().getTime()));
 			stmt.setBoolean(7, taskRow.isTaskCompleted());
 			stmt.setBoolean(8, taskRow.isTaskDeleted());
-			stmt.setInt(9, taskRow.getTaskId());
+			stmt.setString(9, taskRow.getTaskRepetition());
+			stmt.setInt(10, taskRow.getTaskId());
 			
 			int affected_rows = stmt.executeUpdate();
 			
@@ -216,6 +218,7 @@ public class TaskController {
 		taskRow.setTaskDueDate(rs.getTimestamp("task_due_date"));
 		taskRow.setTaskCompleted(rs.getBoolean("is_task_completed"));
 		taskRow.setTaskDeleted(rs.getBoolean("is_task_deleted"));
+		taskRow.setTaskRepetition(rs.getString("task_repetition"));
 		
 		return taskRow;
 	}
