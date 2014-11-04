@@ -45,6 +45,7 @@ public class TaskView {
 		taskViewRow.setTaskDueDate(taskRow.getTaskDueDate());
 		taskViewRow.setTaskCompleted(taskRow.isTaskCompleted());
 		taskViewRow.setTaskDeleted(taskRow.isTaskDeleted());
+		taskViewRow.setTaskRepetition(taskRow.getTaskRepetition());
 		taskViewRow.setUserId(userTaskRow.getUserId());
 		taskViewRow.setTaskAssignedDate(userTaskRow.getTaskAssignedDate());
 		taskViewRow.setTaskAssigned(userTaskRow.isTaskAssigned());
@@ -64,6 +65,7 @@ public class TaskView {
 		taskRow.setTaskDueDate(taskViewRow.getTaskDueDate());
 		taskRow.setTaskCompleted(taskViewRow.isTaskCompleted());
 		taskRow.setTaskDeleted(taskViewRow.isTaskDeleted());
+		taskRow.setTaskRepetition(taskViewRow.getTaskRepetition());
 		
 		return taskRow;
 	}
