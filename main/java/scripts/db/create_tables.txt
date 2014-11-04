@@ -30,7 +30,7 @@ user_created_date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 is_user_deleted boolean NOT NULL DEFAULT false,
 total_score int NOT NULL DEFAULT 0,
 current_score int NOT NULL DEFAULT 0,
-fb_id LONG NOT NULL UNIQUE,
+fb_id LONG NOT NULL,
 PRIMARY KEY (user_id)
 );
 
@@ -99,6 +99,7 @@ task_created_date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 task_due_date datetime NOT NULL,
 is_task_completed boolean NOT NULL DEFAULT false,
 is_task_deleted boolean NOT NULL DEFAULT false,
+task_repetition varchar(10) NOT NULL DEFAULT 'NoRepeat',
 PRIMARY KEY (task_id),
 FOREIGN KEY (task_created_by) REFERENCES Users(user_id)
 );
