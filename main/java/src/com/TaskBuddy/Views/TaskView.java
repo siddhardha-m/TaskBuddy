@@ -220,7 +220,7 @@ public class TaskView {
 				userTaskRow.setTaskAssigned(false);
 			}
 			
-			if(taskRow.isTaskCompleted() && !taskRowFromDB.isTaskCompleted() && taskRow.getTaskRepetition() != "NoRepeat") { //When a Repetition task is marked complete
+			if(taskRow.isTaskCompleted() && !taskRowFromDB.isTaskCompleted() && !taskRow.getTaskRepetition().equals("NoRepeat")) { //When a Repetition task is marked complete
 				
 				//Code block: Create new task with same values
 				Task taskRowNew = getTaskFromTaskViewObject(taskViewRow);
@@ -235,7 +235,11 @@ public class TaskView {
 					
 					Date currentDate = new Date(System.currentTimeMillis());
 					
-					while (!cal.getTime().after(currentDate)) {
+					if(cal.getTime().before(currentDate)) {
+						while (!cal.getTime().after(currentDate)) {
+							cal.add(Calendar.MONTH, 1);
+						}
+					} else {
 						cal.add(Calendar.MONTH, 1);
 					}
 					
@@ -247,7 +251,11 @@ public class TaskView {
 					
 					Date currentDate = new Date(System.currentTimeMillis());
 					
-					while (!cal.getTime().after(currentDate)) {
+					if(cal.getTime().before(currentDate)) {
+						while (!cal.getTime().after(currentDate)) {
+							cal.add(Calendar.DATE, 7);
+						}
+					} else {
 						cal.add(Calendar.DATE, 7);
 					}
 					
@@ -259,7 +267,11 @@ public class TaskView {
 					
 					Date currentDate = new Date(System.currentTimeMillis());
 					
-					while (!cal.getTime().after(currentDate)) {
+					if(cal.getTime().before(currentDate)) {
+						while (!cal.getTime().after(currentDate)) {
+							cal.add(Calendar.DATE, 1);
+						}
+					} else {
 						cal.add(Calendar.DATE, 1);
 					}
 					
