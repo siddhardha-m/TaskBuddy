@@ -1,4 +1,5 @@
 /*
+
  * Lets initialize the variables we need
  */
 var $tasks 			= $('#tasks'),
@@ -6,12 +7,14 @@ var $tasks 			= $('#tasks'),
 	tasks 			= null,
 	users 			= null,
 	currentUserId 	= null,
+	currentUser     = null,
 	userListView 	= null,
 	taskListView 	= null,
 	today 			= new Date(),
 	tomorrow		= new Date(),
 	assignedUser    = null,
-	serverUrl		= 'http://localhost:8080/TaskBuddy/site/';
+	serverUrl		= 'http://localhost:8080/TaskBuddy/site/',
+	maxPoints       =  50;
 /*
  * We will add one day to the current date to pre-fill Due Date
  */
@@ -33,9 +36,8 @@ User = Backbone.Model.extend({
 		userImage: null,
 		totalScore: 0,
 		currentScore: 0,
-		userCreatedDate: '',
-		fbId: 0
-	},
+		userCreatedDate: ''
+		},
 	urlRoot: serverUrl + 'users'
 });
 
@@ -116,6 +118,9 @@ UserItem = Backbone.View.extend({
 		 * We also need to update user title (above the tasks table)
 		 */
 		$('#user-title span').html(this.model.get('userFirstName'));
+		
+		$('#score').html(maxPoints - this.model.get('currentScore'));
+		
 		//$('#user-title h3#score').html(this.model.get('totalScore'));
 
 		/*
@@ -124,6 +129,7 @@ UserItem = Backbone.View.extend({
 		$tasks.empty();
 
 		currentUserId = this.model.get('userId');
+		currentUser = this.model;
 
 		console.log("user id "+ currentUserId);
 
@@ -132,6 +138,11 @@ UserItem = Backbone.View.extend({
 		 */
 
 		tasks = new TaskCollection({id: currentUserId});
+
+		tasks.comparator = function(model) {
+          return [model.get('taskCompleted'),model.get('taskDueDate')];
+          }
+
 
 		/*
 		 * We'll assign current user ID to "global" variable as we need it on several other places
@@ -156,7 +167,9 @@ UserItem = Backbone.View.extend({
 			/*
 			 * Rendering list view
 			 */
-			taskListView.render();
+			taskListView.render(taskListView.getSelectedFilterOption());
+			//tasks.sort();
+			
 		}});
 	}
 });
@@ -358,12 +371,26 @@ TaskCollection = Backbone.Collection.extend({
 	initialize: function(options) {
 		console.log(options.id);
 		this.url = serverUrl + 'tasks' + '/user/' + options.id
+		this.on( "change:taskCompleted", this.triggerReset, this);
+
 	},
+	
+	
 	
 	/*
 	 * Model which this collection will hold and manipulate
 	 */
-	model: Task
+	model: Task,
+	
+	  comparator : function(model) {
+        return [model.get('taskCompleted'),model.get('taskDueDate')];
+      },
+      
+      triggerReset: function(){
+      	this.trigger('reset');
+      }
+      
+      
 
 });
 
@@ -384,18 +411,7 @@ TaskItem = Backbone.View.extend({
 		'click a.delete-action': 'delete'
 	},
 	render: function() {
-		var currentTime = new Date(parseInt(this.model.get("taskDueDate") ));
-
-		console.log(" due date is "+currentTime);
-		var day = currentTime.getDate();
-		var month = currentTime.getMonth() + 1;
-		var year = currentTime.getFullYear();
-        var hour = currentTime.getHours();
-        var mins = currentTime.getMinutes();
-		var date = (day < 10 ? '0' : '') + day  + "-" + months[month] + "-" + year + "  " + hour + ":" + (mins < 10 ? '0' : '') + mins ;
-
-		this.model.attributes["taskDueDate"] = date;
-
+		
 		this.$el.html(this.template(this.model.attributes));
 		return this;
 	},
@@ -406,18 +422,37 @@ TaskItem = Backbone.View.extend({
 	 * We are listening for status checkbox, it updates the model and presist status to the DB
 	 */
 	modify: function(e) {
-		var status = e.currentTarget.checked ? 1 : 0;
-		this.model.set({status: status});
+		var status = e.currentTarget.checked ? true : false;
+		var currScore = currentUser.get('currentScore');
+		
+		
+		
+		var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
+
+		if(duePeriod === "week"){
+	       currScore = currScore + this.model.get('taskPointValue');
+	       currentUser.set({currentScore: currScore});
+	       currentUser.save();
+	       $('#score').html(maxPoints - currentScore);
+		}
+		
+		
+		this.model.set({taskCompleted: status});
+		
+		var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
+		
+		//console.log('user is'+currentUserId);
+		
 		this.model.save();
 		/*
 		 * We'll add strikethrough class to the title and date just to visually distinguish finished from unfinished task
 		 */
-		if (status === 1) {
+		if (status) {
 			this.$el.find('td').addClass('finished');
 		} else {
 			this.$el.find('td').removeClass('finished');
 		}
-	},
+	}
 	/*
 	 * Handling the deletion of item
 	 */
@@ -429,31 +464,114 @@ TaskItem = Backbone.View.extend({
  */
 TaskList = Backbone.View.extend({
 	initialize: function() {
-		_(this).bindAll('add');
+		_(this).bindAll('add','reset','filterBy');
+		
 
 		this._tasks = [];
 		
 		this.collection.each(this.add);
-		
+
 		this.collection.bind('add', this.add);
+		this.collection.bind('reset', this.reset);
+		this.collection.bind("filter", this.filterBy);
+
 	},
-	render: function() {
+	
+	
+	render: function(filterBy) {
 		this._rendered = true;
 		this.$el.empty();
-		_(this._tasks).each(function(item) {
-			$tasks.append(item.render().el);
-		});
-	},
+
+		
+		this.collection.each(function(task) {
+		
+        var taskDueDate = task.get('taskDueDate');       
+
+        
+		if (!filterBy || filterBy === "all")
+		{
+		
+		var taskItem = new TaskItem({model: task});
+        this.$el.append(taskItem.render().el);	
+		}
+		else{			
+        
+		if (filterBy === "week"){
+		
+		
+		if (isDueDateInCurrentWeek(taskDueDate) === "week"){
+		var taskItem = new TaskItem({model: task});
+        this.$el.append(taskItem.render().el);	
+		}
+		
+		}
+		
+		else if (filterBy === "later"){
+		
+
+		if (isDueDateInCurrentWeek(taskDueDate) === "later"){
+		var taskItem = new TaskItem({model: task});
+        this.$el.append(taskItem.render().el);	
+		}
+				
+		}		
+		}	
+		},this);
+
+       
+  	},
 	add: function(task) {
 		var taskItem = new TaskItem({model: task});
 
-		
-		this._tasks.push(taskItem);
-
 		if (this._rendered) {
 			this.$el.append(taskItem.render().el);
-		}
+			this.render(this.getSelectedFilterOption());
+		}		
+		this._tasks.push(taskItem);
+	 	
+	},
+	
+	reset: function(){		
+		this.collection.sort();
+		this.render(this.getSelectedFilterOption());
+	},
+	
+	filterBy: function(filterBy){
+		this.render(filterBy);
+	},
+	
+	
+	getSelectedFilterOption: function(){
+	var filterBy;	
+	var group = document.getElementsByName('group1');
+    for(var i = 0; i < group.length; i++){
+    if(group[i].checked){
+        filterBy = group[i].value;
+     }
+     }
+      
+   return filterBy;
+	},
+	
+	
+	isDueDateInCurrentWeek: function(date){
+		var startDay = 1; 
+		var now = new Date;
+        var d = now.getDay(); 
+        var weekStart = now.valueOf() - (d<=0 ? 7-startDay:d-startDay)*86400000; 
+        var weekEnd =  weekStart.valueOf() + 6*86400000;
+        var taskDueDate = date;
+        
+        if(taskDueDate>= weekStart && taskDueDate<= weekEnd)
+        return "week";
+        else if(taskDueDate >= weekEnd)
+        return "later";
+        else
+        return "all"       
+      
 	}
+	
+	
 });
 
 /*
@@ -599,7 +717,11 @@ users.fetch({success: function() {
 
 
 
+
+
 /*
+
+
  * Attaching to "Add User" button
  */
 $('#add-user').click(function(e) {
@@ -646,3 +768,43 @@ $('#add-task').click(function(e) {
 	return false;
 	
 });
+
+
+
+
+
+$("#this_week, #later, #all_tasks").change(function () {
+
+	var filterBy;	
+	var group = document.getElementsByName('group1');
+    for(var i = 0; i < group.length; i++){
+    if(group[i].checked){
+        filterBy = group[i].value;
+     }
+     }
+          
+     
+   tasks.trigger('filter',filterBy);
+	
+	//return false;
+});
+
+
+	function isDueDateInCurrentWeek(date){
+		var startDay = 1; 
+		var now = new Date;
+        var d = now.getDay(); 
+        var weekStart = now.valueOf() - (d<=0 ? 7-startDay:d-startDay)*86400000; 
+        var weekEnd =  weekStart.valueOf() + 6*86400000;
+        var taskDueDate = date;
+        
+        if(taskDueDate>= weekStart && taskDueDate<= weekEnd)
+        return "week";
+        else if(taskDueDate >= weekEnd)
+        return "later";
+        else
+        return "all"       
+      
+	}
+
+
