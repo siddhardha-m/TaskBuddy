@@ -1,5 +1,4 @@
 /*
-
  * Lets initialize the variables we need
  */
 var $tasks 			= $('#tasks'),
@@ -121,7 +120,14 @@ UserItem = Backbone.View.extend({
 		 */
 		$('#user-title span').html(this.model.get('userFirstName'));
 		
-		$('#score').html(maxPoints - this.model.get('currentScore'));
+		var dispScore = maxPoints - this.model.get('currentScore');
+		
+		if(dispScore < 0)
+			dispScore = 0;
+		if(dispScore > 50)
+			dispScore = 50;
+		
+		$('#score').html(dispScore);
 		
 		//$('#user-title h3#score').html(this.model.get('totalScore'));
 
@@ -334,7 +340,6 @@ UserDialog = Backbone.View.extend({
 });
 
 
-
 /*
  * This is our Backbone model representation (as you can see attributes are the same as in the database table)
  */
@@ -378,8 +383,6 @@ TaskCollection = Backbone.Collection.extend({
 
 	},
 	
-	
-	
 	/*
 	 * Model which this collection will hold and manipulate
 	 */
@@ -392,9 +395,6 @@ TaskCollection = Backbone.Collection.extend({
       triggerReset: function(){
       	this.trigger('reset');
       }
-      
-      
-
 });
 
 
@@ -428,16 +428,24 @@ TaskItem = Backbone.View.extend({
 		var status = e.currentTarget.checked ? true : false;
 		var currScore = currentUser.get('currentScore');
 		
-		
-		
-		var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
+		//var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
+		var taskCompleted = this.model.get('taskCompleted');
 
-		if(duePeriod === "week"){
-	       currScore = currScore + this.model.get('taskPointValue');
+		//if(duePeriod === "week"){
+			if(taskCompleted == false) {
+		       currScore = currScore + this.model.get('taskPointValue');
+		       //if(currScore > 50)
+		    	 //  	currScore = 50;
+			}
+			else {
+				currScore = currScore - this.model.get('taskPointValue');
+				//if(currScore < 0)
+				//	currScore = 0;
+			}
 	       currentUser.set({currentScore: currScore});
 	       currentUser.save();
 	       $('#score').html(maxPoints - currScore);
-		}
+		//}
 		
 		
 		this.model.set({taskCompleted: status});
@@ -494,30 +502,32 @@ TaskList = Backbone.View.extend({
 		if (!filterBy || filterBy === "all")
 		{
 		
-		var taskItem = new TaskItem({model: task});
-        this.$el.append(taskItem.render().el);	
+			var taskItem = new TaskItem({model: task});
+	        this.$el.append(taskItem.render().el);	
 		}
 		else{			
         
-		if (filterBy === "week"){
-		
-		
-		if (isDueDateInCurrentWeek(taskDueDate) === "week"){
-		var taskItem = new TaskItem({model: task});
-        this.$el.append(taskItem.render().el);	
-		}
-		
-		}
-		
-		else if (filterBy === "later"){
-		
-
-		if (isDueDateInCurrentWeek(taskDueDate) === "later"){
-		var taskItem = new TaskItem({model: task});
-        this.$el.append(taskItem.render().el);	
-		}
-				
-		}		
+			if (filterBy === "week"){
+					if (isDueDateInCurrentWeek(taskDueDate) === "week"){
+					var taskItem = new TaskItem({model: task});
+			        this.$el.append(taskItem.render().el);	
+				}
+			
+			}
+			
+			else if (filterBy === "later"){
+				if (isDueDateInCurrentWeek(taskDueDate) === "later"){
+					var taskItem = new TaskItem({model: task});
+			        this.$el.append(taskItem.render().el);	
+				}	
+			}
+			
+			else if (filterBy === "previous"){
+				if (isDueDateInCurrentWeek(taskDueDate) === "previous"){
+					var taskItem = new TaskItem({model: task});
+			        this.$el.append(taskItem.render().el);	
+				}	
+			}
 		}	
 		},this);
 
@@ -569,12 +579,12 @@ TaskList = Backbone.View.extend({
         return "week";
         else if(taskDueDate >= weekEnd)
         return "later";
+        else if(taskDueDate <= weekStart)
+        return "previous";
         else
         return "all"       
       
 	}
-	
-	
 });
 
 /*
@@ -723,13 +733,7 @@ users.fetch({success: function() {
 	$users.find('li:nth-child(2)').find('a').trigger('click');
 }});
 
-
-
-
-
 /*
-
-
  * Attaching to "Add User" button
  */
 $('#add-user').click(function(e) {
@@ -777,11 +781,7 @@ $('#add-task').click(function(e) {
 	
 });
 
-
-
-
-
-$("#this_week, #later, #all_tasks").change(function () {
+$("#previous, #this_week, #later, #all_tasks").change(function () {
 
 	var filterBy;	
 	var group = document.getElementsByName('group1');
@@ -790,8 +790,6 @@ $("#this_week, #later, #all_tasks").change(function () {
         filterBy = group[i].value;
      }
      }
-          
-     
    tasks.trigger('filter',filterBy);
 	
 	//return false;
@@ -810,10 +808,7 @@ function getSelectedFilterOption(){
    return filterBy;
 	}
 
-
-
-
-	function isDueDateInCurrentWeek(date){
+function isDueDateInCurrentWeek(date){
 		var startDay = 1; 
 		var now = new Date;
         var d = now.getDay(); 
@@ -825,7 +820,9 @@ function getSelectedFilterOption(){
         return "week";
         else if(taskDueDate >= weekEnd)
         return "later";
-        else
+        else if(taskDueDate <= weekStart)
+       	return "previous";
+       	else
         return "all"       
       
-	}
+}
