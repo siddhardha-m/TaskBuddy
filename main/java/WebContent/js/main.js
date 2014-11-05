@@ -14,7 +14,8 @@ var $tasks 			= $('#tasks'),
 	tomorrow		= new Date(),
 	assignedUser    = null,
 	serverUrl		= 'http://localhost:8080/TaskBuddy/site/',
-	maxPoints       =  50;
+	maxPoints       =  50,
+	selectedRepitition = null;
 /*
  * We will add one day to the current date to pre-fill Due Date
  */
@@ -342,13 +343,13 @@ Task = Backbone.Model.extend({
 	/*
 	 * We need to define default values which will be used in model creation (and to give Backbone some info what our model look like)
 	 */
+	idAttribute: 'taskId',
 	defaults: {
-		taskId: null,
-		taskCreatedDate: 1407385965000,
+		taskCreatedDate: Date.now(),
 		taskDueDate: tomorrow.getFullYear() + '-' + (1 + tomorrow.getMonth()) + '-' + tomorrow.getDate() + ' ' + tomorrow.getHours() + ':' + tomorrow.getMinutes() + ':' + tomorrow.getSeconds(),
 		userId: null,
 		taskCreatedBy: 1,
-		taskAssignedDate: 1407385965000,
+		taskAssignedDate: Date.now(),
 		taskDeleted: false,
 		taskAssigned: '',
 		taskCompleted: false,
@@ -808,5 +809,3 @@ $("#this_week, #later, #all_tasks").change(function () {
         return "all"       
       
 	}
-
-
