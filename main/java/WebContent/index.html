@@ -12,45 +12,13 @@
   </head>
   
   <body>
-  <script>
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '1491815327739701',
-          xfbml      : true,
-          version    : 'v2.2'
-        });
-        
-        FB.getLoginStatus(function(response) {
-        	 console.log(response);
-        	  if (response.status === 'connected') {
-        	    alert('Logged in.');
-        	  }
-        	  else {
-        	    FB.login();
-        	  }
-        	});
-        
-      };
 
-      (function(d, s, id){
-         var js, fjs = d.getElementsByTagName(s)[0];
-         if (d.getElementById(id)) {return;}
-         js = d.createElement(s); js.id = id;
-         js.src = "//connect.facebook.net/en_US/sdk.js";
-         fjs.parentNode.insertBefore(js, fjs);
-       }(document, 'script', 'facebook-jssdk'));
-      function welcomeUser(){
-    	  FB.api('/me', function(response){
-    		 alert(response.name); 
-    	  });
-    	  
-      }
-    </script>
-	
+
+
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
-          <a class="brand" href="#">Task Buddy</a>
+          <a class="brand" href="#">Task Buddy</a> 
         </div>
       </div>
     </div>
@@ -60,7 +28,7 @@
         <div class="span3">
         <div class="page-header">
             <div class="row-fluid" id="user-title">
-                  <h3><span>User</span>'s Dashboard:</h3>&nbsp;&nbsp;<h3 id="score"></h3>
+                  <h3><span>User</span>'s Dashboard:</h3>&nbsp;&nbsp;
             </div>
           </div>
           <div class="well sidebar-nav">
@@ -82,6 +50,21 @@
           </div>
           <div class="table-responsive">
           <table class="table table-hover table-striped">
+         
+         <div class="row-fluid">
+       
+         <h5> Show me tasks due: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="radio" name="group1" id="this_week" value="week">
+    this week &nbsp;&nbsp;
+        <input type="radio" name="group1" id="later" value="later">
+    later &nbsp;&nbsp;
+    
+     <input type="radio" name="group1" id="all_tasks" value="all" checked="checked">
+    all tasks&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    Points left this week:&nbsp;&nbsp;<span id="score"></span>  (Min points: 50)
+       </div>
+         
+               
             <thead>
               <tr>
                 <th class="status-col">Status</th>
@@ -178,16 +161,23 @@
 	
 	<script type="text/template" id="task-item">
 		<td class="center-col">
-			<input type="checkbox" name="status" value="1" <% if (status == 1) { %> checked="checked" <% } %> />
+			<input type="checkbox" name="taskCompleted" value="1" <% if (taskCompleted) { %> checked="checked" <% } %> />
 		</td>
-		<td <% if (status == 1) { %> class="finished" <% } %>><%= taskTitle %></td>
-		<td <% if (status == 1) { %> class="finished" <% } %>><%= taskDescription %></td>
-		<td <% if (status == 1) { %> class="finished" <% } %>><%= taskPointValue %></td>
-		<td <% if (status == 1) { %> class="finished" <% } %>><%= taskDueDate %></td>
+		<td <% if (taskCompleted) { %> class="finished" <% } %>><%= taskTitle %></td>
+		<td <% if (taskCompleted) { %> class="finished" <% } %>><%= taskDescription %></td>
+		<td <% if (taskCompleted) { %> class="finished" <% } %>><%= taskPointValue %></td>
+		<td <% if (taskCompleted) { %> class="finished" <% } %>> 
+        <% var currentTime = new Date(parseInt(this.model.get("taskDueDate") ));
+		var day = currentTime.getDate();
+		var month = currentTime.getMonth() + 1;
+        var year = currentTime.getFullYear();
+        var hour = currentTime.getHours();
+        var mins = currentTime.getMinutes();
+		var date = (day < 10 ? '0' : '') + day  + "-" + months[month] + "-" + year + "  " + hour + ":" + (mins < 10 ? '0' : '') + mins ;
+       %><%= date %></td>
 		<td class="center-col"><a href="#edit-task" class="edit-action"><i class="icon-edit"></i></a></td>
 		<td class="center-col"><a href="#delete-task" class="delete-action"><i class="icon-trash"></i></a></td>
 	</script>
-	<fb:login-button onlogin="welcomeUser();"></fb:login-button>
 	
   </body>
 </html>
