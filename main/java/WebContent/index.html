@@ -127,7 +127,7 @@
 	       <textarea type="text" name="taskDescription" class="input-block-level input-taskDescription dialog-inputs" placeholder="Description" value="<%= taskDescription %>"></textarea>
         
     
-<!-- Single button -->
+<!-- Assign User -->
 <div class="btn-group input-block-level dialog-inputs">
   <button id="userButton" type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown">
     Assign user <span class="caret"></span>
@@ -149,6 +149,16 @@
 	          		<i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
 	          	</span>
 	          </div>
+			  <div class="input-taskRepetition dialog-inputs">
+				<input type="radio" name="taskRepetition" id="NoRepeat" value="NoRepeat" checked = "checked">
+				<label for="NoRepeat">NoRepeat&nbsp;&nbsp;</label>
+				<input type="radio" name="taskRepetition" id="Daily" value="Daily">
+				<label for="Daily">Daily&nbsp;&nbsp;</label>
+				<input type="radio" name="taskRepetition" id="Weekly" value="Weekly">
+				<label for="Weekly">Weekly&nbsp;&nbsp;</label>
+				<input type="radio" name="taskRepetition" id="Monthly" value="Monthly">
+				<label for="Monthly">Monthly&nbsp;&nbsp;</label>
+			  </div>
 	        </form>
 	      </div>
 	      <div class="modal-footer">
