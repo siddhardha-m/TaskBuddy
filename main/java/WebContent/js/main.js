@@ -36,7 +36,8 @@ User = Backbone.Model.extend({
 		userImage: null,
 		totalScore: 0,
 		currentScore: 0,
-		userCreatedDate: ''
+		userCreatedDate: '',
+		fbId: ''
 		},
 	urlRoot: serverUrl + 'users'
 });
@@ -353,7 +354,8 @@ Task = Backbone.Model.extend({
 		taskCompleted: false,
 		taskTitle: '',
 		taskPointValue: 0,
-		taskDescription: ''
+		taskDescription: '',
+		taskRepetition: 'NoRepeat'
 	},
 	
 	/*
@@ -433,7 +435,7 @@ TaskItem = Backbone.View.extend({
 	       currScore = currScore + this.model.get('taskPointValue');
 	       currentUser.set({currentScore: currScore});
 	       currentUser.save();
-	       $('#score').html(maxPoints - currentScore);
+	       $('#score').html(maxPoints - currScore);
 		}
 		
 		
