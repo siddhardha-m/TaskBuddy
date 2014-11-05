@@ -73,3 +73,6 @@ textarea.dialog-inputs {
 #score{
 	font-weight:bold;font-variant:small-caps;color:#F55419;letter-spacing:1pt;word-spacing:2pt;font-size:15px;text-align:left;font-family:arial, helvetica, sans-serif;line-height:1;	
 }
+input[type="radio"]{
+vertical-align:top;
+}
