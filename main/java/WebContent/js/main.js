@@ -689,7 +689,12 @@ TaskDialog = Backbone.View.extend({
 			 * Adding user ID information read from "global" variable
 			 */
 			
-			this.model.set({userId: assignedUser,taskAssigned: true, taskCreatedBy: currentUserId });
+
+			var repetition = getSelectedFilterOption();
+
+			console.log("taskRepetetion "+ repetition);
+			
+			this.model.set({userId: assignedUser,taskAssigned: true, taskCreatedBy: currentUserId , taskRepetition: repetition});
 			
 			tasks.create(this.model,{ wait: true});
 		} else {
@@ -791,6 +796,21 @@ $("#this_week, #later, #all_tasks").change(function () {
 	
 	//return false;
 });
+
+
+function getSelectedFilterOption(){
+	var filterBy;	
+	var group = document.getElementsByName('taskRepetition');
+    for(var i = 0; i < group.length; i++){
+    if(group[i].checked){
+        filterBy = group[i].value;
+     }
+     }
+      
+   return filterBy;
+	}
+
+
 
 
 	function isDueDateInCurrentWeek(date){
