@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Buddy</title>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon"/>
+    
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
+    
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    
+    <style>
+    	
+    	.centered {
+    		
+    	   align: center;
+		}
+    </style>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  </head>
+  
+  <body>
+  	 <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '1491815327739701',
+          xfbml      : true,
+          version    : 'v2.2'
+        });
+        
+        
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+      
+      function welcomeUser(){
+          FB.getLoginStatus(function(response) {
+         	  if (response.status === 'connected') {
+         		  console.log(response);
+         		 console.log("resp id = " + response.id);
+      	    	FB.api('/me', function(response){
+      	    		 //alert(response.id);
+    	    	//	 console.log(response.id);
+      		      //   	 console.log("Welcome " + response.first_name + " with id = " + response.id);
+      		         	 $.post("signin",
+      		         			{
+      								fbId: response.id,
+      								firstName: response.first_name,
+      								lastName: response.last_name
+      		         			},
+      		         			function(data, status){
+//      		         				alert("data = " + data, "status = " + status);
+      								var userId = parseInt(data);
+      		         		 		 if(userId != -1){
+      			         				window.location.href = "index2.html?id=" + userId;
+      			         			}else{
+      			         				alert("Error: Something went wrong!!!");
+      			         			} 
+      	 	         			});
+      		         	 
+      		         	 //window.location.href = "index2.html?param=" + response.id;
+      	    	  }); // End of Fb.api
+         	  }
+         	  else {
+         	    FB.login();
+         	  }
+         	});
+
+   /* 	  FB.api('/me', function(response){
+    		 //alert(response.id);
+//    		 console.log(response.id);
+	         	 console.log("Welcome " + response.first_name + " with id = " + response.id);
+	         	 $.post("signin",
+	         			{
+							fbId: response.id,
+							firstName: response.first_name,
+							lastName: response.last_name
+	         			},
+	         			function(data, status){
+//	         				alert("data = " + data, "status = " + status);
+							var userId = parseInt(data);
+	         		 		 if(userId != -1){
+		         				window.location.href = "index2.html?id=" + userId;
+		         			}else{
+		         				alert("Error: Something went wrong!!!");
+		         			} 
+ 	         			});
+	         	 
+	         	 //window.location.href = "index2.html?param=" + response.id;
+    	  });
+    	*/  
+      }
+    </script>
+    
+    
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="brand" href="#">Task Buddy</a>
+          <a href="javascript:welcomeUser();" class="btn pull-right"><i class="icon-home"></i>&nbsp;&nbsp;Login</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="container-fluid content">
+     <div class="row-fluid">
+        <div class="page-header">
+     		<h1> Welcome to TaskBuddy!!!</h1>
+        </div>
+     </div>
+    </div>
+    
+  <!--   <div class="centered">
+     	 <fb:login-button class="btn" onlogin="welcomeUser();"></fb:login-button> 	  
+ </div> -->    
+  </body>
+</html>
