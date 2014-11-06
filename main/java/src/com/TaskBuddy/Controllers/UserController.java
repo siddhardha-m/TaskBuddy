@@ -27,7 +27,7 @@ public class UserController {
 	
 	private static String selectSQL = "SELECT " +
 			"user_id, user_first_name, user_last_name, user_image, " +
-			"user_created_date, is_user_deleted, total_score, current_score,fb_id" +
+			"user_created_date, is_user_deleted, total_score, current_score, fb_id" +
 			" FROM Users "
 			+ " WHERE is_user_deleted = false ";
 	
@@ -106,8 +106,8 @@ public class UserController {
 	private static boolean insertUser(User userRow) throws SQLException {
 		
 		String sql = "INSERT INTO Users (user_first_name, user_last_name, user_image, " +
-				"user_created_date, is_user_deleted, total_score, current_score,fb_id) " +
-				"VALUES (?, ?, ?, ?, ?, ?, ?,?)";
+				"user_created_date, is_user_deleted, total_score, current_score, fb_id) " +
+				"VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		ResultSet rs = null;
 		
 		try (
@@ -155,7 +155,7 @@ public class UserController {
 		
 		String sql = "UPDATE Users SET " +
 				"user_first_name = ?, user_last_name = ?, user_image = ?, " +
-				"user_created_date = ?, is_user_deleted = ?, total_score = ?, current_score = ?,fb_id=?" +
+				"user_created_date = ?, is_user_deleted = ?, total_score = ?, current_score = ?, fb_id = ? " +
 				" WHERE user_id = ?";
 		
 		try (
@@ -169,8 +169,8 @@ public class UserController {
 			stmt.setBoolean(5, userRow.isUserDeleted());
 			stmt.setInt(6, userRow.getTotalScore());
 			stmt.setInt(7, userRow.getCurrentScore());
-			stmt.setInt(8, userRow.getUserId());
-			stmt.setLong(9, userRow.getFbId());
+			stmt.setLong(8, userRow.getFbId());
+			stmt.setInt(9, userRow.getUserId());
 			int affected_rows = stmt.executeUpdate();
 			
 			if (affected_rows == 1) {

@@ -16,6 +16,7 @@ import com.TaskBuddy.Controllers.UserController;
 import com.TaskBuddy.Models.User;
 import com.TaskBuddy.db.ConnectionManager;
 
+@SuppressWarnings("serial")
 public class SignIn extends HttpServlet{
 	private static Connection conn = ConnectionManager.getInstance().getConnection();
 	@Override
