@@ -428,10 +428,10 @@ TaskItem = Backbone.View.extend({
 		var status = e.currentTarget.checked ? true : false;
 		var currScore = currentUser.get('currentScore');
 		
-		//var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
+		var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
 		var taskCompleted = this.model.get('taskCompleted');
 
-		//if(duePeriod === "week"){
+		if(duePeriod === "week" || duePeriod === "past"){
 			if(taskCompleted == false) {
 		       currScore = currScore + this.model.get('taskPointValue');
 		       //if(currScore > 50)
@@ -445,7 +445,7 @@ TaskItem = Backbone.View.extend({
 	       currentUser.set({currentScore: currScore});
 	       currentUser.save();
 	       $('#score').html(maxPoints - currScore);
-		//}
+		}
 		
 		
 		this.model.set({taskCompleted: status});
@@ -523,7 +523,7 @@ TaskList = Backbone.View.extend({
 			}
 			
 			else if (filterBy === "previous"){
-				if (isDueDateInCurrentWeek(taskDueDate) === "previous"){
+				if (isDueDateInCurrentWeek(taskDueDate) === "past"){
 					var taskItem = new TaskItem({model: task});
 			        this.$el.append(taskItem.render().el);	
 				}	
@@ -575,7 +575,9 @@ TaskList = Backbone.View.extend({
         var weekEnd =  weekStart.valueOf() + 6*86400000;
         var taskDueDate = date;
         
-        if(taskDueDate>= weekStart && taskDueDate<= weekEnd)
+        if(taskDueDate < weekStart)
+        return "past";
+        else if(taskDueDate>= weekStart && taskDueDate<= weekEnd)
         return "week";
         else if(taskDueDate >= weekEnd)
         return "later";
@@ -816,12 +818,13 @@ function isDueDateInCurrentWeek(date){
         var weekEnd =  weekStart.valueOf() + 6*86400000;
         var taskDueDate = date;
         
+      
         if(taskDueDate>= weekStart && taskDueDate<= weekEnd)
         return "week";
         else if(taskDueDate >= weekEnd)
         return "later";
-        else if(taskDueDate <= weekStart)
-       	return "previous";
+        else if(taskDueDate < weekStart)
+       	return "past";
        	else
         return "all"       
       
