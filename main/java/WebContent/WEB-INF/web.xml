@@ -2,7 +2,7 @@
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
   <display-name>TaskBuddy</display-name>
   <welcome-file-list>
-    <welcome-file>index.html</welcome-file>
+    <welcome-file>home.html</welcome-file>
     <!-- 
     <welcome-file>index.htm</welcome-file>
     <welcome-file>index.jsp</welcome-file>
@@ -28,10 +28,20 @@
   	
   </servlet>
   
+  <servlet>
+  	<servlet-name>SignIn</servlet-name>
+  	<servlet-class>com.TaskBuddy.SignIn</servlet-class>
+  </servlet> 
+  
   <servlet-mapping>
   	<servlet-name>TaskBuddyWS</servlet-name>
   	<url-pattern>/site/*</url-pattern>
   </servlet-mapping>
+  
+  <servlet-mapping>
+  	<servlet-name>SignIn</servlet-name>
+  	<url-pattern>/signin</url-pattern>
+  </servlet-mapping> 
   
   <listener>
   	<listener-class>com.TaskBuddy.db.ContextListener</listener-class>
