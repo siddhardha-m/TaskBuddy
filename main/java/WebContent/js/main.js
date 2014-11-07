@@ -499,7 +499,8 @@ TaskList = Backbone.View.extend({
 	render: function(filterBy) {
 		this._rendered = true;
 		this.$el.empty();
-
+		
+		this.collection.fetch({});
 		
 		this.collection.each(function(task) {
 		
