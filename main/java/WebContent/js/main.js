@@ -354,7 +354,7 @@ Task = Backbone.Model.extend({
 	idAttribute: 'taskId',
 	defaults: {
 		taskCreatedDate: Date.now(),
-		taskDueDate: tomorrow.getFullYear() + '-' + (1 + tomorrow.getMonth()) + '-' + tomorrow.getDate() + ' ' + tomorrow.getHours() + ':' + tomorrow.getMinutes() + ':' + tomorrow.getSeconds(),
+		taskDueDate: tomorrow.getFullYear() + '-' + ((1 + tomorrow.getMonth()) < 10 ? '0' + (1 + tomorrow.getMonth()) : '' + (1 + tomorrow.getMonth())) + '-' + (tomorrow.getDate() < 10 ? '0' + tomorrow.getDate() : '' + tomorrow.getDate()) + ' ' + (tomorrow.getHours() < 10 ? '0' + tomorrow.getHours() : '' + tomorrow.getHours()) + ':' + (tomorrow.getMinutes() < 10 ? '0' + tomorrow.getMinutes() : '' + tomorrow.getMinutes()) + ':' + (tomorrow.getSeconds() < 10 ? '0' + tomorrow.getSeconds() : '' + tomorrow.getSeconds()),
 		userId: null,
 		taskCreatedBy: 1,
 		taskAssignedDate: Date.now(),
@@ -599,7 +599,7 @@ TaskDialog = Backbone.View.extend({
 	 */
 		
 	events: {
-		'click .save-action': 'save',
+		'submit': 'save',
 		"click a#userli": "selectUser",
 	    "click button#close": "closeModal",
 		'click .close,.close-action': 'close'
@@ -627,7 +627,7 @@ TaskDialog = Backbone.View.extend({
 		  e.preventDefault();
 		  var selectedUserName = $(e.currentTarget).html();
 		  assignedUser = parseInt(e.currentTarget.attributes.title.value);
-	    this.$el.find('h4#displayUserName').html(selectedUserName);   
+		  this.$el.find('textarea#displayUserName').html(selectedUserName);
 	  },
 	  
 	/*  submit: function(e){
@@ -837,3 +837,11 @@ function isDueDateInCurrentWeek(date){
         return "all"       
       
 }
+
+function isNumberKey(evt){
+    var charCode = (evt.which) ? evt.which : event.keyCode
+    if (charCode > 31 && (charCode < 48 || charCode > 57))
+        return false;
+    return true;
+}
+

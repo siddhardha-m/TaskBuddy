@@ -165,3 +165,13 @@ vertical-align:top;
     -moz-box-shadow: 0px 0px 24px -1px #A5D6A7;
     box-shadow: 0px 0px 24px -1px #A5D6A7;
 }
+
+td {
+	max-width: 40px;
+	word-wrap:break-word;
+}
+
+.points-td {
+	width: 20px;
+	word-wrap:break-word;
+}
