@@ -72,7 +72,6 @@ UserItem = Backbone.View.extend({
 		/*
 		 * We are attaching context to render method
 		 */
-		console.log('user item created');
 		this.render = _.bind(this.render, this);
 
 		/*
@@ -146,8 +145,6 @@ UserItem = Backbone.View.extend({
 		currentUserId = this.model.get('userId');
 		currentUser = this.model;
 
-		console.log("user id "+ currentUserId);
-
 		/*
 		 * We'll initialize new task collection
 		 */
@@ -163,7 +160,6 @@ UserItem = Backbone.View.extend({
 		 * We'll assign current user ID to "global" variable as we need it on several other places
 		 */
 
-		//console.log("user id "+ currentUserId);
 		/*
 		 * Lets fetch tasks for currently selected user (we can access currently selected user through this.model)
 		 * processData param here only informs the system that params provided through data param needs to be added to URL as GET params
@@ -384,7 +380,6 @@ Task = Backbone.Model.extend({
 TaskCollection = Backbone.Collection.extend({
 	
 	initialize: function(options) {
-		console.log(options.id);
 		this.url = serverUrl + 'tasks' + '/user/' + options.id
 		this.on( "change:taskCompleted", this.triggerReset, this);
 
@@ -458,8 +453,6 @@ TaskItem = Backbone.View.extend({
 		this.model.set({taskCompleted: status});
 		
 		var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
-		
-		//console.log('user is'+currentUserId);
 		
 		this.model.save();
 		/*
@@ -549,7 +542,7 @@ TaskList = Backbone.View.extend({
 			this.render(this.getSelectedFilterOption());
 		}		
 		this._tasks.push(taskItem);
-	 	
+		
 	},
 	
 	reset: function(){		
@@ -627,7 +620,6 @@ TaskDialog = Backbone.View.extend({
 	},
 
 	  closeModal: function(e){
-		  console.log("close");
 		  this.remove();
 		  
 	  },
@@ -639,10 +631,7 @@ TaskDialog = Backbone.View.extend({
 	  },
 	  
 	/*  submit: function(e){
-		  console.log("inside save");
-
 		  var data = JSON.stringify($('taskForm').serializeObject());
-		  console.log("save butooon clicked"+data);
 		  this.remove();
 		
 		  var plainObject = new Object();
@@ -709,16 +698,17 @@ TaskDialog = Backbone.View.extend({
 			 * Adding user ID information read from "global" variable
 			 */
 			
-
 			var repetition = getSelectedFilterOption();
 
-			console.log("taskRepetetion "+ repetition);
+			this.model.set({userId: assignedUser, taskAssigned: true, taskCreatedBy: currentUserId , taskRepetition: repetition});
 			
-			this.model.set({userId: assignedUser,taskAssigned: true, taskCreatedBy: currentUserId , taskRepetition: repetition});
+			tasks.create(this.model,{ wait: true });
 			
-			tasks.create(this.model,{ wait: true});
+			$('.success').fadeIn(400).delay(3000).fadeOut(400);
 		} else {
 			this.model.save();
+			
+			$('.success').fadeIn(400).delay(3000).fadeOut(400);
 		}
 		this.remove();
 	}
@@ -783,13 +773,10 @@ $('#add-task').click(function(e) {
 	$.ajax({
         url: serverUrl + 'users',
         success:function(result){
-            //console.log(" user list after making ajax call"+JSON.stringify(result));
-           
-        	
-            result.forEach(function(entry) {
+
+        	result.forEach(function(entry) {
             	 var eachUser = {};
             	 eachUser['userId'] = entry.userId;
-            	//console.log("entry "+entry.userFirstName);
             	eachUser['name'] = entry.userFirstName+" "+entry.userLastName;
             	list_of_users.push(eachUser);             	
             	
