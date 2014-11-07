@@ -362,7 +362,7 @@ Task = Backbone.Model.extend({
 		taskAssigned: '',
 		taskCompleted: false,
 		taskTitle: '',
-		taskPointValue: 0,
+		taskPointValue: 10,
 		taskDescription: '',
 		taskRepetition: 'NoRepeat'
 	},
@@ -750,9 +750,9 @@ users.fetch({success: function(data) {
  * Attaching to "Add User" button
  */
 $('#add-user').click(function(e) {
-	var view = new UserDialog({model: new User()});
-	view.show();
-	return false;
+//	var view = new UserDialog({model: new User()});
+//	view.show();
+//	return false;
 });
 
 /*
