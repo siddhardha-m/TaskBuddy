@@ -113,6 +113,10 @@ vertical-align:top;
     transform: translate(-50%, -50%);
 }
 
+.user-buttons {
+ 	min-width: 120px;
+}
+ 
 .home-buttons {
 	min-width: 120px;
 	margin-top: 20px;

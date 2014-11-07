@@ -36,7 +36,7 @@ window.fbAsyncInit = function() {
     		 function(data, status){
     			 var userId = parseInt(data);
     			 if(userId != -1){
-    				 window.location.href = "index.html?id=" + userId;
+    				 window.location.href = "main.html?id=" + userId;
     			 }else{
     				 alert("Error: Something went wrong!!!");
     			 }
