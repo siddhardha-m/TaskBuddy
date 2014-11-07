@@ -16,28 +16,50 @@ import com.TaskBuddy.Controllers.UserController;
 import com.TaskBuddy.Models.User;
 import com.TaskBuddy.db.ConnectionManager;
 
+/**
+ * @author Saketh
+ *
+ * Servlet class for handling Login process
+ *
+ */
+
 @SuppressWarnings("serial")
 public class SignIn extends HttpServlet{
+	/**
+	 * 
+	 * Method to handle GET Requests
+	 * 
+	 * @param req, resp
+	 * @return void
+	 * @throws ServletException, IOException
+	 */
+	
 	private static Connection conn = ConnectionManager.getInstance().getConnection();
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-	//	super.doGet(req, resp);
 		doPost(req, resp);
 	}
 	
+	/**
+	 * 
+	 * Method to handle POST request and generate response
+	 * 
+	 * @param request, response
+	 * @return void
+	 * @throws ServletException, IOException
+	 * 
+	 */
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-	//	super.doPost(req, resp);
 			
 		String receivedFbId = request.getParameter("fbId");
 		String receivedFirstName = request.getParameter("firstName");
 		String receivedLastName = request.getParameter("lastName");
-		//response.setContentType("text/plain");
-		//response.getWriter().write("Data received = " + receivedData);
+
 		long fbId = Long.parseLong(receivedFbId);
 		int userIdFromDb = 0;
 		try {
@@ -48,6 +70,17 @@ public class SignIn extends HttpServlet{
 		}
 		response.getWriter().write(Integer.toString(userIdFromDb));
 	}
+	
+	
+	/**
+	 * Method to insert a new record into database based on his/her facebook profile
+	 * 
+	 * @param fbid, firstName, lastName
+	 * @return userId
+	 * @throws SQLException
+	 * 
+	 */
+	
 	
 	private static int insertIntoDB(long fbId, String firstName, String lastName) throws SQLException{
 		String sql = "select user_id from users where fb_id = ?";
