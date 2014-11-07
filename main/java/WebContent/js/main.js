@@ -24,6 +24,13 @@ var months = {
 		'1' : 'Jan', '2' : 'Feb', '3' : 'March', '4' : 'April', '5' : 'May', '6' : 'June', '7' : 'July', '8' : 'Aug', '9' : 'Sept', '10' : 'Oct', '11' : 'Nov', '12' : 'Dec'
 };
 
+/* 
+ * Parse the query parameters present in the URL
+ */
+function parseUrlParam(urlParam){
+	var parsedParam = urlParam.split("=", 2); //limiting the parsed parameters count to two
+	return parsedParam[1];
+}
 
 /*
  * User model
@@ -722,7 +729,19 @@ users = new UserCollection();
 /*
  * Fetching users from DB
  */
-users.fetch({success: function() {
+users.fetch({success: function(data) {
+	var currentUser = parseUrlParam(location.search);
+	var dataModel = data.models;
+	var userNumber = 2;
+	for(var i = 0; i < dataModel.length; i++){
+		var attributes = JSON.stringify(dataModel[i].attributes);
+		
+		var currId =  $.parseJSON(attributes).userId;
+		if(currId == currentUser){
+			userNumber = currId + 1;
+			break;
+		}else { continue; } 
+	}
 	userListView = new UserList({
 		collection: users,
 		el: $users
@@ -730,9 +749,10 @@ users.fetch({success: function() {
 	userListView.render();
 
 	/*
-	 * Triggering click on first user which will load its tasks
+	 * Triggering click on the currently logged in user which will load its tasks
 	 */
-	$users.find('li:nth-child(2)').find('a').trigger('click');
+	$users.find('li:nth-child(' + userNumber + ')').find('a').trigger('click');
+//	$users.find('li:nth-child(2)').find('a').trigger('click');
 }});
 
 /*
