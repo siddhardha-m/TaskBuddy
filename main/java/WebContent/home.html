@@ -28,8 +28,6 @@
           xfbml      : true,
           version    : 'v2.2'
         });
-        
-        
       };
 
       (function(d, s, id){
@@ -40,15 +38,20 @@
          fjs.parentNode.insertBefore(js, fjs);
        }(document, 'script', 'facebook-jssdk'));
       
+      function fbLogin(){
+      		FB.login(function(response){
+    			FB.getLoginStatus(function(response) {
+    				if(response.status === "connected"){
+    					welcomeUser();
+    				}else{
+    					alert("Please Login and Authorize TaskBuddy!!!");
+    					FB.login();
+    				}
+    			});
+    		});
+      }
       function welcomeUser(){
-          FB.getLoginStatus(function(response) {
-         	  if (response.status === 'connected') {
-         		  console.log(response);
-         		 console.log("resp id = " + response.id);
-      	    	FB.api('/me', function(response){
-      	    		 //alert(response.id);
-    	    	//	 console.log(response.id);
-      		      //   	 console.log("Welcome " + response.first_name + " with id = " + response.id);
+      	     	FB.api('/me', function(response){
       		         	 $.post("signin",
       		         			{
       								fbId: response.id,
@@ -56,46 +59,15 @@
       								lastName: response.last_name
       		         			},
       		         			function(data, status){
-//      		         				alert("data = " + data, "status = " + status);
       								var userId = parseInt(data);
       		         		 		 if(userId != -1){
-      			         				window.location.href = "index2.html?id=" + userId;
+      			         				window.location.href = "index.html?id=" + userId;
       			         			}else{
       			         				alert("Error: Something went wrong!!!");
       			         			} 
       	 	         			});
       		         	 
-      		         	 //window.location.href = "index2.html?param=" + response.id;
-      	    	  }); // End of Fb.api
-         	  }
-         	  else {
-         	    FB.login();
-         	  }
-         	});
-
-   /* 	  FB.api('/me', function(response){
-    		 //alert(response.id);
-//    		 console.log(response.id);
-	         	 console.log("Welcome " + response.first_name + " with id = " + response.id);
-	         	 $.post("signin",
-	         			{
-							fbId: response.id,
-							firstName: response.first_name,
-							lastName: response.last_name
-	         			},
-	         			function(data, status){
-//	         				alert("data = " + data, "status = " + status);
-							var userId = parseInt(data);
-	         		 		 if(userId != -1){
-		         				window.location.href = "index2.html?id=" + userId;
-		         			}else{
-		         				alert("Error: Something went wrong!!!");
-		         			} 
- 	         			});
-	         	 
-	         	 //window.location.href = "index2.html?param=" + response.id;
-    	  });
-    	*/  
+      	    	  }); // End of Fb.api 
       }
     </script>
     
@@ -104,7 +76,7 @@
       <div class="navbar-inner">
         <div class="container-fluid">
           <a class="brand" href="#">Task Buddy</a>
-          <a href="javascript:welcomeUser();" class="btn pull-right"><i class="icon-home"></i>&nbsp;&nbsp;Login</a>
+          <a href="javascript: fbLogin()" class="btn pull-right"><i class="icon-home"></i> &nbsp;&nbsp;Login</a> <!-- Invoking facebook Login dialog on click of this button --> 
         </div>
       </div>
     </div>
@@ -117,8 +89,8 @@
      </div>
     </div>
     
-  <!--   <div class="centered">
-     	 <fb:login-button class="btn" onlogin="welcomeUser();"></fb:login-button> 	  
- </div> -->    
+     <div class="centered">
+     	 	  
+ </div>     
   </body>
 </html>
