@@ -599,7 +599,7 @@ TaskDialog = Backbone.View.extend({
 	 */
 		
 	events: {
-		'submit': 'save',
+		'click .save-action': 'save',
 		"click a#userli": "selectUser",
 	    "click button#close": "closeModal",
 		'click .close,.close-action': 'close'
