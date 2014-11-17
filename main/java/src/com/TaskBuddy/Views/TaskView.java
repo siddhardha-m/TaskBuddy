@@ -42,12 +42,15 @@ public class TaskView {
 		taskViewRow.setTaskTitle(taskRow.getTaskTitle());
 		taskViewRow.setTaskDescription(taskRow.getTaskDescription());
 		taskViewRow.setTaskOriginalPointValue(taskRow.getTaskOriginalPointValue());
+		taskViewRow.setTaskUpdatedPointValue(taskRow.getTaskUpdatedPointValue());
 		taskViewRow.setTaskCreatedBy(taskRow.getTaskCreatedBy());
 		taskViewRow.setTaskCreatedDate(taskRow.getTaskCreatedDate());
 		taskViewRow.setTaskDueDate(taskRow.getTaskDueDate());
 		taskViewRow.setTaskCompleted(taskRow.isTaskCompleted());
 		taskViewRow.setTaskDeleted(taskRow.isTaskDeleted());
 		taskViewRow.setTaskRepetition(taskRow.getTaskRepetition());
+		taskViewRow.setTaskMaster(taskRow.isTaskMaster());
+		taskViewRow.setTaskIdC(taskRow.getTaskIdC());
 		taskViewRow.setUserId(userTaskRow.getUserId());
 		taskViewRow.setTaskAssignedDate(userTaskRow.getTaskAssignedDate());
 		taskViewRow.setTaskAssigned(userTaskRow.isTaskAssigned());
@@ -62,12 +65,15 @@ public class TaskView {
 		taskRow.setTaskTitle(taskViewRow.getTaskTitle());
 		taskRow.setTaskDescription(taskViewRow.getTaskDescription());
 		taskRow.setTaskOriginalPointValue(taskViewRow.getTaskOriginalPointValue());
+		taskRow.setTaskUpdatedPointValue(taskViewRow.getTaskUpdatedPointValue());
 		taskRow.setTaskCreatedBy(taskViewRow.getTaskCreatedBy());
 		taskRow.setTaskCreatedDate(taskViewRow.getTaskCreatedDate());
 		taskRow.setTaskDueDate(taskViewRow.getTaskDueDate());
 		taskRow.setTaskCompleted(taskViewRow.isTaskCompleted());
 		taskRow.setTaskDeleted(taskViewRow.isTaskDeleted());
 		taskRow.setTaskRepetition(taskViewRow.getTaskRepetition());
+		taskRow.setTaskMaster(taskViewRow.isTaskMaster());
+		taskRow.setTaskIdC(taskViewRow.getTaskIdC());
 		
 		return taskRow;
 	}
