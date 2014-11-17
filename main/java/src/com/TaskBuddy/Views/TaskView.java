@@ -41,7 +41,7 @@ public class TaskView {
 		taskViewRow.setTaskId(taskRow.getTaskId());
 		taskViewRow.setTaskTitle(taskRow.getTaskTitle());
 		taskViewRow.setTaskDescription(taskRow.getTaskDescription());
-		taskViewRow.setTaskPointValue(taskRow.getTaskPointValue());
+		taskViewRow.setTaskPointValue(taskRow.getTaskOriginalPointValue());
 		taskViewRow.setTaskCreatedBy(taskRow.getTaskCreatedBy());
 		taskViewRow.setTaskCreatedDate(taskRow.getTaskCreatedDate());
 		taskViewRow.setTaskDueDate(taskRow.getTaskDueDate());
@@ -61,7 +61,7 @@ public class TaskView {
 		taskRow.setTaskId(taskViewRow.getTaskId());
 		taskRow.setTaskTitle(taskViewRow.getTaskTitle());
 		taskRow.setTaskDescription(taskViewRow.getTaskDescription());
-		taskRow.setTaskPointValue(taskViewRow.getTaskPointValue());
+		taskRow.setTaskOriginalPointValue(taskViewRow.getTaskPointValue());
 		taskRow.setTaskCreatedBy(taskViewRow.getTaskCreatedBy());
 		taskRow.setTaskCreatedDate(taskViewRow.getTaskCreatedDate());
 		taskRow.setTaskDueDate(taskViewRow.getTaskDueDate());

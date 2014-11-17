@@ -14,13 +14,16 @@ public class Task {
 	private int taskId;
 	private String taskTitle;
 	private String taskDescription;
-	private int taskPointValue;
+	private int taskOriginalPointValue;
+	private int taskUpdatedPointValue;
 	private int taskCreatedBy;
 	private Date taskCreatedDate;
 	private Date taskDueDate;
 	private boolean isTaskCompleted;
 	private boolean isTaskDeleted;
 	private String taskRepetition;
+	private boolean isTaskMaster;
+	private int taskIdC;
 	
 	public int getTaskId() {
 		return taskId;
@@ -40,11 +43,17 @@ public class Task {
 	public void setTaskDescription(String taskDescription) {
 		this.taskDescription = taskDescription;
 	}
-	public int getTaskPointValue() {
-		return taskPointValue;
+	public int getTaskOriginalPointValue() {
+		return taskOriginalPointValue;
 	}
-	public void setTaskPointValue(int taskPointValue) {
-		this.taskPointValue = taskPointValue;
+	public void setTaskOriginalPointValue(int taskOriginalPointValue) {
+		this.taskOriginalPointValue = taskOriginalPointValue;
+	}
+	public int getTaskUpdatedPointValue() {
+		return taskUpdatedPointValue;
+	}
+	public void setTaskUpdatedPointValue(int taskUpdatedPointValue) {
+		this.taskUpdatedPointValue = taskUpdatedPointValue;
 	}
 	public int getTaskCreatedBy() {
 		return taskCreatedBy;
@@ -81,5 +90,17 @@ public class Task {
 	}
 	public void setTaskRepetition(String taskRepetition) {
 		this.taskRepetition = taskRepetition;
+	}
+	public boolean isTaskMaster() {
+		return isTaskMaster;
+	}
+	public void setTaskMaster(boolean isTaskMaster) {
+		this.isTaskMaster = isTaskMaster;
+	}
+	public int getTaskIdC() {
+		return taskIdC;
+	}
+	public void setTaskIdC(int taskIdC) {
+		this.taskIdC = taskIdC;
 	}
 }
