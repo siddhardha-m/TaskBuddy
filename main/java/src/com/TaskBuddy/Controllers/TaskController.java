@@ -37,15 +37,44 @@ public class TaskController {
 	
 	/**
 	 * 
-	 * Method to return all Tasks
+	 * Method to return all Non Master Tasks
 	 * 
-	 * @return ArrayList of all Tasks
+	 * @return ArrayList of all Non Master Tasks
 	 * @throws SQLException
 	 * 
 	 */
 	public static ArrayList<Task> getAllTasks() throws SQLException {
 		
-		String sql = selectSQL;
+		String sql = selectSQL +
+				" AND is_task_master = false ";
+		
+		try (
+				Statement stmt = conn.createStatement();
+				ResultSet rs = stmt.executeQuery(sql);
+			){
+			
+			ArrayList<Task> tasksList = new ArrayList<Task>();
+			
+			while (rs.next()) {
+				tasksList.add(processResultSetIntoTaskRow(rs));
+			}
+			
+			return tasksList;
+		}
+	}
+
+	/**
+	 * 
+	 * Method to return all Master Tasks
+	 * 
+	 * @return ArrayList of all Master Tasks
+	 * @throws SQLException
+	 * 
+	 */
+	public static ArrayList<Task> getAllMasterTasks() throws SQLException {
+		
+		String sql = selectSQL +
+				" AND is_task_master = true ";
 		
 		try (
 				Statement stmt = conn.createStatement();
@@ -64,7 +93,7 @@ public class TaskController {
 	
 	/**
 	 * 
-	 * Method to return the Task for the given taskId
+	 * Method to return the Non Master Task for the given taskId
 	 * 
 	 * @param taskId
 	 * @return Task instance
@@ -74,6 +103,7 @@ public class TaskController {
 	public static Task getTaskById(int taskId) throws SQLException {
 		
 		String sql = selectSQL +
+				" AND is_task_master = false " +
 				" AND task_id = ? ";
 		ResultSet rs = null;
 		
