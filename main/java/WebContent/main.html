@@ -149,7 +149,7 @@
 </div>
 
 
-	          <input type="number" min="10" max="100" step="10" name="taskPointValue" class="input-small input-taskPointValue dialog-inputs" placeholder="Points" value="<%= taskPointValue %>" required onkeypress="return isNumberKey(event)">
+	          <input type="number" min="10" max="100" step="10" name="taskOriginalPointValue" class="input-small input-taskPointValue dialog-inputs" placeholder="Points" value="<%= taskOriginalPointValue %>" required onkeypress="return isNumberKey(event)">
 	          <div id="dp1" class="input-append date dialog-inputs">
 	          	<input class="input-medium" name="taskDueDate" value="<%= taskDueDate %>" data-format="yyyy-MM-dd hh:mm:ss" type="text" placeholder="Due Date" required readonly>
 	          	<span class="add-on">
@@ -187,7 +187,7 @@
 		</td>
 		<td <% if (taskCompleted) { %> class="finished" <% } %>><%= taskTitle %></td>
 		<td <% if (taskCompleted) { %> class="finished" <% } %>><%= taskDescription %></td>
-		<td class="points-td" <% if (taskCompleted) { %> class="finished" <% } %>><%= taskPointValue %></td>
+		<td class="points-td" <% if (taskCompleted) { %> class="finished" <% } %>><%= taskOriginalPointValue %></td>
 		<td <% if (taskCompleted) { %> class="finished" <% } %>> 
         <% var currentTime = new Date(parseInt(this.model.get("taskDueDate") ));
 		var day = currentTime.getDate();

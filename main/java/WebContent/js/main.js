@@ -362,8 +362,11 @@ Task = Backbone.Model.extend({
 		taskAssigned: '',
 		taskCompleted: false,
 		taskTitle: '',
-		taskPointValue: 10,
+		taskOriginalPointValue: 0,
+		taskUpdatedPointValue: 0,
 		taskDescription: '',
+		taskMaster: true,
+		taskIdC: 0,
 		taskRepetition: 'NoRepeat'
 	},
 	
