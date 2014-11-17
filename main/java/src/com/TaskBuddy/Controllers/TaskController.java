@@ -109,7 +109,7 @@ public class TaskController {
 		String sql = "INSERT INTO Tasks (task_title, task_description, task_original_point_value, " + 
 				"task_updated_point_value, task_created_by, task_created_date, task_due_date, " +
 				"is_task_completed, is_task_deleted, task_repetition, is_task_master, task_id_c) " +
-				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		ResultSet rs = null;
 		
 		try (
