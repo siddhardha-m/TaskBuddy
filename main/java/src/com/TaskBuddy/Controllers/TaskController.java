@@ -25,10 +25,11 @@ public class TaskController {
 	
 	private static Connection conn = ConnectionManager.getInstance().getConnection();
 	
-	private static String selectSQL = "SELECT " +
-			"task_id, task_title, task_description, task_point_value, task_created_by, " +
-			"task_created_date, task_due_date, is_task_completed, is_task_deleted, task_repetition" +
-			" FROM Tasks "
+	private static String selectSQL = "SELECT "
+			+ "task_id, task_title, task_description, task_original_point_value, task_updated_point_value, "
+			+ "task_created_by, task_created_date, task_due_date, is_task_completed, is_task_deleted, "
+			+ "task_repetition, is_task_master, task_id_c "
+			+ " FROM Tasks "
 			+ " WHERE is_task_deleted = false ";
 	
 	private TaskController() {
@@ -105,8 +106,9 @@ public class TaskController {
 	 */
 	private static boolean insertTask(Task taskRow) throws SQLException {
 		
-		String sql = "INSERT INTO Tasks (task_title, task_description, task_point_value, task_created_by, " +
-				"task_created_date, task_due_date, is_task_completed, is_task_deleted, task_repetition) " +
+		String sql = "INSERT INTO Tasks (task_title, task_description, task_original_point_value, " + 
+				"task_updated_point_value, task_created_by, task_created_date, task_due_date, " +
+				"is_task_completed, is_task_deleted, task_repetition, is_task_master, task_id_c) " +
 				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		ResultSet rs = null;
 		
@@ -117,12 +119,15 @@ public class TaskController {
 			stmt.setString(1, taskRow.getTaskTitle());
 			stmt.setString(2, taskRow.getTaskDescription());
 			stmt.setInt(3, taskRow.getTaskOriginalPointValue());
-			stmt.setInt(4, taskRow.getTaskCreatedBy());
-			stmt.setTimestamp(5, new  Timestamp(taskRow.getTaskCreatedDate().getTime()));
-			stmt.setTimestamp(6, new Timestamp(taskRow.getTaskDueDate().getTime()));
-			stmt.setBoolean(7, taskRow.isTaskCompleted());
-			stmt.setBoolean(8, taskRow.isTaskDeleted());
-			stmt.setString(9, taskRow.getTaskRepetition());
+			stmt.setInt(4, taskRow.getTaskUpdatedPointValue());
+			stmt.setInt(5, taskRow.getTaskCreatedBy());
+			stmt.setTimestamp(6, new  Timestamp(taskRow.getTaskCreatedDate().getTime()));
+			stmt.setTimestamp(7, new Timestamp(taskRow.getTaskDueDate().getTime()));
+			stmt.setBoolean(8, taskRow.isTaskCompleted());
+			stmt.setBoolean(9, taskRow.isTaskDeleted());
+			stmt.setString(10, taskRow.getTaskRepetition());
+			stmt.setBoolean(11, taskRow.isTaskMaster());
+			stmt.setInt(12, taskRow.getTaskIdC());
 			
 			int affected_rows = stmt.executeUpdate();
 			
@@ -155,8 +160,10 @@ public class TaskController {
 	private static boolean updateTask(Task taskRow) throws SQLException {
 		
 		String sql = "UPDATE Tasks SET " +
-				"task_title = ?, task_description = ?, task_point_value = ?, task_created_by = ?, " +
-				"task_created_date = ?, task_due_date = ?, is_task_completed = ?, is_task_deleted = ?, task_repetition = ?" +
+				"task_title = ?, task_description = ?, task_original_point_value = ?, " +
+				"task_updated_point_value = ?, task_created_by = ?, task_created_date = ?, " +
+				"task_due_date = ?, is_task_completed = ?, is_task_deleted = ?, task_repetition = ?, " +
+				"is_task_master = ?, task_id_c = ?" +
 				" WHERE task_id = ?";
 		
 		try (
@@ -166,13 +173,16 @@ public class TaskController {
 			stmt.setString(1, taskRow.getTaskTitle());
 			stmt.setString(2, taskRow.getTaskDescription());
 			stmt.setInt(3, taskRow.getTaskOriginalPointValue());
-			stmt.setInt(4, taskRow.getTaskCreatedBy());
-			stmt.setTimestamp(5, new Timestamp(taskRow.getTaskCreatedDate().getTime()));
-			stmt.setTimestamp(6, new Timestamp(taskRow.getTaskDueDate().getTime()));
-			stmt.setBoolean(7, taskRow.isTaskCompleted());
-			stmt.setBoolean(8, taskRow.isTaskDeleted());
-			stmt.setString(9, taskRow.getTaskRepetition());
-			stmt.setInt(10, taskRow.getTaskId());
+			stmt.setInt(4, taskRow.getTaskUpdatedPointValue());
+			stmt.setInt(5, taskRow.getTaskCreatedBy());
+			stmt.setTimestamp(6, new Timestamp(taskRow.getTaskCreatedDate().getTime()));
+			stmt.setTimestamp(7, new Timestamp(taskRow.getTaskDueDate().getTime()));
+			stmt.setBoolean(8, taskRow.isTaskCompleted());
+			stmt.setBoolean(9, taskRow.isTaskDeleted());
+			stmt.setString(10, taskRow.getTaskRepetition());
+			stmt.setBoolean(11, taskRow.isTaskMaster());
+			stmt.setInt(12, taskRow.getTaskIdC());
+			stmt.setInt(13, taskRow.getTaskId());
 			
 			int affected_rows = stmt.executeUpdate();
 			
@@ -212,13 +222,16 @@ public class TaskController {
 		taskRow.setTaskId(rs.getInt("task_id"));
 		taskRow.setTaskTitle(rs.getString("task_title"));
 		taskRow.setTaskDescription(rs.getString("task_description"));
-		taskRow.setTaskOriginalPointValue(rs.getInt("task_point_value"));
+		taskRow.setTaskOriginalPointValue(rs.getInt("task_original_point_value"));
+		taskRow.setTaskUpdatedPointValue(rs.getInt("task_updated_point_value"));
 		taskRow.setTaskCreatedBy(rs.getInt("task_created_by"));
 		taskRow.setTaskCreatedDate(rs.getTimestamp("task_created_date"));
 		taskRow.setTaskDueDate(rs.getTimestamp("task_due_date"));
 		taskRow.setTaskCompleted(rs.getBoolean("is_task_completed"));
 		taskRow.setTaskDeleted(rs.getBoolean("is_task_deleted"));
 		taskRow.setTaskRepetition(rs.getString("task_repetition"));
+		taskRow.setTaskMaster(rs.getBoolean("is_task_master"));
+		taskRow.setTaskIdC(rs.getInt("task_id_c"));
 		
 		return taskRow;
 	}
