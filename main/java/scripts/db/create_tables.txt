@@ -93,13 +93,16 @@ CREATE TABLE IF NOT EXISTS Tasks
 task_id int NOT NULL AUTO_INCREMENT,
 task_title varchar(50) NOT NULL,
 task_description varchar(500) NOT NULL,
-task_point_value int NOT NULL DEFAULT 10 CHECK (task_point_value >= 10 and task_point_value % 5 = 0),
+task_original_point_value int NOT NULL DEFAULT 0,
+task_updated_point_value int NOT NULL DEFAULT 0,
 task_created_by int NOT NULL,
 task_created_date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 task_due_date datetime NOT NULL,
 is_task_completed boolean NOT NULL DEFAULT false,
 is_task_deleted boolean NOT NULL DEFAULT false,
 task_repetition varchar(10) NOT NULL DEFAULT 'NoRepeat',
+is_task_master boolean NOT NULL DEFAULT true,
+task_id_c int NOT NULL,
 PRIMARY KEY (task_id),
 FOREIGN KEY (task_created_by) REFERENCES Users(user_id)
 );
