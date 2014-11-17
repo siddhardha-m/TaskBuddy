@@ -124,6 +124,42 @@ public class TaskView {
 			
 		}
 	}
+
+	/**
+	 * 
+	 * This method is invoked on GET
+	 * @return ArrayList of all TaskViewObjects in JSON format
+	 * 
+	 */
+	@GET @Path("master")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public static ArrayList<TaskViewObject> getAllMasterTaskViews() {
+		try {
+			
+			ArrayList<TaskViewObject> taskViewList = new ArrayList<TaskViewObject>();
+			
+			ArrayList<Task> tasksList = TaskController.getAllMasterTasks();
+			
+			for (Task taskRow : tasksList) {
+				
+				ArrayList<UserTask> userTasksList = UserTaskController.getAllUsersByTaskId(taskRow.getTaskId());
+				
+				for (UserTask  userTaskRow : userTasksList) {
+					taskViewList.add(createTaskViewObject(taskRow, userTaskRow));
+				}
+				
+			}
+			
+			return taskViewList;
+			
+		} catch (Exception e) {
+			
+			log.error("Error message: " + e.getMessage());
+			
+			return null;
+			
+		}
+	}
 	
 	@GET @Path("user/{userId}")
 	@Produces({ MediaType.APPLICATION_JSON })
