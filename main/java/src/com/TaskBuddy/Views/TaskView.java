@@ -133,24 +133,12 @@ public class TaskView {
 	 */
 	@GET @Path("master")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public static ArrayList<TaskViewObject> getAllMasterTaskViews() {
+	public static ArrayList<Task> getAllMasterTaskViews() {
 		try {
-			
-			ArrayList<TaskViewObject> taskViewList = new ArrayList<TaskViewObject>();
 			
 			ArrayList<Task> tasksList = TaskController.getAllMasterTasks();
 			
-			for (Task taskRow : tasksList) {
-				
-				ArrayList<UserTask> userTasksList = UserTaskController.getAllUsersByTaskId(taskRow.getTaskId());
-				
-				for (UserTask  userTaskRow : userTasksList) {
-					taskViewList.add(createTaskViewObject(taskRow, userTaskRow));
-				}
-				
-			}
-			
-			return taskViewList;
+			return tasksList;
 			
 		} catch (Exception e) {
 			
@@ -220,11 +208,16 @@ public class TaskView {
 	public static boolean insertTaskView(TaskViewObject taskViewRow) {
 		try {
 			Task taskRow = getTaskFromTaskViewObject(taskViewRow);
-			UserTask userTaskRow = getUserTaskFromTaskViewObject(taskViewRow);
-			
 			boolean taskSaved = TaskController.save(taskRow);
-			userTaskRow.setTaskId(taskRow.getTaskId());
-			boolean userTaskSaved = UserTaskController.save(userTaskRow);
+			
+			boolean userTaskSaved = true;
+			
+			if(!taskRow.isTaskMaster())
+			{
+				UserTask userTaskRow = getUserTaskFromTaskViewObject(taskViewRow);			
+				userTaskRow.setTaskId(taskRow.getTaskId());
+				userTaskSaved = UserTaskController.save(userTaskRow);
+			}
 			
 			if(taskSaved && userTaskSaved) {
 				return true;
