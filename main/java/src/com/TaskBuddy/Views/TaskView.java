@@ -112,6 +112,11 @@ public class TaskView {
 					taskViewList.add(createTaskViewObject(taskRow, userTaskRow));
 				}
 				
+				if(userTasksList.isEmpty())
+				{
+					UserTask userTaskRow = new UserTask();
+					taskViewList.add(createTaskViewObject(taskRow, userTaskRow));
+				}
 			}
 			
 			return taskViewList;
