@@ -23,7 +23,7 @@ public class Task {
 	private boolean isTaskDeleted;
 	private String taskRepetition;
 	private boolean isTaskMaster;
-	private int taskIdC;
+	private int taskDueDuration;
 	
 	public int getTaskId() {
 		return taskId;
@@ -97,10 +97,10 @@ public class Task {
 	public void setTaskMaster(boolean isTaskMaster) {
 		this.isTaskMaster = isTaskMaster;
 	}
-	public int getTaskIdC() {
-		return taskIdC;
+	public int getTaskDueDuration() {
+		return taskDueDuration;
 	}
-	public void setTaskIdC(int taskIdC) {
-		this.taskIdC = taskIdC;
+	public void setTaskDueDuration(int taskDueDuration) {
+		this.taskDueDuration = taskDueDuration;
 	}
 }

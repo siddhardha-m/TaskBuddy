@@ -28,7 +28,7 @@ public class TaskController {
 	private static String selectSQL = "SELECT "
 			+ "task_id, task_title, task_description, task_original_point_value, task_updated_point_value, "
 			+ "task_created_by, task_created_date, task_due_date, is_task_completed, is_task_deleted, "
-			+ "task_repetition, is_task_master, task_id_c "
+			+ "task_repetition, is_task_master, task_due_duration "
 			+ " FROM Tasks "
 			+ " WHERE is_task_deleted = false ";
 	
@@ -138,7 +138,7 @@ public class TaskController {
 		
 		String sql = "INSERT INTO Tasks (task_title, task_description, task_original_point_value, " + 
 				"task_updated_point_value, task_created_by, task_created_date, task_due_date, " +
-				"is_task_completed, is_task_deleted, task_repetition, is_task_master, task_id_c) " +
+				"is_task_completed, is_task_deleted, task_repetition, is_task_master, task_due_duration) " +
 				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		ResultSet rs = null;
 		
@@ -157,7 +157,7 @@ public class TaskController {
 			stmt.setBoolean(9, taskRow.isTaskDeleted());
 			stmt.setString(10, taskRow.getTaskRepetition());
 			stmt.setBoolean(11, taskRow.isTaskMaster());
-			stmt.setInt(12, taskRow.getTaskIdC());
+			stmt.setInt(12, taskRow.getTaskDueDuration());
 			
 			int affected_rows = stmt.executeUpdate();
 			
@@ -193,7 +193,7 @@ public class TaskController {
 				"task_title = ?, task_description = ?, task_original_point_value = ?, " +
 				"task_updated_point_value = ?, task_created_by = ?, task_created_date = ?, " +
 				"task_due_date = ?, is_task_completed = ?, is_task_deleted = ?, task_repetition = ?, " +
-				"is_task_master = ?, task_id_c = ?" +
+				"is_task_master = ?, task_due_duration = ?" +
 				" WHERE task_id = ?";
 		
 		try (
@@ -211,7 +211,7 @@ public class TaskController {
 			stmt.setBoolean(9, taskRow.isTaskDeleted());
 			stmt.setString(10, taskRow.getTaskRepetition());
 			stmt.setBoolean(11, taskRow.isTaskMaster());
-			stmt.setInt(12, taskRow.getTaskIdC());
+			stmt.setInt(12, taskRow.getTaskDueDuration());
 			stmt.setInt(13, taskRow.getTaskId());
 			
 			int affected_rows = stmt.executeUpdate();
@@ -261,7 +261,7 @@ public class TaskController {
 		taskRow.setTaskDeleted(rs.getBoolean("is_task_deleted"));
 		taskRow.setTaskRepetition(rs.getString("task_repetition"));
 		taskRow.setTaskMaster(rs.getBoolean("is_task_master"));
-		taskRow.setTaskIdC(rs.getInt("task_id_c"));
+		taskRow.setTaskDueDuration(rs.getInt("task_due_duration"));
 		
 		return taskRow;
 	}

@@ -23,7 +23,7 @@ public class TaskViewObject {
 	private boolean isTaskDeleted;
 	private String taskRepetition;
 	private boolean isTaskMaster;
-	private int taskIdC;
+	private int taskDueDuration;
 	private int userId;
 	private Date taskAssignedDate;
 	private boolean isTaskAssigned;
@@ -100,11 +100,11 @@ public class TaskViewObject {
 	public void setTaskMaster(boolean isTaskMaster) {
 		this.isTaskMaster = isTaskMaster;
 	}
-	public int getTaskIdC() {
-		return taskIdC;
+	public int getTaskDueDuration() {
+		return taskDueDuration;
 	}
-	public void setTaskIdC(int taskIdC) {
-		this.taskIdC = taskIdC;
+	public void setTaskDueDuration(int taskDueDuration) {
+		this.taskDueDuration = taskDueDuration;
 	}
 	public int getUserId() {
 		return userId;
