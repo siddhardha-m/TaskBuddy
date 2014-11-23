@@ -19,6 +19,8 @@ public class User {
 	private boolean isUserDeleted;
 	private int totalScore;
 	private int currentScore;
+	private int currentPoints;
+	private int weeklyPoints;
 	private long fbId;
 
 	
@@ -70,6 +72,18 @@ public class User {
 	}
 	public void setCurrentScore(int currentScore) {
 		this.currentScore = currentScore;
+	}
+	public int getCurrentPoints() {
+		return currentPoints;
+	}
+	public void setCurrentPoints(int currentPoints) {
+		this.currentPoints = currentPoints;
+	}
+	public int getWeeklyPoints() {
+		return weeklyPoints;
+	}
+	public void setWeeklyPoints(int weeklyPoints) {
+		this.weeklyPoints = weeklyPoints;
 	}
 	public long getFbId(){
 		return fbId;
