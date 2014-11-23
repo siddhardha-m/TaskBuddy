@@ -37,16 +37,15 @@ public class TaskController {
 	
 	/**
 	 * 
-	 * Method to return all Non Master Tasks
+	 * Method to return all Tasks
 	 * 
-	 * @return ArrayList of all Non Master Tasks
+	 * @return ArrayList of all Tasks
 	 * @throws SQLException
 	 * 
 	 */
 	public static ArrayList<Task> getAllTasks() throws SQLException {
 		
-		String sql = selectSQL +
-				" AND is_task_master = false ";
+		String sql = selectSQL;
 		
 		try (
 				Statement stmt = conn.createStatement();
