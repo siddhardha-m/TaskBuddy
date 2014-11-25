@@ -549,7 +549,7 @@ TaskList = Backbone.View.extend({
 			this.render(this.getSelectedFilterOption());
 		}		
 		this._tasks.push(taskItem);
-		
+		// console.log("added item");
 	},
 	
 	reset: function(){		
