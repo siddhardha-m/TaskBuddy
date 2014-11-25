@@ -2,6 +2,7 @@
  * Lets initialize the variables we need
  */
 var $tasks 			= $('#tasks'),
+    $masterTasks    = $('#masterTasks'),
 	$users 			= $('#users'),
 	tasks 			= null,
 	users 			= null,
@@ -15,6 +16,7 @@ var $tasks 			= $('#tasks'),
 	serverUrl		= 'http://localhost:8080/TaskBuddy/site/',
 	maxPoints       =  50,
 	selectedRepitition = null;
+    base_url        = null;
 /*
  * We will add one day to the current date to pre-fill Due Date
  */
@@ -66,7 +68,7 @@ UserItem = Backbone.View.extend({
 	 */
 	tagName: 'li',
 	/*
-	 * Constructor like method where we can do needed intializations
+	 * Constructor like method where we can do needed initializations
 	 */
 	initialize: function() {
 		/*
@@ -209,6 +211,8 @@ UserList = Backbone.View.extend({
     	this.collection.bind('remove', this.remove);
 	},
 	render: function() {
+		
+
 		/*
 		 * Initializing and setting flag from which we'll know if our view was rendered or not
 		 */
@@ -366,7 +370,7 @@ Task = Backbone.Model.extend({
 		taskUpdatedPointValue: 0,
 		taskDescription: '',
 		taskMaster: true,
-		taskIdC: 0,
+		taskDueDuration: 0,
 		taskRepetition: 'NoRepeat'
 	},
 	
@@ -703,9 +707,458 @@ TaskDialog = Backbone.View.extend({
 			
 			var repetition = getSelectedFilterOption();
 
+			
 			this.model.set({userId: assignedUser, taskAssigned: true, taskCreatedBy: currentUserId , taskRepetition: repetition});
 			
+			if (null != assignedUser)
+				this.model.set({taskMaster: false});
+			
+			console.log(" assigned User is "+ assignedUser);
+
 			tasks.create(this.model,{ wait: true });
+			
+			$('.assigned').fadeIn(400).delay(3000).fadeOut(400);
+		} else {
+			this.model.save();
+			
+			$('.assigned').fadeIn(400).delay(3000).fadeOut(400);
+		}
+		
+		
+		
+       
+		
+		this.remove();
+		
+		 
+	}
+});
+
+
+
+// model for master Task
+
+
+MasterTask = Backbone.Model.extend({
+
+	/*
+	 * We need to define default values which will be used in model creation (and to give Backbone some info what our model look like)
+	 */
+	idAttribute: 'taskId',
+	defaults: {
+		taskCreatedDate: Date.now(),
+		taskDueDate: tomorrow.getFullYear() + '-' + ((1 + tomorrow.getMonth()) < 10 ? '0' + (1 + tomorrow.getMonth()) : '' + (1 + tomorrow.getMonth())) + '-' + (tomorrow.getDate() < 10 ? '0' + tomorrow.getDate() : '' + tomorrow.getDate()) + ' ' + (tomorrow.getHours() < 10 ? '0' + tomorrow.getHours() : '' + tomorrow.getHours()) + ':' + (tomorrow.getMinutes() < 10 ? '0' + tomorrow.getMinutes() : '' + tomorrow.getMinutes()) + ':' + (tomorrow.getSeconds() < 10 ? '0' + tomorrow.getSeconds() : '' + tomorrow.getSeconds()),
+		userId: null,
+		taskCreatedBy: 1,
+		taskAssignedDate: Date.now(),
+		taskDeleted: false,
+		taskAssigned: '',
+		taskCompleted: false,
+		taskTitle: '',
+		taskOriginalPointValue: 0,
+		taskUpdatedPointValue: 0,
+		taskDescription: '',
+		taskMaster: true,
+		taskDueDuration: 0,
+		taskRepetition: 'NoRepeat'
+	},
+	
+	/*
+	 * This is the URI where the Backbone will communicate with our server part
+	 */
+	urlRoot : serverUrl + 'tasks' + '/master'
+
+});
+
+
+// master task collection
+
+MasterTaskCollection = Backbone.Collection.extend({
+	
+	url: serverUrl + 'tasks' + '/master', 
+	
+	initialize: function(options) {
+		//this.url = serverUrl + 'tasks' + '/master';
+		this.on( "change:taskCompleted", this.triggerReset, this);
+
+	},
+	
+	/*
+	 * Model which this collection will hold and manipulate
+	 */
+	model: MasterTask,
+	
+	  comparator : function(model) {
+        return [model.get('taskCompleted'),model.get('taskDueDate')];
+      },
+      
+      triggerReset: function(){
+      	this.trigger('reset');
+      }
+});
+
+
+
+
+
+/*
+ * Single Master task view
+ */
+MasterTaskItem = Backbone.View.extend({
+	tagName: 'tr',
+	initialize: function() {
+		this.render = _.bind(this.render, this);
+		this.template = _.template($('#task-item').html());
+		this.model.bind('change', this.render);
+	},
+	events: {
+		'dblclick': 'assignTask',
+		'change input': 'modify',
+		'click .icon-edit':'assignTask',
+		'click a.delete-action': 'delete'
+	},
+	render: function() {
+		
+		this.$el.html(this.template(this.model.attributes));
+		return this;
+	},
+	edit: function() {
+		new TaskDialog({model: this.model}).show();
+	},
+	/*
+	 * We are listening for status checkbox, it updates the model and presist status to the DB
+	 */
+	
+	assignTask: function(){
+		console.log('clicked edit');
+		
+		list_of_users=new Array();
+		//var view = new TaskDialog({model: new MasterTask()});
+		
+		var dummyModel = new Task(this.model.attributes);
+
+		 var currentTime = new Date(parseInt(this.model.get("taskDueDate") ));
+			var day = currentTime.getDate();
+			var month = currentTime.getMonth() + 1;
+	        var year = currentTime.getFullYear();
+	        var hour = currentTime.getHours();
+	        var mins = currentTime.getMinutes();
+	        
+			var date =  year + "-" + month + "-"+ (day < 10 ? '0' : '') + day  + " " + hour + ":" + (mins < 10 ? '0' : '') + mins + ':00';
+		
+		dummyModel.set({"taskDueDate" : date.toString()});
+		
+		dummyModel.set({'taskId': null});
+		
+		var view = new TaskDialog({model: dummyModel});
+
+		$.ajax({
+	        url: serverUrl + 'users',
+	        success:function(result){
+
+	        	result.forEach(function(entry) {
+	            	var eachUser = {};
+	            	eachUser['userId'] = entry.userId;
+	            	eachUser['name'] = entry.userFirstName+" "+entry.userLastName;
+	            	list_of_users.push(eachUser);             	
+	            	
+	            });
+
+	            view.show(list_of_users);
+	        	
+	        }
+	    });
+		
+		
+	},
+	
+	modify: function(e) {
+		//var status = e.currentTarget.checked ? true : false;
+		//var currScore = currentUser.get('currentScore');
+		
+		//var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
+		//var taskCompleted = this.model.get('taskCompleted');
+
+	//	if(duePeriod === "week" || duePeriod === "past"){
+//			if(taskCompleted == false) {
+	//	       currScore = currScore + this.model.get('taskPointValue');
+		       //if(currScore > 50)
+		    	 //  	currScore = 50;
+	//		}
+	//		else {
+		//		currScore = currScore - this.model.get('taskPointValue');
+				//if(currScore < 0)
+				//	currScore = 0;
+		//	}
+	     //  currentUser.set({currentScore: currScore});
+	    //   currentUser.save();
+	   //    $('#score').html(maxPoints - currScore);
+	//	}
+		
+		
+		this.model.set({taskCompleted: status});
+		
+	//	var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
+		
+		this.model.save();
+		/*
+		 * We'll add strikethrough class to the title and date just to visually distinguish finished from unfinished task
+		 */
+		if (status) {
+			this.$el.find('td').addClass('finished');
+		} else {
+			this.$el.find('td').removeClass('finished');
+		}
+	}
+	/*
+	 * Handling the deletion of item
+	 */
+
+});
+
+
+
+
+
+MasterTaskList = Backbone.View.extend({
+	initialize: function() {
+//		_(this).bindAll('add','reset','filterBy');
+		
+		_(this).bindAll('add','reset');
+		
+		this._tasks = [];
+		
+		this.collection.each(this.add);
+
+		this.collection.bind('add', this.add);
+		this.collection.bind('reset', this.reset);
+//		this.collection.bind("filter", this.filterBy);
+
+	},
+	
+	
+	render: function() {
+		this._rendered = true;
+		this.$el.empty();
+		
+		this.collection.fetch();
+		
+		this.collection.each(function(masterTask) {
+		
+  //     var taskDueDate = task.get('taskDueDate');       
+
+       
+//		if (!filterBy || filterBy === "all")
+	//	{
+		
+			var masterTaskItem = new MasterTaskItem({model: masterTask});
+	        this.$el.append(masterTaskItem.render().el);	
+//		}
+	/*	else{			
+       
+			if (filterBy === "week"){
+					if (isDueDateInCurrentWeek(taskDueDate) === "week"){
+					var taskItem = new TaskItem({model: task});
+			        this.$el.append(taskItem.render().el);	
+				}
+			
+			}
+			
+			else if (filterBy === "later"){
+				if (isDueDateInCurrentWeek(taskDueDate) === "later"){
+					var taskItem = new TaskItem({model: task});
+			        this.$el.append(taskItem.render().el);	
+				}	
+			}
+			
+			else if (filterBy === "previous"){
+				if (isDueDateInCurrentWeek(taskDueDate) === "past"){
+					var taskItem = new TaskItem({model: task});
+			        this.$el.append(taskItem.render().el);	
+				}	
+			}
+		} */	
+		},this);
+
+      
+ 	},
+ 	
+ 	
+	add: function(masterTask) {
+		var masterTaskItem = new MasterTaskItem({model: masterTask});
+
+		if (this._rendered) {
+			this.$el.append(masterTaskItem.render().el);
+			this.render();
+		}		
+		this._tasks.push(masterTaskItem);
+		
+	},
+	
+	reset: function(){		
+		this.collection.sort();
+		this.render();
+	},
+	
+	
+/*	getSelectedFilterOption: function(){
+	var filterBy;	
+	var group = document.getElementsByName('group1');
+   for(var i = 0; i < group.length; i++){
+   if(group[i].checked){
+       filterBy = group[i].value;
+    }
+    }
+     
+  return filterBy;
+	},
+	
+	
+	isDueDateInCurrentWeek: function(date){
+		var startDay = 1; 
+		var now = new Date;
+       var d = now.getDay(); 
+       var weekStart = now.valueOf() - (d<=0 ? 7-startDay:d-startDay)*86400000; 
+       var weekEnd =  weekStart.valueOf() + 6*86400000;
+       var taskDueDate = date;
+       
+       if(taskDueDate < weekStart)
+       return "past";
+       else if(taskDueDate>= weekStart && taskDueDate<= weekEnd)
+       return "week";
+       else if(taskDueDate >= weekEnd)
+       return "later";
+       else if(taskDueDate <= weekStart)
+       return "previous";
+       else
+       return "all"       
+     
+	}
+	
+	*/
+});
+
+
+
+
+
+
+MasterTaskDialog = Backbone.View.extend({
+	/*
+	 * As you may see we don't listen for change on input elements. We'll show a different strategy for fetching data here
+	 */
+		
+	events: {
+		'click .save-action': 'save',
+		"click a#userli": "selectUser",
+	    "click button#close": "closeModal",
+		'click .close,.close-action': 'close'
+	},
+	initialize: function() {
+		this.template = _.template($('#master-task-dialog').html());
+	},
+	render: function(list_of_users) {
+
+		this.$el.html(this.template(this.model.toJSON() , list_of_users ));
+		/*
+		 * We'll initialize datetime picker
+		 */
+		
+		
+		this.$el.find('#dp1').datetimepicker();
+		return this;
+	},
+
+	  closeModal: function(e){
+		  this.remove();
+		  
+	  },
+	  selectUser: function(e) {
+		  e.preventDefault();
+		  var selectedUserName = $(e.currentTarget).html();
+		  assignedUser = parseInt(e.currentTarget.attributes.title.value);
+		  this.$el.find('textarea#displayUserName').html(selectedUserName);
+	  },
+	  
+	/*  submit: function(e){
+		  var data = JSON.stringify($('taskForm').serializeObject());
+		  this.remove();
+		
+		  var plainObject = new Object();
+		  myObject.name = "John";
+		  
+		  
+		  $.ajax({
+			    url:serverUrl,
+			    type:'POST',
+			    dataType:"json",
+			    data: plainObject,
+			    success:function (data) {             
+			    if(data.error) {  // If there is an error, show the error messages
+			            $('.alert-error').text(data.error.text).show();
+			        }            
+			    }
+			});
+		  
+	  },
+	 */ 
+	  
+	show: function(list_of_users) {
+		$(document.body).append(this.render(list_of_users).el);
+	},
+	close: function() {
+		this.remove();
+	},
+	/*
+	 * Handling the save click, adding item to collection and persisting data to DB
+	 */
+	save: function() {
+		/*
+		 * We'll save a reference to current context
+		 */
+		var that = this;
+
+		/*
+		 * Traversing input elements in current dialog
+		 */
+		
+		$.each(this.$el.find('input'), function(i, item) {
+			var attribute = {};
+			/*
+			 * Matching name and value
+			 */
+			if(item.name !== "taskDueDate"){
+			attribute[item.name] = item.value;
+			that.model.set(attribute);
+			}
+			
+			if(item.name === 'taskDueDate'){
+				 var date = new Date(item.value); 
+				 var milliseconds = date.getTime();
+				 that.model.set({taskDueDate: milliseconds});
+			}
+			
+		});
+
+		/*
+		 * Same logic as in the user dialog, different approach for new and modified task
+		 */
+		if (null == this.model.taskId) {
+			/*
+			 * Adding user ID information read from "global" variable
+			 */
+			
+			var repetition = getSelectedFilterOption();
+
+			
+			this.model.set({userId: assignedUser, taskAssigned: true, taskCreatedBy: currentUserId , taskRepetition: repetition});
+			
+			if (null != assignedUser)
+				this.model.set({taskMaster: false});
+			
+			console.log(" assigned User is "+ assignedUser);
+
+			masterTasks.create(this.model,{ wait: true });
 			
 			$('.success').fadeIn(400).delay(3000).fadeOut(400);
 		} else {
@@ -718,6 +1171,141 @@ TaskDialog = Backbone.View.extend({
 });
 
 
+
+
+
+
+
+var AppRouter = Backbone.Router.extend({
+	
+    routes: {
+        "master": "masterTasks",
+        "myTasks": "myTasks",
+        "*actions": "defaultRoute" // Backbone will try match the route above first
+
+    }
+});
+
+base_url = window.location.href;
+
+// Instantiate the router
+var app_router = new AppRouter;
+app_router.on('route:masterTasks', function () {
+    // Note the variable in the route definition being passed in here
+    console.log( " logged master ");   
+    
+	$('#div1').show();
+	$('#taskFilterList').hide();
+	
+	$tasks.empty();
+	
+
+	masterTasks = new MasterTaskCollection();
+
+	masterTasks.comparator = function(model) {
+      return [model.get('taskCompleted'),model.get('taskDueDate')];
+      }
+
+
+	/*
+	 * We'll assign current user ID to "global" variable as we need it on several other places
+	 */
+
+	/*
+	 * Lets fetch tasks for currently selected user (we can access currently selected user through this.model)
+	 * processData param here only informs the system that params provided through data param needs to be added to URL as GET params
+	 */
+	masterTasks.fetch({processData: true, success: function() {
+		/*
+		 * Initializing task list view and passing tasks collection to it
+		 */
+		masterTaskListView = new MasterTaskList({
+			collection: masterTasks,
+			/*
+			 * Telling view to which DOM elements it needs to attach itself
+			 */
+			el: $tasks
+		});
+		/*
+		 * Rendering list view
+		 */
+		masterTaskListView.render();
+		//tasks.sort();
+		
+	}});
+	
+	
+	
+	
+	
+});
+
+
+app_router.on('route:myTasks', function () {
+    // Note the variable in the route definition being passed in here
+	initilializeMyTasks();
+	
+	//$tasks.empty();
+	
+	$users.empty();
+	
+	$users.append(" <li class='nav-header'><h6>Friends</h6></li>");
+	
+	users = new UserCollection();
+	/*
+	 * Fetching users from DB
+	 */
+	users.fetch({success: function(data) {
+		var currentUser = parseUrlParam(location.search);
+		var dataModel = data.models;
+		var userNumber = 2;
+		for(var i = 0; i < dataModel.length; i++){
+			var attributes = JSON.stringify(dataModel[i].attributes);
+			
+			var currId =  $.parseJSON(attributes).userId;
+			if(currId == currentUser){
+				userNumber = currId + 1;
+				break;
+			}else { continue; } 
+		}
+		userListView = new UserList({
+			collection: users,
+			el: $users
+		});
+		userListView.render();
+
+		/*
+		 * Triggering click on the currently logged in user which will load its tasks
+		 */
+		
+		$users.find('li:nth-child(' + userNumber + ')').find('a').trigger('click');
+		
+	//	$users.find('li:nth-child(1)').find('a').trigger('click');
+//		$users.find('li:nth-chiqld(2)').find('a').trigger('click');
+	}});
+	
+	
+	
+
+});
+
+
+
+app_router.on('route:defaultRoute', function (path) {		
+	if(window.location.href === base_url && path == null){
+		initilializeMyTasks();
+	}			
+});
+
+Backbone.history.start();
+
+function initilializeMyTasks(){
+	 console.log( " my Tasks " + base_url);   
+	   // window.location.replace(base_url);
+		$('#div1').hide();
+		$('#taskFilterList').show();
+		
+}
 
 users = new UserCollection();
 /*
@@ -746,8 +1334,9 @@ users.fetch({success: function(data) {
 	 * Triggering click on the currently logged in user which will load its tasks
 	 */
 	$users.find('li:nth-child(' + userNumber + ')').find('a').trigger('click');
-//	$users.find('li:nth-child(2)').find('a').trigger('click');
+//	$users.find('li:nth-chiqld(2)').find('a').trigger('click');
 }});
+
 
 /*
  * Attaching to "Add User" button
@@ -771,7 +1360,7 @@ $('#delete-user').click(function(e) {
  */
 $('#add-task').click(function(e) {
 	list_of_users=new Array();
-	var view = new TaskDialog({model: new Task()});
+	var view = new MasterTaskDialog({model: new MasterTask()});
 
 	$.ajax({
         url: serverUrl + 'users',
@@ -789,10 +1378,14 @@ $('#add-task').click(function(e) {
         	
         }
     });
-	
+
 	return false;
-	
+
 });
+
+
+
+
 
 $("#previous, #this_week, #later, #all_tasks").change(function () {
 
@@ -847,4 +1440,51 @@ function isNumberKey(evt){
         return false;
     return true;
 }
+
+
+
+
+
+$('#div1').hide();
+
+$("#myTab a").click(function(e){
+	e.preventDefault();
+	$(this).tab('show');
+	 var id  = this.id;
+	
+	if(id === "myTasks")
+		myTask();
+	else if (id === "masterTasks")
+		masterTask();
+	
+	
+});
+
+
+function masterTask(){
+	$('#div1').show();
+	$('#taskFilterList').hide();
+
+	$.ajax({
+        url: serverUrl + 'tasks/master',
+        success:function(result){
+
+       // console.log("result is "+ JSON.stringify(result));
+        	
+        }
+    });
+	
+
+}
+
+function myTask(){
+	$('#div1').hide();
+	$('#taskFilterList').show();
+}
+
+
+
+
+
+
 

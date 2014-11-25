@@ -42,17 +42,32 @@
         </div>
         <div class="span9 main-content">
           <div class="page-header">
-            <div class="row-fluid">
-                  <h3 id="user-title"><span>User</span>'s Tasks</h3>
+           
+            
+             <div class="row-fluid">
+                
+                  <a id="myTasks" href="#myTasks"><h3 id="user-title"><span>User</span>'s Tasks</h3></a> &nbsp;
+                  <a id="masterTasks" href="#master"><h3 id="maste1r"><span> Master tasks</span></h3></a>
+                   <div class='success'>Task Created Successfully</div>
+                   <div class='assigned'>Task Assigned Successfully</div>
+
+
+                </ul>
+                <div id="div1">  
+                <a href="#add-tShask" id="add-task" role="button" class="btn pull-right" data-toggle="modal"><i class="icon-tasks"></i>&nbsp;&nbsp;Add Task</a>
+                  </div>
                   
-                  <div class='success'>Task Created Successfully</div>
                   
-                  <a href="#add-task" id="add-task" role="button" class="btn pull-right" data-toggle="modal"><i class="icon-tasks"></i>&nbsp;&nbsp;Add Task</a>
-            </div>
+                  
+                  </div>
+                  
+                  
+                  
+           
           </div>
           <div class="table-responsive">
          
-       <div class="row-fluid">
+       <div id="taskFilterList" class="row-fluid">
        <div class="span6">
         <h5> Show Tasks Due: &nbsp;&nbsp;&nbsp;
         <input type="radio" name="group1" id="previous" value="previous"> Previous &nbsp;&nbsp;
@@ -84,6 +99,8 @@
             </thead>
             <tbody id="tasks">
             </tbody>
+            <tbody id="masterTasks">
+            </tbody>
           </table>
           </div>
         </div>
@@ -91,12 +108,16 @@
     </div>
 
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    	<script type="text/javascript" src="jquery.stickytabs.js"></script>	
+    
     <script src="js/fw/bootstrap.min.js"></script>
     <script src="js/fw/bootstrap-datetimepicker.min.js"></script>
     <script type="text/javascript" src="js/fw/underscore.min.js"></script>
 	<script type="text/javascript" src="js/fw/backbone.min.js"></script>
 	<script type="text/javascript" src="js/fw/backbone-validation-min.js"></script>
 	<script type="text/javascript" src="js/main.js"></script>
+	
 
 	<script type="text/template" id="user-dialog">
 		<div class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="Add User" aria-hidden="true">
@@ -121,12 +142,14 @@
 	<script type="text/template" id="user-item">
 		<a href="#<%= userId %>" data-id="<%= userId %>"><%= userFirstName %> <%= userLastName %></a>
 	</script>
+
 	
-	<script type="text/template" id="task-dialog">
+	
+		<script type="text/template" id="task-dialog">
 		<div class="modal in fade" tabindex="-1" role="dialog" aria-labelledby="Add Task" aria-hidden="true">
 	      <div class="modal-header">
 	        <button id="close" type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-	        <h3 id="myModalLabel">Add/Edit Task</h3>
+	        <h3 id="myModalLabel">Assign Task</h3>
 	      </div>
 	      <div class="modal-body">
 	        <form class="form-inline">
@@ -180,6 +203,74 @@
 	    </div>
 	    <div class="modal-backdrop fade in"></div>
 	</script>
+	
+	
+	
+	
+	
+		<script type="text/template" id="master-task-dialog">
+		<div class="modal in fade" tabindex="-1" role="dialog" aria-labelledby="Add Task" aria-hidden="true">
+	      <div class="modal-header">
+	        <button id="close" type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+	        <h3 id="myModalLabel">Add Master Task</h3>
+	      </div>
+	      <div class="modal-body">
+	        <form class="form-inline">
+	           <input type="text" maxlength="50" name="taskTitle" class="input-block-level input-taskTitle dialog-inputs" placeholder="Title" value="<%= taskTitle %>" required>
+		       <input type="text" maxlength="500" name="taskDescription" class="input-block-level input-taskDescription dialog-inputs" placeholder="Description" value="<%= taskDescription %>" required>
+        
+    
+<!-- Assign User -->
+<div class="btn-group input-block-level dialog-inputs">
+  <button id="userButton" type="button" class="btn btn-default btn-lg dropdown-toggle" data-toggle="dropdown">
+    Assign user <span class="caret"></span>
+  </button>
+ <%= console.log("list of users"+JSON.stringify(list_of_users)) %>
+  <ul class="dropdown-menu" role="menu">
+     <% _.each(list_of_users, function(eachUser){ %>
+    <li><a href="#" id="userli" title="<%= eachUser.userId %>"><%= eachUser.name %></a></li>
+    <% }); %>
+  </ul>
+<textarea rows="1" class="selected-user" id="displayUserName" required readonly></textarea>
+</div>
+
+
+	          <input type="number" min="10" max="100" step="10" name="taskOriginalPointValue" class="input-small input-taskPointValue dialog-inputs" placeholder="Points" value="<%= taskOriginalPointValue %>" required onkeypress="return isNumberKey(event)">
+	          <div id="dp1" class="input-append date dialog-inputs">
+	          	<input class="input-medium" name="taskDueDate" value="<%= taskDueDate %>" data-format="yyyy-MM-dd hh:mm:ss" type="text" placeholder="Due Date" required readonly>
+	          	<span class="add-on">
+	          		<i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+	          	</span>
+	          </div>
+			  <div class="input-taskRepetition dialog-inputs">
+				<input type="radio" name="taskRepetition" id="NoRepeat" value="NoRepeat" checked = "checked">
+				<label for="NoRepeat">NoRepeat&nbsp;&nbsp;</label>
+				<input type="radio" name="taskRepetition" id="Daily" value="Daily">
+				<label for="Daily">Daily&nbsp;&nbsp;</label>
+				<input type="radio" name="taskRepetition" id="Weekly" value="Weekly">
+				<label for="Weekly">Weekly&nbsp;&nbsp;</label>
+				<input type="radio" name="taskRepetition" id="Monthly" value="Monthly">
+				<label for="Monthly">Monthly&nbsp;&nbsp;</label>
+			  </div>
+<!--
+<div id="save-row" class="row-fluid">
+			  <button id="save" class="btn btn-primary save-action pull-right"  type="submit">Save</button>
+</div>
+-->
+	        </form>
+	      </div>
+	      <div class="modal-footer">
+	        <button id="close" class="btn close-action" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button id="save" class="btn btn-primary save-action">Save</button>
+	      </div>
+	    </div>
+	    <div class="modal-backdrop fade in"></div>
+	</script>
+	
+	
+	
+	
+	
 	
 	<script type="text/template" id="task-item">
 		<td class="center-col">

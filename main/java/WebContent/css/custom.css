@@ -136,7 +136,7 @@ vertical-align:top;
 	border-bottom: 1px solid black;
 }
 
-.success {
+.success,.assigned {
 	display:none;
     width:500px;
     height:20px;
