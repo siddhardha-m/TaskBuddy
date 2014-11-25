@@ -27,7 +27,8 @@ public class UserController {
 	
 	private static String selectSQL = "SELECT " +
 			"user_id, user_first_name, user_last_name, user_image, " +
-			"user_created_date, is_user_deleted, total_score, current_score, fb_id" +
+			"user_created_date, is_user_deleted, total_score, current_score, " +
+			"current_points, weekly_points, fb_id" +
 			" FROM Users "
 			+ " WHERE is_user_deleted = false ";
 	
@@ -106,8 +107,9 @@ public class UserController {
 	private static boolean insertUser(User userRow) throws SQLException {
 		
 		String sql = "INSERT INTO Users (user_first_name, user_last_name, user_image, " +
-				"user_created_date, is_user_deleted, total_score, current_score, fb_id) " +
-				"VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+				"user_created_date, is_user_deleted, total_score, current_score, " +
+				"current_points, weekly_points, fb_id) " +
+				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		ResultSet rs = null;
 		
 		try (
@@ -121,7 +123,9 @@ public class UserController {
 			stmt.setBoolean(5, userRow.isUserDeleted());
 			stmt.setInt(6, userRow.getTotalScore());
 			stmt.setInt(7, userRow.getCurrentScore());
-			stmt.setLong(8, userRow.getFbId());
+			stmt.setInt(8, userRow.getCurrentPoints());
+			stmt.setInt(9, userRow.getWeeklyPoints());
+			stmt.setLong(10, userRow.getFbId());
 			
 			int affected_rows = stmt.executeUpdate();
 			
@@ -155,7 +159,8 @@ public class UserController {
 		
 		String sql = "UPDATE Users SET " +
 				"user_first_name = ?, user_last_name = ?, user_image = ?, " +
-				"user_created_date = ?, is_user_deleted = ?, total_score = ?, current_score = ?, fb_id = ? " +
+				"user_created_date = ?, is_user_deleted = ?, total_score = ?, current_score = ?, " +
+				"current_points = ?, weekly_points = ?, fb_id = ? " +
 				" WHERE user_id = ?";
 		
 		try (
@@ -169,8 +174,10 @@ public class UserController {
 			stmt.setBoolean(5, userRow.isUserDeleted());
 			stmt.setInt(6, userRow.getTotalScore());
 			stmt.setInt(7, userRow.getCurrentScore());
-			stmt.setLong(8, userRow.getFbId());
-			stmt.setInt(9, userRow.getUserId());
+			stmt.setInt(8, userRow.getCurrentPoints());
+			stmt.setInt(9, userRow.getWeeklyPoints());
+			stmt.setLong(10, userRow.getFbId());
+			stmt.setInt(11, userRow.getUserId());
 			int affected_rows = stmt.executeUpdate();
 			
 			if (affected_rows == 1) {
@@ -214,6 +221,8 @@ public class UserController {
 		userRow.setUserDeleted(rs.getBoolean("is_user_deleted"));
 		userRow.setTotalScore(rs.getInt("total_score"));
 		userRow.setCurrentScore(rs.getInt("current_score"));
+		userRow.setCurrentPoints(rs.getInt("current_points"));
+		userRow.setWeeklyPoints(rs.getInt("weekly_points"));
 		userRow.setFbId(rs.getLong("fb_id"));
 		
 		return userRow;

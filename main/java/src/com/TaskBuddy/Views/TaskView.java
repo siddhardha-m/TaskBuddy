@@ -138,7 +138,7 @@ public class TaskView {
 	 */
 	@GET @Path("master")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public static ArrayList<Task> getAllMasterTaskViews() {
+	public static ArrayList<Task> getAllMasterTasks() {
 		try {
 			
 			ArrayList<Task> tasksList = TaskController.getAllMasterTasks();

@@ -30,6 +30,8 @@ user_created_date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
 is_user_deleted boolean NOT NULL DEFAULT false,
 total_score int NOT NULL DEFAULT 0,
 current_score int NOT NULL DEFAULT 0,
+current_points int NOT NULL DEFAULT 0,
+weekly_points int NOT NULL DEFAULT 0,
 fb_id LONG NOT NULL,
 PRIMARY KEY (user_id)
 );
@@ -151,5 +153,28 @@ CREATE EVENT reset_master_tasks
 	DO
 		update Tasks
 		set is_task_completed = false;
+
+# ==============================================
+
+
+# ========== Reset User points event ==========
+
+SET GLOBAL event_scheduler = ON;
+
+DROP EVENT IF EXISTS reset_user_points;
+
+DELIMITER $$
+
+CREATE EVENT reset_user_points
+	ON SCHEDULE EVERY 1 WEEK STARTS '2014-11-15 00:00:00' 
+	DO
+	BEGIN
+		update Users
+		set current_points = current_points + weekly_points;
+		update Users
+		set current_score = current_points - total_score;
+	END $$
+
+DELIMITER ;
 
 # ==============================================
