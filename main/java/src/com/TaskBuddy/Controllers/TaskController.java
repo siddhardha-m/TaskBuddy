@@ -147,8 +147,8 @@ public class TaskController {
 			
 			stmt.setString(1, taskRow.getTaskTitle());
 			stmt.setString(2, taskRow.getTaskDescription());
-			stmt.setInt(3, taskRow.getTaskOriginalPointValue());
-			stmt.setInt(4, taskRow.getTaskUpdatedPointValue());
+			stmt.setDouble(3, taskRow.getTaskOriginalPointValue());
+			stmt.setDouble(4, taskRow.getTaskUpdatedPointValue());
 			stmt.setInt(5, taskRow.getTaskCreatedBy());
 			stmt.setTimestamp(6, new  Timestamp(taskRow.getTaskCreatedDate().getTime()));
 			stmt.setTimestamp(7, new Timestamp(taskRow.getTaskDueDate().getTime()));
@@ -201,8 +201,8 @@ public class TaskController {
 			
 			stmt.setString(1, taskRow.getTaskTitle());
 			stmt.setString(2, taskRow.getTaskDescription());
-			stmt.setInt(3, taskRow.getTaskOriginalPointValue());
-			stmt.setInt(4, taskRow.getTaskUpdatedPointValue());
+			stmt.setDouble(3, taskRow.getTaskOriginalPointValue());
+			stmt.setDouble(4, taskRow.getTaskUpdatedPointValue());
 			stmt.setInt(5, taskRow.getTaskCreatedBy());
 			stmt.setTimestamp(6, new Timestamp(taskRow.getTaskCreatedDate().getTime()));
 			stmt.setTimestamp(7, new Timestamp(taskRow.getTaskDueDate().getTime()));
@@ -251,8 +251,8 @@ public class TaskController {
 		taskRow.setTaskId(rs.getInt("task_id"));
 		taskRow.setTaskTitle(rs.getString("task_title"));
 		taskRow.setTaskDescription(rs.getString("task_description"));
-		taskRow.setTaskOriginalPointValue(rs.getInt("task_original_point_value"));
-		taskRow.setTaskUpdatedPointValue(rs.getInt("task_updated_point_value"));
+		taskRow.setTaskOriginalPointValue(rs.getDouble("task_original_point_value"));
+		taskRow.setTaskUpdatedPointValue(rs.getDouble("task_updated_point_value"));
 		taskRow.setTaskCreatedBy(rs.getInt("task_created_by"));
 		taskRow.setTaskCreatedDate(rs.getTimestamp("task_created_date"));
 		taskRow.setTaskDueDate(rs.getTimestamp("task_due_date"));

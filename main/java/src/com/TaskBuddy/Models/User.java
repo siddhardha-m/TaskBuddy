@@ -17,10 +17,10 @@ public class User {
 	private String userImage;
 	private Date userCreatedDate;
 	private boolean isUserDeleted;
-	private int totalScore;
-	private int currentScore;
-	private int currentPoints;
-	private int weeklyPoints;
+	private double totalScore;
+	private double currentScore;
+	private double currentPoints;
+	private double weeklyPoints;
 	private long fbId;
 
 	
@@ -61,28 +61,28 @@ public class User {
 	public void setUserDeleted(boolean isUserDeleted) {
 		this.isUserDeleted = isUserDeleted;
 	}
-	public int getTotalScore() {
+	public double getTotalScore() {
 		return totalScore;
 	}
-	public void setTotalScore(int totalScore) {
+	public void setTotalScore(double totalScore) {
 		this.totalScore = totalScore;
 	}
-	public int getCurrentScore() {
+	public double getCurrentScore() {
 		return currentScore;
 	}
-	public void setCurrentScore(int currentScore) {
+	public void setCurrentScore(double currentScore) {
 		this.currentScore = currentScore;
 	}
-	public int getCurrentPoints() {
+	public double getCurrentPoints() {
 		return currentPoints;
 	}
-	public void setCurrentPoints(int currentPoints) {
+	public void setCurrentPoints(double currentPoints) {
 		this.currentPoints = currentPoints;
 	}
-	public int getWeeklyPoints() {
+	public double getWeeklyPoints() {
 		return weeklyPoints;
 	}
-	public void setWeeklyPoints(int weeklyPoints) {
+	public void setWeeklyPoints(double weeklyPoints) {
 		this.weeklyPoints = weeklyPoints;
 	}
 	public long getFbId(){

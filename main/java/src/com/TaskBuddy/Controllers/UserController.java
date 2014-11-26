@@ -121,10 +121,10 @@ public class UserController {
 			stmt.setString(3, userRow.getUserImage());
 			stmt.setTimestamp(4, new Timestamp(userRow.getUserCreatedDate().getTime()));
 			stmt.setBoolean(5, userRow.isUserDeleted());
-			stmt.setInt(6, userRow.getTotalScore());
-			stmt.setInt(7, userRow.getCurrentScore());
-			stmt.setInt(8, userRow.getCurrentPoints());
-			stmt.setInt(9, userRow.getWeeklyPoints());
+			stmt.setDouble(6, userRow.getTotalScore());
+			stmt.setDouble(7, userRow.getCurrentScore());
+			stmt.setDouble(8, userRow.getCurrentPoints());
+			stmt.setDouble(9, userRow.getWeeklyPoints());
 			stmt.setLong(10, userRow.getFbId());
 			
 			int affected_rows = stmt.executeUpdate();
@@ -172,10 +172,10 @@ public class UserController {
 			stmt.setString(3, userRow.getUserImage());
 			stmt.setTimestamp(4, new Timestamp(userRow.getUserCreatedDate().getTime()));
 			stmt.setBoolean(5, userRow.isUserDeleted());
-			stmt.setInt(6, userRow.getTotalScore());
-			stmt.setInt(7, userRow.getCurrentScore());
-			stmt.setInt(8, userRow.getCurrentPoints());
-			stmt.setInt(9, userRow.getWeeklyPoints());
+			stmt.setDouble(6, userRow.getTotalScore());
+			stmt.setDouble(7, userRow.getCurrentScore());
+			stmt.setDouble(8, userRow.getCurrentPoints());
+			stmt.setDouble(9, userRow.getWeeklyPoints());
 			stmt.setLong(10, userRow.getFbId());
 			stmt.setInt(11, userRow.getUserId());
 			int affected_rows = stmt.executeUpdate();
@@ -219,10 +219,10 @@ public class UserController {
 		userRow.setUserImage(rs.getString("user_image"));
 		userRow.setUserCreatedDate(rs.getTimestamp("user_created_date"));
 		userRow.setUserDeleted(rs.getBoolean("is_user_deleted"));
-		userRow.setTotalScore(rs.getInt("total_score"));
-		userRow.setCurrentScore(rs.getInt("current_score"));
-		userRow.setCurrentPoints(rs.getInt("current_points"));
-		userRow.setWeeklyPoints(rs.getInt("weekly_points"));
+		userRow.setTotalScore(rs.getDouble("total_score"));
+		userRow.setCurrentScore(rs.getDouble("current_score"));
+		userRow.setCurrentPoints(rs.getDouble("current_points"));
+		userRow.setWeeklyPoints(rs.getDouble("weekly_points"));
 		userRow.setFbId(rs.getLong("fb_id"));
 		
 		return userRow;

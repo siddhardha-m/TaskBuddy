@@ -14,8 +14,8 @@ public class TaskViewObject {
 	private int taskId;
 	private String taskTitle;
 	private String taskDescription;
-	private int taskOriginalPointValue;
-	private int taskUpdatedPointValue;
+	private double taskOriginalPointValue;
+	private double taskUpdatedPointValue;
 	private int taskCreatedBy;
 	private Date taskCreatedDate;
 	private Date taskDueDate;
@@ -46,16 +46,16 @@ public class TaskViewObject {
 	public void setTaskDescription(String taskDescription) {
 		this.taskDescription = taskDescription;
 	}
-	public int getTaskOriginalPointValue() {
+	public double getTaskOriginalPointValue() {
 		return taskOriginalPointValue;
 	}
-	public void setTaskOriginalPointValue(int taskOriginalPointValue) {
+	public void setTaskOriginalPointValue(double taskOriginalPointValue) {
 		this.taskOriginalPointValue = taskOriginalPointValue;
 	}
-	public int getTaskUpdatedPointValue() {
+	public double getTaskUpdatedPointValue() {
 		return taskUpdatedPointValue;
 	}
-	public void setTaskUpdatedPointValue(int taskUpdatedPointValue) {
+	public void setTaskUpdatedPointValue(double taskUpdatedPointValue) {
 		this.taskUpdatedPointValue = taskUpdatedPointValue;
 	}
 	public int getTaskCreatedBy() {

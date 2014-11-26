@@ -29,7 +29,7 @@ import com.TaskBuddy.properties.PropertiesManager;
 public class MasterTaskView {
 
 	private static final Logger log = Logger.getLogger(TaskView.class);
-	private static final int PERCENTAGE = Integer.parseInt(PropertiesManager.getProperty("PERCENTAGE"));
+	private static final double PERCENTAGE = Double.parseDouble(PropertiesManager.getProperty("PERCENTAGE"));
 
 	public MasterTaskView() {
 	}
@@ -149,14 +149,14 @@ public class MasterTaskView {
 			}
 
 			if(countOfIncompleteMasterTasks > 1){
-				int originalPoints = taskRow.getTaskOriginalPointValue();
-				int percentValue = (originalPoints * PERCENTAGE) / 100;
-				int updatedPoints = originalPoints - percentValue;
+				double originalPoints = taskRow.getTaskOriginalPointValue();
+				double percentValue = (originalPoints * PERCENTAGE) / 100;
+				double updatedPoints = originalPoints - percentValue;
 				taskRow.setTaskOriginalPointValue(updatedPoints);
 
 				taskSaved = TaskController.save(taskRow);
 
-				int total = 0;
+				double total = 0;
 				for(Task masterTask : masterTasksList){
 					if(masterTask.getTaskId() != taskRow.getTaskId() && !masterTask.isTaskCompleted()){ //Ignoring the completed tasks and the currently selected tasks
 						total += masterTask.getTaskOriginalPointValue();
@@ -164,9 +164,9 @@ public class MasterTaskView {
 				}
 				for(Task masterTask : masterTasksList){
 					if(masterTask.getTaskId() != taskRow.getTaskId() && !masterTask.isTaskCompleted()){ //Ignoring the completed tasks and the currently selected tasks
-						int originalPointsRemTasks = masterTask.getTaskOriginalPointValue();
-						int percentValueRemTasks = (originalPointsRemTasks * percentValue) / total;
-						int updatedPointsRemTasks = originalPointsRemTasks + percentValueRemTasks;
+						double originalPointsRemTasks = masterTask.getTaskOriginalPointValue();
+						double percentValueRemTasks = (originalPointsRemTasks * percentValue) / total;
+						double updatedPointsRemTasks = originalPointsRemTasks + percentValueRemTasks;
 						masterTask.setTaskOriginalPointValue(updatedPointsRemTasks);
 						TaskController.save(masterTask);
 					}
