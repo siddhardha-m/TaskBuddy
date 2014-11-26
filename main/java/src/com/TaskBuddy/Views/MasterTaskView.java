@@ -102,7 +102,7 @@ public class MasterTaskView {
 			
 			ArrayList<TaskViewObject> taskViewList = new ArrayList<TaskViewObject>();
 			
-			ArrayList<Task> tasksList = TaskController.getAllTasks();
+			ArrayList<Task> tasksList = TaskController.getAllMasterTasks();
 			
 			for (Task taskRow : tasksList) {
 				
@@ -120,59 +120,6 @@ public class MasterTaskView {
 			}
 			
 			return taskViewList;
-			
-		} catch (Exception e) {
-			
-			log.error("Error message: " + e.getMessage());
-			
-			return null;
-			
-		}
-	}
-	
-	@GET @Path("user/{userId}")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public static ArrayList<TaskViewObject> getAllTaskViewsByUserId(@PathParam("userId") int userId) {
-		try {
-			
-			ArrayList<UserTask> userTasksList = UserTaskController.getAllTasksByUserId(userId);
-			
-			ArrayList<TaskViewObject> taskViewList = new ArrayList<TaskViewObject>();
-			
-			for (UserTask userTaskRow : userTasksList) {
-				
-				Task taskRow = TaskController.getTaskById(userTaskRow.getTaskId());
-				
-				taskViewList.add(createTaskViewObject(taskRow, userTaskRow));
-			}
-			
-			return taskViewList;
-			
-		} catch (Exception e) {
-			
-			log.error("Error message: " + e.getMessage());
-			
-			return null;
-			
-		}
-	}
-	
-	@GET @Path("{taskId}")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public static TaskViewObject getTaskViewByTaskId(@PathParam("taskId") int taskId) {
-		try {
-			
-			Task taskRow = TaskController.getTaskById(taskId);
-			
-			ArrayList<UserTask> userTasksList = UserTaskController.getAllUsersByTaskId(taskId);
-			
-			UserTask userTaskRow = new UserTask();
-			
-			for (UserTask userTaskRowInternal : userTasksList) {
-				userTaskRow = userTaskRowInternal;
-			}
-			
-			return createTaskViewObject(taskRow, userTaskRow);
 			
 		} catch (Exception e) {
 			
