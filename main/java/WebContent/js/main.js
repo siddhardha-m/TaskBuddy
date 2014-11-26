@@ -579,7 +579,8 @@ TaskList = Backbone.View.extend({
 		var startDay = 1; 
 		var now = new Date;
         var d = now.getDay(); 
-        var weekStart = now.valueOf() - (d<=0 ? 7-startDay:d-startDay)*86400000; 
+      //  var weekStart = now.valueOf() - (d<=0 ? 7-startDay:d-startDay)*86400000; 
+        var weekStart =  now.valueOf() ;
         var weekEnd =  weekStart.valueOf() + 6*86400000;
         var taskDueDate = date;
         
@@ -873,7 +874,7 @@ MasterTaskItem = Backbone.View.extend({
 	},
 	
 	modify: function(e) {
-		//var status = e.currentTarget.checked ? true : false;
+		var status = e.currentTarget.checked ? true : false;
 		//var currScore = currentUser.get('currentScore');
 		
 		//var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
@@ -1415,10 +1416,16 @@ function getSelectedFilterOption(){
 	}
 
 function isDueDateInCurrentWeek(date){
-		var startDay = 1; 
+	
+	 // assumed start day of the current week is monday
+	
+		
 		var now = new Date;
         var d = now.getDay(); 
-        var weekStart = now.valueOf() - (d<=0 ? 7-startDay:d-startDay)*86400000; 
+        var startDay = 1; 
+    //   var weekStart = d; 
+    //    var weekStart = now.valueOf() - (d<=0 ? 7-startDay:d-startDay)*86400000; 
+        var weekStart = now.valueOf();
         var weekEnd =  weekStart.valueOf() + 6*86400000;
         var taskDueDate = date;
         
