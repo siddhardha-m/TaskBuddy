@@ -1,6 +1,7 @@
 package com.TaskBuddy.Views;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -16,6 +17,7 @@ import com.TaskBuddy.Controllers.TaskController;
 import com.TaskBuddy.Models.Task;
 import com.TaskBuddy.Models.UserTask;
 import com.TaskBuddy.ViewObjects.TaskViewObject;
+import com.TaskBuddy.properties.PropertiesManager;
 
 /**
  * @author Siddhardha
@@ -25,15 +27,16 @@ import com.TaskBuddy.ViewObjects.TaskViewObject;
  */
 @Path("/tasks/master")
 public class MasterTaskView {
-	
+
 	private static final Logger log = Logger.getLogger(TaskView.class);
+	private static final int PERCENTAGE = Integer.parseInt(PropertiesManager.getProperty("PERCENTAGE"));
 
 	public MasterTaskView() {
 	}
-	
+
 	private static TaskViewObject createTaskViewObject(Task taskRow, UserTask userTaskRow) {
 		TaskViewObject taskViewRow = new TaskViewObject();
-		
+
 		taskViewRow.setTaskId(taskRow.getTaskId());
 		taskViewRow.setTaskTitle(taskRow.getTaskTitle());
 		taskViewRow.setTaskDescription(taskRow.getTaskDescription());
@@ -50,13 +53,13 @@ public class MasterTaskView {
 		taskViewRow.setUserId(userTaskRow.getUserId());
 		taskViewRow.setTaskAssignedDate(userTaskRow.getTaskAssignedDate());
 		taskViewRow.setTaskAssigned(userTaskRow.isTaskAssigned());
-		
+
 		return taskViewRow;
 	}
-	
+
 	private static Task getTaskFromTaskViewObject(TaskViewObject taskViewRow) {
 		Task taskRow = new Task();
-		
+
 		taskRow.setTaskId(taskViewRow.getTaskId());
 		taskRow.setTaskTitle(taskViewRow.getTaskTitle());
 		taskRow.setTaskDescription(taskViewRow.getTaskDescription());
@@ -70,10 +73,10 @@ public class MasterTaskView {
 		taskRow.setTaskRepetition(taskViewRow.getTaskRepetition());
 		taskRow.setTaskMaster(taskViewRow.isTaskMaster());
 		taskRow.setTaskDueDuration(taskViewRow.getTaskDueDuration());
-		
+
 		return taskRow;
 	}
-	
+
 	/**
 	 * 
 	 * This method is invoked on GET
@@ -84,27 +87,27 @@ public class MasterTaskView {
 	@Produces({ MediaType.APPLICATION_JSON })
 	public static ArrayList<TaskViewObject> getAllMasterTaskViews() {
 		try {
-			
+
 			ArrayList<TaskViewObject> taskViewList = new ArrayList<TaskViewObject>();
-			
+
 			ArrayList<Task> tasksList = TaskController.getAllMasterTasks();
-			
+
 			for (Task taskRow : tasksList) {
 				UserTask userTaskRow = new UserTask();
 				taskViewList.add(createTaskViewObject(taskRow, userTaskRow));
 			}
-			
+
 			return taskViewList;
-			
+
 		} catch (Exception e) {
-			
+
 			log.error("Error message: " + e.getMessage());
-			
+
 			return null;
-			
+
 		}
 	}
-	
+
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
@@ -113,40 +116,76 @@ public class MasterTaskView {
 			Task taskRow = getTaskFromTaskViewObject(taskViewRow);
 
 			boolean taskSaved = TaskController.save(taskRow);
-			
+
 			if(taskSaved) {
 				return true;
 			} else {
 				return false;
 			}
-			
+
 		} catch (Exception e) {
-			
+
 			log.error("Error message: " + e.getMessage());
-			
+
 			return false;
 		}
 	}
-	
+
 	@PUT @Path("{taskId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public static boolean updateMasterTaskView(TaskViewObject taskViewRow) {
 		try {
 			Task taskRow = getTaskFromTaskViewObject(taskViewRow);
-			
-			boolean taskSaved = TaskController.save(taskRow);
-			
+			boolean taskSaved  = false;
+
+			List<Task> masterTasksList = TaskController.getAllMasterTasks();
+
+			int countOfIncompleteMasterTasks = 0;
+			for(Task masterTask : masterTasksList){
+				if(!masterTask.isTaskCompleted()){
+					countOfIncompleteMasterTasks++;
+				}
+			}
+
+			if(countOfIncompleteMasterTasks > 1){
+				int originalPoints = taskRow.getTaskOriginalPointValue();
+				int percentValue = (originalPoints * PERCENTAGE) / 100;
+				int updatedPoints = originalPoints - percentValue;
+				taskRow.setTaskOriginalPointValue(updatedPoints);
+
+				taskSaved = TaskController.save(taskRow);
+
+				int total = 0;
+				for(Task masterTask : masterTasksList){
+					if(masterTask.getTaskId() != taskRow.getTaskId() && !masterTask.isTaskCompleted()){ //Ignoring the completed tasks and the currently selected tasks
+						total += masterTask.getTaskOriginalPointValue();
+					}
+				}
+				for(Task masterTask : masterTasksList){
+					if(masterTask.getTaskId() != taskRow.getTaskId() && !masterTask.isTaskCompleted()){ //Ignoring the completed tasks and the currently selected tasks
+						int originalPointsRemTasks = masterTask.getTaskOriginalPointValue();
+						int percentValueRemTasks = (originalPointsRemTasks * percentValue) / total;
+						int updatedPointsRemTasks = originalPointsRemTasks + percentValueRemTasks;
+						masterTask.setTaskOriginalPointValue(updatedPointsRemTasks);
+						TaskController.save(masterTask);
+					}
+				}
+			}else{
+				taskSaved = TaskController.save(taskRow);
+			}
+
 			if(taskSaved) {
 				return true;
 			} else {
 				return false;
 			}
-			
+
+
 		} catch (Exception e) {
-			
+
 			log.error("Error message: " + e.getMessage());
-			
+
 			return false;
 		}
 	}
