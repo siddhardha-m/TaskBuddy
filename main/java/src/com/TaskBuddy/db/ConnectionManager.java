@@ -6,7 +6,10 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
+import com.TaskBuddy.properties.PropertiesManager;
+
 /**
+ * 
  * @author Siddhardha
  * 
  * ConnectionManager class for creating persistent database connection object 'conn'.
@@ -19,11 +22,13 @@ public class ConnectionManager {
 	
 	private static final Logger log = Logger.getLogger(ConnectionManager.class);
 	
-	private static final String SERVER_NAME = "localhost";
-	private static final String DB_NAME = "taskbuddy";
-	private static final String USERNAME = "tb_db_user";
-	private static final String PASSWORD = "tbdbuserpwd";
-	private static final String CONN_STRING = "jdbc:mysql://" + SERVER_NAME + "/" + DB_NAME;
+	private static final String DB_CLIENT = PropertiesManager.getProperty("DB_CLIENT");
+	private static final String SERVER_NAME = PropertiesManager.getProperty("SERVER_NAME");
+	private static final String DB_NAME = PropertiesManager.getProperty("DB_NAME");
+	private static final String USERNAME = PropertiesManager.getProperty("USERNAME");
+	private static final String PASSWORD = PropertiesManager.getProperty("PASSWORD");
+	
+	private static final String CONN_STRING = "jdbc:" + DB_CLIENT + "://" + SERVER_NAME + "/" + DB_NAME;
 	
 	private Connection conn = null;
 	
