@@ -27,12 +27,12 @@ import com.TaskBuddy.ViewObjects.TaskViewObject;
  * View class for Tasks table
  *
  */
-@Path("/tasks")
-public class TaskView {
+@Path("/tasks/master")
+public class MasterTaskView {
 	
 	private static final Logger log = Logger.getLogger(TaskView.class);
 
-	public TaskView() {
+	public MasterTaskView() {
 	}
 	
 	private static TaskViewObject createTaskViewObject(Task taskRow, UserTask userTaskRow) {
