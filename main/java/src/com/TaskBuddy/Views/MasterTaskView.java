@@ -1,8 +1,6 @@
 package com.TaskBuddy.Views;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -15,7 +13,6 @@ import javax.ws.rs.core.MediaType;
 import org.apache.log4j.Logger;
 
 import com.TaskBuddy.Controllers.TaskController;
-import com.TaskBuddy.Controllers.UserTaskController;
 import com.TaskBuddy.Models.Task;
 import com.TaskBuddy.Models.UserTask;
 import com.TaskBuddy.ViewObjects.TaskViewObject;
@@ -77,17 +74,6 @@ public class MasterTaskView {
 		return taskRow;
 	}
 	
-	private static UserTask getUserTaskFromTaskViewObject(TaskViewObject taskViewRow) {
-		UserTask userTaskRow = new UserTask();
-		
-		userTaskRow.setUserId(taskViewRow.getUserId());
-		userTaskRow.setTaskId(taskViewRow.getTaskId());
-		userTaskRow.setTaskAssignedDate(taskViewRow.getTaskAssignedDate());
-		userTaskRow.setTaskAssigned(taskViewRow.isTaskAssigned());
-		
-		return userTaskRow;
-	}
-	
 	/**
 	 * 
 	 * This method is invoked on GET
@@ -96,7 +82,7 @@ public class MasterTaskView {
 	 */
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })
-	public static ArrayList<TaskViewObject> getAllTaskViews() {
+	public static ArrayList<TaskViewObject> getAllMasterTaskViews() {
 		try {
 			
 			ArrayList<TaskViewObject> taskViewList = new ArrayList<TaskViewObject>();
@@ -104,18 +90,8 @@ public class MasterTaskView {
 			ArrayList<Task> tasksList = TaskController.getAllMasterTasks();
 			
 			for (Task taskRow : tasksList) {
-				
-				ArrayList<UserTask> userTasksList = UserTaskController.getAllUsersByTaskId(taskRow.getTaskId());
-				
-				for (UserTask  userTaskRow : userTasksList) {
-					taskViewList.add(createTaskViewObject(taskRow, userTaskRow));
-				}
-				
-				if(userTasksList.isEmpty())
-				{
-					UserTask userTaskRow = new UserTask();
-					taskViewList.add(createTaskViewObject(taskRow, userTaskRow));
-				}
+				UserTask userTaskRow = new UserTask();
+				taskViewList.add(createTaskViewObject(taskRow, userTaskRow));
 			}
 			
 			return taskViewList;
@@ -132,21 +108,13 @@ public class MasterTaskView {
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public static boolean insertTaskView(TaskViewObject taskViewRow) {
+	public static boolean insertMasterTaskView(TaskViewObject taskViewRow) {
 		try {
 			Task taskRow = getTaskFromTaskViewObject(taskViewRow);
+
 			boolean taskSaved = TaskController.save(taskRow);
 			
-			boolean userTaskSaved = true;
-			
-			if(!taskRow.isTaskMaster())
-			{
-				UserTask userTaskRow = getUserTaskFromTaskViewObject(taskViewRow);			
-				userTaskRow.setTaskId(taskRow.getTaskId());
-				userTaskSaved = UserTaskController.save(userTaskRow);
-			}
-			
-			if(taskSaved && userTaskSaved) {
+			if(taskSaved) {
 				return true;
 			} else {
 				return false;
@@ -163,110 +131,13 @@ public class MasterTaskView {
 	@PUT @Path("{taskId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public static boolean updateTaskView(TaskViewObject taskViewRow) {
+	public static boolean updateMasterTaskView(TaskViewObject taskViewRow) {
 		try {
 			Task taskRow = getTaskFromTaskViewObject(taskViewRow);
-			UserTask userTaskRow = getUserTaskFromTaskViewObject(taskViewRow);
-			
-			Task taskRowFromDB = TaskController.getTaskById(taskRow.getTaskId());
-			ArrayList<UserTask> userTasksList = UserTaskController.getAllUsersByTaskId(taskRow.getTaskId());
-			
-			for (UserTask userTaskRowObj : userTasksList) {
-				if (userTaskRowObj.getUserId() != userTaskRow.getUserId()) {
-					userTaskRowObj.setTaskAssigned(false);
-					UserTaskController.save(userTaskRowObj);
-				}
-			}
-			
-			if (taskRow.isTaskDeleted() == true) {
-				userTaskRow.setTaskAssigned(false);
-			}
-			
-			if(taskRow.isTaskCompleted() && !taskRowFromDB.isTaskCompleted() && !taskRow.getTaskRepetition().equals("NoRepeat")) { //When a Repetition task is marked complete
-				
-				//Code block: Create new task with same values
-				Task taskRowNew = getTaskFromTaskViewObject(taskViewRow);
-				UserTask userTaskRowNew = getUserTaskFromTaskViewObject(taskViewRow);
-				
-				taskRowNew.setTaskId(-1);
-				taskRowNew.setTaskCreatedDate(new Date(System.currentTimeMillis()));
-				
-				if (taskRowNew.getTaskRepetition().equals("Monthly")) { //Add 1 month to due date until due date > current date
-					Calendar cal = Calendar.getInstance();
-					cal.setTime(taskRowNew.getTaskDueDate());
-					
-					Date currentDate = new Date(System.currentTimeMillis());
-					
-					if(cal.getTime().before(currentDate)) {
-						while (!cal.getTime().after(currentDate)) {
-							cal.add(Calendar.MONTH, 1);
-						}
-					} else {
-						cal.add(Calendar.MONTH, 1);
-					}
-					
-					taskRowNew.setTaskDueDate(cal.getTime());
-				}
-				else if (taskRowNew.getTaskRepetition().equals("Weekly")) { //Add 7 days to due date until due date > current date
-					Calendar cal = Calendar.getInstance();
-					cal.setTime(taskRowNew.getTaskDueDate());
-					
-					Date currentDate = new Date(System.currentTimeMillis());
-					
-					if(cal.getTime().before(currentDate)) {
-						while (!cal.getTime().after(currentDate)) {
-							cal.add(Calendar.DATE, 7);
-						}
-					} else {
-						cal.add(Calendar.DATE, 7);
-					}
-					
-					taskRowNew.setTaskDueDate(cal.getTime());
-				}
-				else if (taskRowNew.getTaskRepetition().equals("Daily")) { //Add 1 day to due date until due date > current date
-					Calendar cal = Calendar.getInstance();
-					cal.setTime(taskRowNew.getTaskDueDate());
-					
-					Date currentDate = new Date(System.currentTimeMillis());
-					
-					if(cal.getTime().before(currentDate)) {
-						while (!cal.getTime().after(currentDate)) {
-							cal.add(Calendar.DATE, 1);
-						}
-					} else {
-						cal.add(Calendar.DATE, 1);
-					}
-					
-					taskRowNew.setTaskDueDate(cal.getTime());
-				}
-					
-				taskRowNew.setTaskCompleted(false);
-				
-				boolean taskNewSaved = TaskController.save(taskRowNew);
-				
-				userTaskRowNew.setTaskId(taskRowNew.getTaskId());
-				userTaskRowNew.setTaskAssignedDate(new Date(System.currentTimeMillis()));
-				
-				boolean userTaskNewSaved = UserTaskController.save(userTaskRowNew);
-				
-				//End of Code block: Create new task
-				
-				taskRow.setTaskRepetition("NoRepeat"); //Marking the completed task as Non repeatable
-				
-				if(taskNewSaved && userTaskNewSaved) {
-					//do nothing
-				} else {
-					return false;
-				}
-				
-			} else if(!taskRow.isTaskCompleted() && taskRowFromDB.isTaskCompleted() && taskRow.getTaskRepetition() != "NoRepeat") { //When a Repetition task is marked not complete
-				
-			}
 			
 			boolean taskSaved = TaskController.save(taskRow);
-			boolean userTaskSaved = UserTaskController.save(userTaskRow);
 			
-			if(taskSaved && userTaskSaved) {
+			if(taskSaved) {
 				return true;
 			} else {
 				return false;
