@@ -103,7 +103,6 @@ public class TaskController {
 	public static Task getTaskById(int taskId) throws SQLException {
 		
 		String sql = selectSQL +
-				" AND is_task_master = false " +
 				" AND task_id = ? ";
 		ResultSet rs = null;
 		
