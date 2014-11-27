@@ -149,7 +149,7 @@ SET GLOBAL event_scheduler = ON;
 DROP EVENT IF EXISTS reset_master_tasks;
 
 CREATE EVENT reset_master_tasks
-	ON SCHEDULE EVERY 1 WEEK STARTS '2014-11-15 00:00:00' 
+	ON SCHEDULE EVERY 1 WEEK STARTS '2014-11-16 00:00:00' 
 	DO
 		update Tasks
 		set is_task_completed = false;
@@ -166,7 +166,7 @@ DROP EVENT IF EXISTS reset_user_points;
 DELIMITER $$
 
 CREATE EVENT reset_user_points
-	ON SCHEDULE EVERY 1 WEEK STARTS '2014-11-15 00:00:00' 
+	ON SCHEDULE EVERY 1 WEEK STARTS '2014-11-16 00:00:00' 
 	DO
 	BEGIN
 		update Users

@@ -127,6 +127,8 @@
 	        <form class="form-inline">
 				<input type="text" name="userFirstName" class="input-block-level user-firstName dialog-inputs" placeholder="First Name" value="<%= userFirstName %>" required>
 				<input type="text" name="userLastName" class="input-block-level user-lastName dialog-inputs" placeholder="Last Name" value="<%= userLastName %>" required>
+                <input type="number" min="0" max="100" step="1" name="weeklyPoints" class="input-small input-weeklyPoints dialog-inputs" value="<%= weeklyPoints.toFixed(4) %>" required onkeypress="return isNumberKey(event)" >
+
 	        </form>
 	      </div>
 	      <div class="modal-footer">

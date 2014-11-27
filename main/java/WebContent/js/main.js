@@ -45,8 +45,8 @@ User = Backbone.Model.extend({
 		userImage: null,
 		totalScore: 0,
 		currentScore: 0,
-		current_points: 0,
-		weekly_points: 0,
+		currentPoints: 0,
+		weeklyPoints: 0,
 		userCreatedDate: '',
 		fbId: ''
 	},
@@ -130,7 +130,9 @@ UserItem = Backbone.View.extend({
 		 */
 		$('.user-title span').html(this.model.get('userFirstName'));
 
-		var dispScore = maxPoints - this.model.get('currentScore');
+		//var dispScore = maxPoints - this.model.get('currentScore');
+		
+		var dispScore = this.model.get('currentScore') + this.model.get('weeklyPoints');
 
 		if(dispScore < 0)
 			dispScore = 0;
