@@ -184,3 +184,12 @@ td {
 	margin-top: 0px;
 }
 
+.friends {
+	margin: 0px 0px 5px 0px;
+}
+
+#invcheckbox {
+	visibility: hidden;
+	width: 0px;
+	height: 0px;
+}

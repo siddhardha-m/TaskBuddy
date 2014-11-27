@@ -155,7 +155,7 @@ UserItem = Backbone.View.extend({
 		var goal = currentUserModel.get('currentPoints')+ currentUserModel.get('weeklyPoints')- currentUserModel.get('totalScore');
 
 		
-		$('#score').html(goal);
+		$('#score').html(goal.toFixed(4));
 		
 		/*
 		 * We'll initialize new task collection
@@ -337,7 +337,13 @@ UserDialog = Backbone.View.extend({
 			 * Simple save will persist the model to the DB and update its view
 			 */
 			this.model.save();
+			
 		}
+		
+		var goal = currentUserModel.get('currentPoints')+ currentUserModel.get('weeklyPoints')- currentUserModel.get('totalScore');
+		
+		$('#score').html(goal.toFixed(4));
+		
 		/*
 		 * Hiding modal dialog window
 		 */
@@ -500,7 +506,7 @@ TaskItem = Backbone.View.extend({
 
 		console.log("goal is "+goal);
 		
-		$('#score').html(goal);
+		$('#score').html(goal.toFixed(4));
 
 		//var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
 
@@ -1270,7 +1276,7 @@ app_router.on('route:user', function () {
 
 	$users.empty();
 
-	$users.append(" <li class='nav-header'><h6>Friends</h6></li>");
+	$users.append(" <li class='nav-header'><h6 class='friends'>Friends</h6></li>");
 
 	users = new UserCollection();
 	/*
