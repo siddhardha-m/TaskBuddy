@@ -827,7 +827,9 @@ MasterTaskItem = Backbone.View.extend({
 
 		var dummyModel = new Task(this.model.attributes);
 
-		var currentTime = new Date(parseInt(this.model.get("taskDueDate") ));
+		var currentTime = new Date();
+		var numberOfDaysToAdd = this.model.get("taskDueDuration");
+		currentTime.setDate(currentTime.getDate() + numberOfDaysToAdd);
 		var day = currentTime.getDate();
 		var month = currentTime.getMonth() + 1;
 		var year = currentTime.getFullYear();
