@@ -723,6 +723,9 @@ TaskDialog = Backbone.View.extend({
 			tasks.create(this.model,{ wait: true });
 
 			$('.assigned').fadeIn(400).delay(3000).fadeOut(400);
+			
+		    $("#task-table #tasks tr:nth-child("+selectedRowIndex+") td:nth-child(1) input").trigger('click');
+
 		} else {
 			this.model.save();
 
