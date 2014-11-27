@@ -1162,6 +1162,8 @@ var AppRouter = Backbone.Router.extend({
 
 base_url = window.location.href;
 
+$('.myTasks')[0].click();
+
 //Instantiate the router
 var app_router = new AppRouter;
 app_router.on('route:masterTasks', function () {
