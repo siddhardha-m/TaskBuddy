@@ -2,21 +2,21 @@
  * Lets initialize the variables we need
  */
 var $tasks 			= $('#tasks'),
-    $masterTasks    = $('#masterTasks'),
-	$users 			= $('#users'),
-	tasks 			= null,
-	users 			= null,
-	currentUserId 	= null,
-	currentUser     = null,
-	userListView 	= null,
-	taskListView 	= null,
-	today 			= new Date(),
-	tomorrow		= new Date(),
-	assignedUser    = null,
-	serverUrl		= 'http://localhost:8080/TaskBuddy/site/',
-	maxPoints       =  50,
-	selectedRepitition = null;
-    base_url        = null;
+$masterTasks    = $('#masterTasks'),
+$users 			= $('#users'),
+tasks 			= null,
+users 			= null,
+currentUserId 	= null,
+currentUser     = null,
+userListView 	= null,
+taskListView 	= null,
+today 			= new Date(),
+tomorrow		= new Date(),
+assignedUser    = null,
+serverUrl		= 'http://localhost:8080/TaskBuddy/site/',
+maxPoints       =  50,
+selectedRepitition = null;
+base_url        = null;
 /*
  * We will add one day to the current date to pre-fill Due Date
  */
@@ -45,9 +45,11 @@ User = Backbone.Model.extend({
 		userImage: null,
 		totalScore: 0,
 		currentScore: 0,
+		current_points: 0,
+		weekly_points: 0,
 		userCreatedDate: '',
 		fbId: ''
-		},
+	},
 	urlRoot: serverUrl + 'users'
 });
 
@@ -122,22 +124,22 @@ UserItem = Backbone.View.extend({
 		 */
 		$users.find('li.active').removeClass('active');
 		this.$el.addClass('active');
-		
+
 		/*
 		 * We also need to update user title (above the tasks table)
 		 */
-		$('#user-title span').html(this.model.get('userFirstName'));
-		
+		$('.user-title span').html(this.model.get('userFirstName'));
+
 		var dispScore = maxPoints - this.model.get('currentScore');
-		
+
 		if(dispScore < 0)
 			dispScore = 0;
 		if(dispScore > 50)
 			dispScore = 50;
-		
+
 		$('#score').html(dispScore);
-		
-		//$('#user-title h3#score').html(this.model.get('totalScore'));
+
+		//$('.user-title h3#score').html(this.model.get('totalScore'));
 
 		/*
 		 * Cleaning bit, we'll remove tasks that was tied to user selected earlier
@@ -154,8 +156,8 @@ UserItem = Backbone.View.extend({
 		tasks = new TaskCollection({id: currentUserId});
 
 		tasks.comparator = function(model) {
-          return [model.get('taskCompleted'),model.get('taskDueDate')];
-          }
+			return [model.get('taskCompleted'),model.get('taskDueDate')];
+		}
 
 
 		/*
@@ -182,7 +184,7 @@ UserItem = Backbone.View.extend({
 			 */
 			taskListView.render(taskListView.getSelectedFilterOption());
 			//tasks.sort();
-			
+
 		}});
 	}
 });
@@ -198,20 +200,20 @@ UserList = Backbone.View.extend({
 		 * Holder of single user views
 		 */
 		this._users = [];
-		
+
 		/*
 		 * For each element in collection we run the 'add' method
 		 */
 		this.collection.each(this.add);
-		
+
 		/*
 		 * Binding collection events to our methods
 		 */
 		this.collection.bind('add', this.add);
-    	this.collection.bind('remove', this.remove);
+		this.collection.bind('remove', this.remove);
 	},
 	render: function() {
-		
+
 
 		/*
 		 * Initializing and setting flag from which we'll know if our view was rendered or not
@@ -299,9 +301,9 @@ UserDialog = Backbone.View.extend({
 		/*
 		 * If this is new user it won't have the ID attribute defined
 		 */
-		
+
 		var that = this;
-		 
+
 		$.each(this.$el.find('input'), function(i, item) {
 			var attribute = {};
 			/*
@@ -309,18 +311,18 @@ UserDialog = Backbone.View.extend({
 			 */
 			attribute[item.name] = item.value;
 			that.model.set(attribute);
-			
+
 		});
-		
-		
+
+
 		if (null == this.model.userId) {
 			/*
 			 * We are creating our model through its collection (this way we'll automatically update its views and persist it to DB)
 			 */	
 			var todaydate = new Date(); 
-			 var milliseconds = todaydate.getTime();
-			 
-			 this.model.set({userCreatedDate: milliseconds});
+			var milliseconds = todaydate.getTime();
+
+			this.model.set({userCreatedDate: milliseconds});
 			users.create(this.model);
 		} else {
 			/*
@@ -373,7 +375,7 @@ Task = Backbone.Model.extend({
 		taskDueDuration: 0,
 		taskRepetition: 'NoRepeat'
 	},
-	
+
 	/*
 	 * This is the URI where the Backbone will communicate with our server part
 	 */
@@ -385,25 +387,25 @@ Task = Backbone.Model.extend({
  * We also need a collection object which will hold our models (so it will be able to communicate with Backbone views more easily)
  */
 TaskCollection = Backbone.Collection.extend({
-	
+
 	initialize: function(options) {
 		this.url = serverUrl + 'tasks' + '/user/' + options.id
 		this.on( "change:taskCompleted", this.triggerReset, this);
 
 	},
-	
+
 	/*
 	 * Model which this collection will hold and manipulate
 	 */
 	model: Task,
-	
-	  comparator : function(model) {
-        return [model.get('taskCompleted'),model.get('taskDueDate')];
-      },
-      
-      triggerReset: function(){
-      	this.trigger('reset');
-      }
+
+	comparator : function(model) {
+		return [model.get('taskCompleted'),model.get('taskDueDate')];
+	},
+
+	triggerReset: function(){
+		this.trigger('reset');
+	}
 });
 
 
@@ -423,7 +425,7 @@ TaskItem = Backbone.View.extend({
 		'click a.delete-action': 'delete'
 	},
 	render: function() {
-		
+
 		this.$el.html(this.template(this.model.attributes));
 		return this;
 	},
@@ -436,31 +438,31 @@ TaskItem = Backbone.View.extend({
 	modify: function(e) {
 		var status = e.currentTarget.checked ? true : false;
 		var currScore = currentUser.get('currentScore');
-		
+
 		var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
 		var taskCompleted = this.model.get('taskCompleted');
 
 		if(duePeriod === "week" || duePeriod === "past"){
 			if(taskCompleted == false) {
-		       currScore = currScore + this.model.get('taskPointValue');
-		       //if(currScore > 50)
-		    	 //  	currScore = 50;
+				currScore = currScore + this.model.get('taskPointValue');
+				//if(currScore > 50)
+				//  	currScore = 50;
 			}
 			else {
 				currScore = currScore - this.model.get('taskPointValue');
 				//if(currScore < 0)
 				//	currScore = 0;
 			}
-	       currentUser.set({currentScore: currScore});
-	       currentUser.save();
-	       $('#score').html(maxPoints - currScore);
+			currentUser.set({currentScore: currScore});
+			currentUser.save();
+			$('#score').html(maxPoints - currScore);
 		}
-		
-		
+
+
 		this.model.set({taskCompleted: status});
-		
+
 		var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
-		
+
 		this.model.save();
 		/*
 		 * We'll add strikethrough class to the title and date just to visually distinguish finished from unfinished task
@@ -483,10 +485,10 @@ TaskItem = Backbone.View.extend({
 TaskList = Backbone.View.extend({
 	initialize: function() {
 		_(this).bindAll('add','reset','filterBy');
-		
+
 
 		this._tasks = [];
-		
+
 		this.collection.each(this.add);
 
 		this.collection.bind('add', this.add);
@@ -494,53 +496,53 @@ TaskList = Backbone.View.extend({
 		this.collection.bind("filter", this.filterBy);
 
 	},
-	
-	
+
+
 	render: function(filterBy) {
 		this._rendered = true;
 		this.$el.empty();
-		
-		this.collection.fetch({});
-		
-		this.collection.each(function(task) {
-		
-        var taskDueDate = task.get('taskDueDate');       
 
-        
-		if (!filterBy || filterBy === "all")
-		{
-		
-			var taskItem = new TaskItem({model: task});
-	        this.$el.append(taskItem.render().el);	
-		}
-		else{			
-        
-			if (filterBy === "week"){
+		this.collection.fetch({});
+
+		this.collection.each(function(task) {
+
+			var taskDueDate = task.get('taskDueDate');       
+
+
+			if (!filterBy || filterBy === "all")
+			{
+
+				var taskItem = new TaskItem({model: task});
+				this.$el.append(taskItem.render().el);	
+			}
+			else{			
+
+				if (filterBy === "week"){
 					if (isDueDateInCurrentWeek(taskDueDate) === "week"){
-					var taskItem = new TaskItem({model: task});
-			        this.$el.append(taskItem.render().el);	
+						var taskItem = new TaskItem({model: task});
+						this.$el.append(taskItem.render().el);	
+					}
+
 				}
-			
-			}
-			
-			else if (filterBy === "later"){
-				if (isDueDateInCurrentWeek(taskDueDate) === "later"){
-					var taskItem = new TaskItem({model: task});
-			        this.$el.append(taskItem.render().el);	
-				}	
-			}
-			
-			else if (filterBy === "previous"){
-				if (isDueDateInCurrentWeek(taskDueDate) === "past"){
-					var taskItem = new TaskItem({model: task});
-			        this.$el.append(taskItem.render().el);	
-				}	
-			}
-		}	
+
+				else if (filterBy === "later"){
+					if (isDueDateInCurrentWeek(taskDueDate) === "later"){
+						var taskItem = new TaskItem({model: task});
+						this.$el.append(taskItem.render().el);	
+					}	
+				}
+
+				else if (filterBy === "previous"){
+					if (isDueDateInCurrentWeek(taskDueDate) === "past"){
+						var taskItem = new TaskItem({model: task});
+						this.$el.append(taskItem.render().el);	
+					}	
+				}
+			}	
 		},this);
 
-       
-  	},
+
+	},
 	add: function(task) {
 		var taskItem = new TaskItem({model: task});
 
@@ -551,50 +553,50 @@ TaskList = Backbone.View.extend({
 		this._tasks.push(taskItem);
 		// console.log("added item");
 	},
-	
+
 	reset: function(){		
 		this.collection.sort();
 		this.render(this.getSelectedFilterOption());
 	},
-	
+
 	filterBy: function(filterBy){
 		this.render(filterBy);
 	},
-	
-	
+
+
 	getSelectedFilterOption: function(){
-	var filterBy;	
-	var group = document.getElementsByName('group1');
-    for(var i = 0; i < group.length; i++){
-    if(group[i].checked){
-        filterBy = group[i].value;
-     }
-     }
-      
-   return filterBy;
+		var filterBy;	
+		var group = document.getElementsByName('group1');
+		for(var i = 0; i < group.length; i++){
+			if(group[i].checked){
+				filterBy = group[i].value;
+			}
+		}
+
+		return filterBy;
 	},
-	
-	
+
+
 	isDueDateInCurrentWeek: function(date){
 		var startDay = 1; 
 		var now = new Date;
-        var d = now.getDay(); 
-      //  var weekStart = now.valueOf() - (d<=0 ? 7-startDay:d-startDay)*86400000; 
-        var weekStart =  now.valueOf() ;
-        var weekEnd =  weekStart.valueOf() + 6*86400000;
-        var taskDueDate = date;
-        
-        if(taskDueDate < weekStart)
-        return "past";
-        else if(taskDueDate>= weekStart && taskDueDate<= weekEnd)
-        return "week";
-        else if(taskDueDate >= weekEnd)
-        return "later";
-        else if(taskDueDate <= weekStart)
-        return "previous";
-        else
-        return "all"       
-      
+		var d = now.getDay(); 
+		//  var weekStart = now.valueOf() - (d<=0 ? 7-startDay:d-startDay)*86400000; 
+		var weekStart =  now.valueOf() ;
+		var weekEnd =  weekStart.valueOf() + 6*86400000;
+		var taskDueDate = date;
+
+		if(taskDueDate < weekStart)
+			return "past";
+		else if(taskDueDate>= weekStart && taskDueDate<= weekEnd)
+			return "week";
+		else if(taskDueDate >= weekEnd)
+			return "later";
+		else if(taskDueDate <= weekStart)
+			return "previous";
+		else
+			return "all"       
+
 	}
 });
 
@@ -605,11 +607,11 @@ TaskDialog = Backbone.View.extend({
 	/*
 	 * As you may see we don't listen for change on input elements. We'll show a different strategy for fetching data here
 	 */
-		
+
 	events: {
 		'click .save-action': 'save',
 		"click a#userli": "selectUser",
-	    "click button#close": "closeModal",
+		"click button#close": "closeModal",
 		'click .close,.close-action': 'close'
 	},
 	initialize: function() {
@@ -621,31 +623,31 @@ TaskDialog = Backbone.View.extend({
 		/*
 		 * We'll initialize datetime picker
 		 */
-		
-		
+
+
 		this.$el.find('#dp1').datetimepicker();
 		return this;
 	},
 
-	  closeModal: function(e){
-		  this.remove();
-		  
-	  },
-	  selectUser: function(e) {
-		  e.preventDefault();
-		  var selectedUserName = $(e.currentTarget).html();
-		  assignedUser = parseInt(e.currentTarget.attributes.title.value);
-		  this.$el.find('textarea#displayUserName').html(selectedUserName);
-	  },
-	  
+	closeModal: function(e){
+		this.remove();
+
+	},
+	selectUser: function(e) {
+		e.preventDefault();
+		var selectedUserName = $(e.currentTarget).html();
+		assignedUser = parseInt(e.currentTarget.attributes.title.value);
+		this.$el.find('textarea#displayUserName').html(selectedUserName);
+	},
+
 	/*  submit: function(e){
 		  var data = JSON.stringify($('taskForm').serializeObject());
 		  this.remove();
-		
+
 		  var plainObject = new Object();
 		  myObject.name = "John";
-		  
-		  
+
+
 		  $.ajax({
 			    url:serverUrl,
 			    type:'POST',
@@ -657,10 +659,10 @@ TaskDialog = Backbone.View.extend({
 			        }            
 			    }
 			});
-		  
+
 	  },
 	 */ 
-	  
+
 	show: function(list_of_users) {
 		$(document.body).append(this.render(list_of_users).el);
 	},
@@ -679,23 +681,23 @@ TaskDialog = Backbone.View.extend({
 		/*
 		 * Traversing input elements in current dialog
 		 */
-		
+
 		$.each(this.$el.find('input'), function(i, item) {
 			var attribute = {};
 			/*
 			 * Matching name and value
 			 */
 			if(item.name !== "taskDueDate"){
-			attribute[item.name] = item.value;
-			that.model.set(attribute);
+				attribute[item.name] = item.value;
+				that.model.set(attribute);
 			}
-			
+
 			if(item.name === 'taskDueDate'){
-				 var date = new Date(item.value); 
-				 var milliseconds = date.getTime();
-				 that.model.set({taskDueDate: milliseconds});
+				var date = new Date(item.value); 
+				var milliseconds = date.getTime();
+				that.model.set({taskDueDate: milliseconds});
 			}
-			
+
 		});
 
 		/*
@@ -705,39 +707,30 @@ TaskDialog = Backbone.View.extend({
 			/*
 			 * Adding user ID information read from "global" variable
 			 */
-			
+
 			var repetition = getSelectedFilterOption();
 
-			
+
 			this.model.set({userId: assignedUser, taskAssigned: true, taskCreatedBy: currentUserId , taskRepetition: repetition});
-			
+
 			if (null != assignedUser)
 				this.model.set({taskMaster: false});
-			
+
 			console.log(" assigned User is "+ assignedUser);
 
 			tasks.create(this.model,{ wait: true });
-			
+
 			$('.assigned').fadeIn(400).delay(3000).fadeOut(400);
 		} else {
 			this.model.save();
-			
+
 			$('.assigned').fadeIn(400).delay(3000).fadeOut(400);
 		}
-		
-		
-		
-       
-		
 		this.remove();
-		
-		 
 	}
 });
 
-
-
-// model for master Task
+//model for master Task
 
 
 MasterTask = Backbone.Model.extend({
@@ -748,8 +741,8 @@ MasterTask = Backbone.Model.extend({
 	idAttribute: 'taskId',
 	defaults: {
 		taskCreatedDate: Date.now(),
-		taskDueDate: tomorrow.getFullYear() + '-' + ((1 + tomorrow.getMonth()) < 10 ? '0' + (1 + tomorrow.getMonth()) : '' + (1 + tomorrow.getMonth())) + '-' + (tomorrow.getDate() < 10 ? '0' + tomorrow.getDate() : '' + tomorrow.getDate()) + ' ' + (tomorrow.getHours() < 10 ? '0' + tomorrow.getHours() : '' + tomorrow.getHours()) + ':' + (tomorrow.getMinutes() < 10 ? '0' + tomorrow.getMinutes() : '' + tomorrow.getMinutes()) + ':' + (tomorrow.getSeconds() < 10 ? '0' + tomorrow.getSeconds() : '' + tomorrow.getSeconds()),
-		userId: null,
+		taskDueDate: Date.now(),
+		userId: 0,
 		taskCreatedBy: 1,
 		taskAssignedDate: Date.now(),
 		taskDeleted: false,
@@ -763,7 +756,7 @@ MasterTask = Backbone.Model.extend({
 		taskDueDuration: 0,
 		taskRepetition: 'NoRepeat'
 	},
-	
+
 	/*
 	 * This is the URI where the Backbone will communicate with our server part
 	 */
@@ -772,35 +765,31 @@ MasterTask = Backbone.Model.extend({
 });
 
 
-// master task collection
+//master task collection
 
 MasterTaskCollection = Backbone.Collection.extend({
-	
+
 	url: serverUrl + 'tasks' + '/master', 
-	
+
 	initialize: function(options) {
 		//this.url = serverUrl + 'tasks' + '/master';
 		this.on( "change:taskCompleted", this.triggerReset, this);
 
 	},
-	
+
 	/*
 	 * Model which this collection will hold and manipulate
 	 */
 	model: MasterTask,
-	
-	  comparator : function(model) {
-        return [model.get('taskCompleted'),model.get('taskDueDate')];
-      },
-      
-      triggerReset: function(){
-      	this.trigger('reset');
-      }
+
+	comparator : function(model) {
+		return [model.get('taskCompleted'),model.get('taskDueDate')];
+	},
+
+	triggerReset: function(){
+		this.trigger('reset');
+	}
 });
-
-
-
-
 
 /*
  * Single Master task view
@@ -809,7 +798,7 @@ MasterTaskItem = Backbone.View.extend({
 	tagName: 'tr',
 	initialize: function() {
 		this.render = _.bind(this.render, this);
-		this.template = _.template($('#task-item').html());
+		this.template = _.template($('#master-task-item').html());
 		this.model.bind('change', this.render);
 	},
 	events: {
@@ -819,7 +808,7 @@ MasterTaskItem = Backbone.View.extend({
 		'click a.delete-action': 'delete'
 	},
 	render: function() {
-		
+
 		this.$el.html(this.template(this.model.attributes));
 		return this;
 	},
@@ -829,78 +818,76 @@ MasterTaskItem = Backbone.View.extend({
 	/*
 	 * We are listening for status checkbox, it updates the model and presist status to the DB
 	 */
-	
+
 	assignTask: function(){
 		console.log('clicked edit');
-		
+
 		list_of_users=new Array();
 		//var view = new TaskDialog({model: new MasterTask()});
-		
+
 		var dummyModel = new Task(this.model.attributes);
 
-		 var currentTime = new Date(parseInt(this.model.get("taskDueDate") ));
-			var day = currentTime.getDate();
-			var month = currentTime.getMonth() + 1;
-	        var year = currentTime.getFullYear();
-	        var hour = currentTime.getHours();
-	        var mins = currentTime.getMinutes();
-	        
-			var date =  year + "-" + month + "-"+ (day < 10 ? '0' : '') + day  + " " + hour + ":" + (mins < 10 ? '0' : '') + mins + ':00';
-		
+		var currentTime = new Date(parseInt(this.model.get("taskDueDate") ));
+		var day = currentTime.getDate();
+		var month = currentTime.getMonth() + 1;
+		var year = currentTime.getFullYear();
+		var hour = currentTime.getHours();
+		var mins = currentTime.getMinutes();
+
+		var date =  year + "-" + month + "-"+ (day < 10 ? '0' : '') + day  + " " + hour + ":" + (mins < 10 ? '0' : '') + mins + ':00';
+
 		dummyModel.set({"taskDueDate" : date.toString()});
-		
+
 		dummyModel.set({'taskId': null});
-		
+
 		var view = new TaskDialog({model: dummyModel});
 
 		$.ajax({
-	        url: serverUrl + 'users',
-	        success:function(result){
+			url: serverUrl + 'users',
+			success:function(result){
 
-	        	result.forEach(function(entry) {
-	            	var eachUser = {};
-	            	eachUser['userId'] = entry.userId;
-	            	eachUser['name'] = entry.userFirstName+" "+entry.userLastName;
-	            	list_of_users.push(eachUser);             	
-	            	
-	            });
+				result.forEach(function(entry) {
+					var eachUser = {};
+					eachUser['userId'] = entry.userId;
+					eachUser['name'] = entry.userFirstName+" "+entry.userLastName;
+					list_of_users.push(eachUser);             	
 
-	            view.show(list_of_users);
-	        	
-	        }
-	    });
-		
-		
+				});
+
+				view.show(list_of_users);
+
+			}
+		});
 	},
-	
+
 	modify: function(e) {
 		var status = e.currentTarget.checked ? true : false;
 		//var currScore = currentUser.get('currentScore');
-		
+
 		//var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
 		//var taskCompleted = this.model.get('taskCompleted');
 
-	//	if(duePeriod === "week" || duePeriod === "past"){
-//			if(taskCompleted == false) {
-	//	       currScore = currScore + this.model.get('taskPointValue');
-		       //if(currScore > 50)
-		    	 //  	currScore = 50;
-	//		}
-	//		else {
+		//	if(duePeriod === "week" || duePeriod === "past"){
+//		if(taskCompleted == false) {
+		//	       currScore = currScore + this.model.get('taskPointValue');
+		//if(currScore > 50)
+		//  	currScore = 50;
+		//		}
+		//		else {
 		//		currScore = currScore - this.model.get('taskPointValue');
-				//if(currScore < 0)
-				//	currScore = 0;
+		//if(currScore < 0)
+		//	currScore = 0;
 		//	}
-	     //  currentUser.set({currentScore: currScore});
-	    //   currentUser.save();
-	   //    $('#score').html(maxPoints - currScore);
-	//	}
-		
-		
+		//  currentUser.set({currentScore: currScore});
+		//   currentUser.save();
+		//    $('#score').html(maxPoints - currScore);
+		//	}
+
+
 		this.model.set({taskCompleted: status});
-		
-	//	var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
-		
+
+		//	var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
+
 		this.model.save();
 		/*
 		 * We'll add strikethrough class to the title and date just to visually distinguish finished from unfinished task
@@ -917,18 +904,14 @@ MasterTaskItem = Backbone.View.extend({
 
 });
 
-
-
-
-
 MasterTaskList = Backbone.View.extend({
 	initialize: function() {
 //		_(this).bindAll('add','reset','filterBy');
-		
+
 		_(this).bindAll('add','reset');
-		
+
 		this._tasks = [];
-		
+
 		this.collection.each(this.add);
 
 		this.collection.bind('add', this.add);
@@ -936,42 +919,42 @@ MasterTaskList = Backbone.View.extend({
 //		this.collection.bind("filter", this.filterBy);
 
 	},
-	
-	
+
+
 	render: function() {
 		this._rendered = true;
 		this.$el.empty();
-		
-		this.collection.fetch();
-		
-		this.collection.each(function(masterTask) {
-		
-  //     var taskDueDate = task.get('taskDueDate');       
 
-       
-//		if (!filterBy || filterBy === "all")
-	//	{
-		
+		this.collection.fetch();
+
+		this.collection.each(function(masterTask) {
+
+			//     var taskDueDate = task.get('taskDueDate');       
+
+
+//			if (!filterBy || filterBy === "all")
+			//	{
+
 			var masterTaskItem = new MasterTaskItem({model: masterTask});
-	        this.$el.append(masterTaskItem.render().el);	
-//		}
-	/*	else{			
-       
+			this.$el.append(masterTaskItem.render().el);	
+//			}
+			/*	else{			
+
 			if (filterBy === "week"){
 					if (isDueDateInCurrentWeek(taskDueDate) === "week"){
 					var taskItem = new TaskItem({model: task});
 			        this.$el.append(taskItem.render().el);	
 				}
-			
+
 			}
-			
+
 			else if (filterBy === "later"){
 				if (isDueDateInCurrentWeek(taskDueDate) === "later"){
 					var taskItem = new TaskItem({model: task});
 			        this.$el.append(taskItem.render().el);	
 				}	
 			}
-			
+
 			else if (filterBy === "previous"){
 				if (isDueDateInCurrentWeek(taskDueDate) === "past"){
 					var taskItem = new TaskItem({model: task});
@@ -981,10 +964,10 @@ MasterTaskList = Backbone.View.extend({
 		} */	
 		},this);
 
-      
- 	},
- 	
- 	
+
+	},
+
+
 	add: function(masterTask) {
 		var masterTaskItem = new MasterTaskItem({model: masterTask});
 
@@ -993,16 +976,16 @@ MasterTaskList = Backbone.View.extend({
 			this.render();
 		}		
 		this._tasks.push(masterTaskItem);
-		
+
 	},
-	
+
 	reset: function(){		
 		this.collection.sort();
 		this.render();
 	},
-	
-	
-/*	getSelectedFilterOption: function(){
+
+
+	/*	getSelectedFilterOption: function(){
 	var filterBy;	
 	var group = document.getElementsByName('group1');
    for(var i = 0; i < group.length; i++){
@@ -1010,11 +993,11 @@ MasterTaskList = Backbone.View.extend({
        filterBy = group[i].value;
     }
     }
-     
+
   return filterBy;
 	},
-	
-	
+
+
 	isDueDateInCurrentWeek: function(date){
 		var startDay = 1; 
 		var now = new Date;
@@ -1022,7 +1005,7 @@ MasterTaskList = Backbone.View.extend({
        var weekStart = now.valueOf() - (d<=0 ? 7-startDay:d-startDay)*86400000; 
        var weekEnd =  weekStart.valueOf() + 6*86400000;
        var taskDueDate = date;
-       
+
        if(taskDueDate < weekStart)
        return "past";
        else if(taskDueDate>= weekStart && taskDueDate<= weekEnd)
@@ -1033,26 +1016,21 @@ MasterTaskList = Backbone.View.extend({
        return "previous";
        else
        return "all"       
-     
+
 	}
-	
-	*/
+
+	 */
 });
-
-
-
-
-
 
 MasterTaskDialog = Backbone.View.extend({
 	/*
 	 * As you may see we don't listen for change on input elements. We'll show a different strategy for fetching data here
 	 */
-		
+
 	events: {
 		'click .save-action': 'save',
 		"click a#userli": "selectUser",
-	    "click button#close": "closeModal",
+		"click button#close": "closeModal",
 		'click .close,.close-action': 'close'
 	},
 	initialize: function() {
@@ -1064,31 +1042,30 @@ MasterTaskDialog = Backbone.View.extend({
 		/*
 		 * We'll initialize datetime picker
 		 */
-		
-		
+
 		this.$el.find('#dp1').datetimepicker();
 		return this;
 	},
 
-	  closeModal: function(e){
-		  this.remove();
-		  
-	  },
-	  selectUser: function(e) {
-		  e.preventDefault();
-		  var selectedUserName = $(e.currentTarget).html();
-		  assignedUser = parseInt(e.currentTarget.attributes.title.value);
-		  this.$el.find('textarea#displayUserName').html(selectedUserName);
-	  },
-	  
+	closeModal: function(e){
+		this.remove();
+
+	},
+	selectUser: function(e) {
+		e.preventDefault();
+		var selectedUserName = $(e.currentTarget).html();
+		assignedUser = parseInt(e.currentTarget.attributes.title.value);
+		this.$el.find('textarea#displayUserName').html(selectedUserName);
+	},
+
 	/*  submit: function(e){
 		  var data = JSON.stringify($('taskForm').serializeObject());
 		  this.remove();
-		
+
 		  var plainObject = new Object();
 		  myObject.name = "John";
-		  
-		  
+
+
 		  $.ajax({
 			    url:serverUrl,
 			    type:'POST',
@@ -1100,10 +1077,10 @@ MasterTaskDialog = Backbone.View.extend({
 			        }            
 			    }
 			});
-		  
+
 	  },
 	 */ 
-	  
+
 	show: function(list_of_users) {
 		$(document.body).append(this.render(list_of_users).el);
 	},
@@ -1122,23 +1099,23 @@ MasterTaskDialog = Backbone.View.extend({
 		/*
 		 * Traversing input elements in current dialog
 		 */
-		
+
 		$.each(this.$el.find('input'), function(i, item) {
 			var attribute = {};
 			/*
 			 * Matching name and value
 			 */
 			if(item.name !== "taskDueDate"){
-			attribute[item.name] = item.value;
-			that.model.set(attribute);
+				attribute[item.name] = item.value;
+				that.model.set(attribute);
 			}
-			
+
 			if(item.name === 'taskDueDate'){
-				 var date = new Date(item.value); 
-				 var milliseconds = date.getTime();
-				 that.model.set({taskDueDate: milliseconds});
+				var date = new Date(item.value); 
+				var milliseconds = date.getTime();
+				that.model.set({taskDueDate: milliseconds});
 			}
-			
+
 		});
 
 		/*
@@ -1148,64 +1125,58 @@ MasterTaskDialog = Backbone.View.extend({
 			/*
 			 * Adding user ID information read from "global" variable
 			 */
-			
+
 			var repetition = getSelectedFilterOption();
 
-			
-			this.model.set({userId: assignedUser, taskAssigned: true, taskCreatedBy: currentUserId , taskRepetition: repetition});
-			
+
+			this.model.set({userId: assignedUser, taskAssigned: true, taskCreatedBy: currentUserId});
+
 			if (null != assignedUser)
 				this.model.set({taskMaster: false});
-			
+
 			console.log(" assigned User is "+ assignedUser);
 
 			masterTasks.create(this.model,{ wait: true });
-			
+
 			$('.success').fadeIn(400).delay(3000).fadeOut(400);
 		} else {
 			this.model.save();
-			
+
 			$('.success').fadeIn(400).delay(3000).fadeOut(400);
 		}
 		this.remove();
 	}
 });
 
-
-
-
-
-
-
 var AppRouter = Backbone.Router.extend({
-	
-    routes: {
-        "master": "masterTasks",
-        "myTasks": "myTasks",
-        "*actions": "defaultRoute" // Backbone will try match the route above first
 
-    }
+	routes: {
+		"master": "masterTasks",
+		"user": "user",
+		"*actions": "defaultRoute" // Backbone will try match the route above first
+
+	}
 });
 
 base_url = window.location.href;
 
-// Instantiate the router
+//Instantiate the router
 var app_router = new AppRouter;
 app_router.on('route:masterTasks', function () {
-    // Note the variable in the route definition being passed in here
-    console.log( " logged master ");   
-    
+	// Note the variable in the route definition being passed in here
+	console.log( " logged master ");   
+
 	$('#div1').show();
 	$('#taskFilterList').hide();
-	
+
 	$tasks.empty();
-	
+
 
 	masterTasks = new MasterTaskCollection();
 
 	masterTasks.comparator = function(model) {
-      return [model.get('taskCompleted'),model.get('taskDueDate')];
-      }
+		return [model.get('taskCompleted'),model.get('taskDueDate')];
+	}
 
 
 	/*
@@ -1232,26 +1203,21 @@ app_router.on('route:masterTasks', function () {
 		 */
 		masterTaskListView.render();
 		//tasks.sort();
-		
+
 	}});
-	
-	
-	
-	
-	
 });
 
 
-app_router.on('route:myTasks', function () {
-    // Note the variable in the route definition being passed in here
+app_router.on('route:user', function () {
+	// Note the variable in the route definition being passed in here
 	initilializeMyTasks();
-	
+
 	//$tasks.empty();
-	
+
 	$users.empty();
-	
+
 	$users.append(" <li class='nav-header'><h6>Friends</h6></li>");
-	
+
 	users = new UserCollection();
 	/*
 	 * Fetching users from DB
@@ -1262,7 +1228,7 @@ app_router.on('route:myTasks', function () {
 		var userNumber = 2;
 		for(var i = 0; i < dataModel.length; i++){
 			var attributes = JSON.stringify(dataModel[i].attributes);
-			
+
 			var currId =  $.parseJSON(attributes).userId;
 			if(currId == currentUser){
 				userNumber = currId + 1;
@@ -1278,19 +1244,13 @@ app_router.on('route:myTasks', function () {
 		/*
 		 * Triggering click on the currently logged in user which will load its tasks
 		 */
-		
+
 		$users.find('li:nth-child(' + userNumber + ')').find('a').trigger('click');
-		
-	//	$users.find('li:nth-child(1)').find('a').trigger('click');
+
+		//	$users.find('li:nth-child(1)').find('a').trigger('click');
 //		$users.find('li:nth-chiqld(2)').find('a').trigger('click');
 	}});
-	
-	
-	
-
 });
-
-
 
 app_router.on('route:defaultRoute', function (path) {		
 	if(window.location.href === base_url && path == null){
@@ -1301,11 +1261,11 @@ app_router.on('route:defaultRoute', function (path) {
 Backbone.history.start();
 
 function initilializeMyTasks(){
-	 console.log( " my Tasks " + base_url);   
-	   // window.location.replace(base_url);
-		$('#div1').hide();
-		$('#taskFilterList').show();
-		
+	console.log( " my Tasks " + base_url);   
+	// window.location.replace(base_url);
+	$('#div1').hide();
+	$('#taskFilterList').show();
+
 }
 
 users = new UserCollection();
@@ -1318,7 +1278,7 @@ users.fetch({success: function(data) {
 	var userNumber = 2;
 	for(var i = 0; i < dataModel.length; i++){
 		var attributes = JSON.stringify(dataModel[i].attributes);
-		
+
 		var currId =  $.parseJSON(attributes).userId;
 		if(currId == currentUser){
 			userNumber = currId + 1;
@@ -1364,41 +1324,37 @@ $('#add-task').click(function(e) {
 	var view = new MasterTaskDialog({model: new MasterTask()});
 
 	$.ajax({
-        url: serverUrl + 'users',
-        success:function(result){
+		url: serverUrl + 'users',
+		success:function(result){
 
-        	result.forEach(function(entry) {
-            	 var eachUser = {};
-            	 eachUser['userId'] = entry.userId;
-            	eachUser['name'] = entry.userFirstName+" "+entry.userLastName;
-            	list_of_users.push(eachUser);             	
-            	
-            });
+			result.forEach(function(entry) {
+				var eachUser = {};
+				eachUser['userId'] = entry.userId;
+				eachUser['name'] = entry.userFirstName+" "+entry.userLastName;
+				list_of_users.push(eachUser);             	
 
-            view.show(list_of_users);
-        	
-        }
-    });
+			});
+
+			view.show(list_of_users);
+
+		}
+	});
 
 	return false;
 
 });
 
-
-
-
-
 $("#previous, #this_week, #later, #all_tasks").change(function () {
 
 	var filterBy;	
 	var group = document.getElementsByName('group1');
-    for(var i = 0; i < group.length; i++){
-    if(group[i].checked){
-        filterBy = group[i].value;
-     }
-     }
-   tasks.trigger('filter',filterBy);
-	
+	for(var i = 0; i < group.length; i++){
+		if(group[i].checked){
+			filterBy = group[i].value;
+		}
+	}
+	tasks.trigger('filter',filterBy);
+
 	//return false;
 });
 
@@ -1406,92 +1362,81 @@ $("#previous, #this_week, #later, #all_tasks").change(function () {
 function getSelectedFilterOption(){
 	var filterBy;	
 	var group = document.getElementsByName('taskRepetition');
-    for(var i = 0; i < group.length; i++){
-    if(group[i].checked){
-        filterBy = group[i].value;
-     }
-     }
-      
-   return filterBy;
+	for(var i = 0; i < group.length; i++){
+		if(group[i].checked){
+			filterBy = group[i].value;
+		}
 	}
 
+	return filterBy;
+}
+
 function isDueDateInCurrentWeek(date){
-	
-	 // assumed start day of the current week is monday
-	
-		
-		var now = new Date;
-        var d = now.getDay(); 
-        var startDay = 1; 
-    //   var weekStart = d; 
-    //    var weekStart = now.valueOf() - (d<=0 ? 7-startDay:d-startDay)*86400000; 
-        var weekStart = now.valueOf();
-        var weekEnd =  weekStart.valueOf() + 6*86400000;
-        var taskDueDate = date;
-        
-      
-        if(taskDueDate>= weekStart && taskDueDate<= weekEnd)
-        return "week";
-        else if(taskDueDate >= weekEnd)
-        return "later";
-        else if(taskDueDate < weekStart)
-       	return "past";
-       	else
-        return "all"       
-      
+
+	// assumed start day of the current week is monday
+
+
+	var now = new Date;
+	var d = now.getDay(); 
+	var startDay = 1; 
+	//   var weekStart = d; 
+	//    var weekStart = now.valueOf() - (d<=0 ? 7-startDay:d-startDay)*86400000; 
+	var weekStart = now.valueOf();
+	var weekEnd =  weekStart.valueOf() + 6*86400000;
+	var taskDueDate = date;
+
+
+	if(taskDueDate>= weekStart && taskDueDate<= weekEnd)
+		return "week";
+	else if(taskDueDate >= weekEnd)
+		return "later";
+	else if(taskDueDate < weekStart)
+		return "past";
+	else
+		return "all"       
+
 }
 
 function isNumberKey(evt){
-    var charCode = (evt.which) ? evt.which : event.keyCode
-    if (charCode > 31 && (charCode < 48 || charCode > 57))
-        return false;
-    return true;
+	var charCode = (evt.which) ? evt.which : event.keyCode
+			if (charCode > 31 && (charCode < 48 || charCode > 57))
+				return false;
+	return true;
 }
-
-
-
-
 
 $('#div1').hide();
 
 $("#myTab a").click(function(e){
 	e.preventDefault();
 	$(this).tab('show');
-	 var id  = this.id;
-	
-	if(id === "myTasks")
+	var id  = this.id;
+
+	if(id === "user")
 		myTask();
 	else if (id === "masterTasks")
 		masterTask();
-	
-	
 });
 
 
 function masterTask(){
-	$('#div1').show();
-	$('#taskFilterList').hide();
 
 	$.ajax({
-        url: serverUrl + 'tasks/master',
-        success:function(result){
-
-       // console.log("result is "+ JSON.stringify(result));
-        	
-        }
-    });
-	
-
+		url: serverUrl + 'tasks/master',
+		success:function(result){
+		}
+	});
 }
 
-function myTask(){
+function activeMasterTasks(){
+	$('#div1').show();
+	$('#taskFilterList').hide();
+	$('#master-title').addClass("active")
+	$('#my-tasks-title').removeClass("active")
+}
+
+function activeMyTasks(){
 	$('#div1').hide();
 	$('#taskFilterList').show();
+	$('#my-tasks-title').addClass("active")
+	$('#master-title').removeClass("active")
 }
-
-
-
-
-
-
-
