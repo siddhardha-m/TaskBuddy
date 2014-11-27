@@ -1162,10 +1162,14 @@ var AppRouter = Backbone.Router.extend({
 
 base_url = window.location.href;
 
-$('.myTasks')[0].click();
+//$('.masterTasks')[0].click();
 
 //Instantiate the router
+location.hash = '';
 var app_router = new AppRouter;
+Backbone.history.start();
+
+
 app_router.on('route:masterTasks', function () {
 	// Note the variable in the route definition being passed in here
 	console.log( " logged master ");   
@@ -1262,7 +1266,6 @@ app_router.on('route:defaultRoute', function (path) {
 	}			
 });
 
-Backbone.history.start();
 
 function initilializeMyTasks(){
 	console.log( " my Tasks " + base_url);   
