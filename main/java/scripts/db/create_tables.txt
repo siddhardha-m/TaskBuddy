@@ -171,8 +171,6 @@ CREATE EVENT reset_user_points
 	BEGIN
 		update Users
 		set current_points = current_points + weekly_points;
-		update Users
-		set current_score = current_points - total_score;
 	END $$
 
 DELIMITER ;
