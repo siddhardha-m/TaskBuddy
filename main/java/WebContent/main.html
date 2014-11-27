@@ -241,7 +241,7 @@
 
 	<script type="text/template" id="master-task-item">
 		<td class="center-col">
-			<input type="checkbox" name="taskCompleted" value="1" <% if (taskCompleted) { %> checked="checked" <% } %> disabled/>
+			<input type="checkbox" name="taskCompleted" value="1" <% if (taskCompleted) { %> checked="checked" <% } %> />
 		</td>
 		<td <% if (taskCompleted) { %> class="finished" <% } %>><%= taskTitle %></td>
 		<td <% if (taskCompleted) { %> class="finished" <% } %>><%= taskDescription %></td>

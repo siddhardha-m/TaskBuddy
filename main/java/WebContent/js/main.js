@@ -7,7 +7,7 @@ $users 			= $('#users'),
 tasks 			= null,
 users 			= null,
 currentUserId 	= null,
-currentUser     = null,
+currentUserModel     = null,
 userListView 	= null,
 taskListView 	= null,
 today 			= new Date(),
@@ -15,6 +15,7 @@ tomorrow		= new Date(),
 assignedUser    = null,
 serverUrl		= 'http://localhost:8080/TaskBuddy/site/',
 maxPoints       =  50,
+selectedRowIndex  = null,
 selectedRepitition = null;
 base_url        = null;
 /*
@@ -38,8 +39,8 @@ function parseUrlParam(urlParam){
  * User model
  */
 User = Backbone.Model.extend({
+	idAttribute: 'userId',
 	defaults: {
-		userId: null,
 		userFirstName: '',
 		userLastName: '',
 		userImage: null,
@@ -132,14 +133,14 @@ UserItem = Backbone.View.extend({
 
 		//var dispScore = maxPoints - this.model.get('currentScore');
 		
-		var dispScore = this.model.get('currentScore') + this.model.get('weeklyPoints');
+		//var dispScore = this.model.get('currentScore') + this.model.get('weeklyPoints');
 
-		if(dispScore < 0)
-			dispScore = 0;
-		if(dispScore > 50)
-			dispScore = 50;
+	//	if(dispScore < 0)
+	//		dispScore = 0;
+	//	if(dispScore > 50)
+	//		dispScore = 50;
 
-		$('#score').html(dispScore);
+		
 
 		//$('.user-title h3#score').html(this.model.get('totalScore'));
 
@@ -149,8 +150,13 @@ UserItem = Backbone.View.extend({
 		$tasks.empty();
 
 		currentUserId = this.model.get('userId');
-		currentUser = this.model;
+		currentUserModel = this.model;
+		
+		var goal = currentUserModel.get('currentPoints')+ currentUserModel.get('weeklyPoints')- currentUserModel.get('totalScore');
 
+		
+		$('#score').html(goal);
+		
 		/*
 		 * We'll initialize new task collection
 		 */
@@ -439,12 +445,13 @@ TaskItem = Backbone.View.extend({
 	 */
 	modify: function(e) {
 		var status = e.currentTarget.checked ? true : false;
-		var currScore = currentUser.get('currentScore');
+	//	var currScore = currentUser.get('currentScore');
 
-		var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
+		
+	//	var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
 		var taskCompleted = this.model.get('taskCompleted');
 
-		if(duePeriod === "week" || duePeriod === "past"){
+	/*	if(duePeriod === "week" || duePeriod === "past"){
 			if(taskCompleted == false) {
 				currScore = currScore + this.model.get('taskPointValue');
 				//if(currScore > 50)
@@ -461,9 +468,41 @@ TaskItem = Backbone.View.extend({
 		}
 
 
-		this.model.set({taskCompleted: status});
+*/
+		
+		var totalScore = currentUserModel.get('totalScore');
+		
+		//console.log(' taskpointvalue' + this.model.get('taskPointValue'));
+		
+		var updatedPoints = null;
 
-		var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
+		if(status){
+			updatedPoints = totalScore + this.model.get('taskOriginalPointValue');	
+			console.log(" update points "+ updatedPoints)
+		}
+		else{
+		  updatedPoints = 
+			  totalScore - this.model.get('taskOriginalPointValue');
+			console.log(" update points "+ updatedPoints)
+
+		}
+		
+		currentUserModel.set({'totalScore': updatedPoints});
+		
+		currentUserModel.save();
+		
+		
+		
+		this.model.set({taskCompleted: status});
+		
+		
+        var goal = currentUserModel.get('currentPoints')+ currentUserModel.get('weeklyPoints')- currentUserModel.get('totalScore');
+
+		console.log("goal is "+goal);
+		
+		$('#score').html(goal);
+
+		//var duePeriod = isDueDateInCurrentWeek(this.model.get('taskDueDate'));		
 
 		this.model.save();
 		/*
@@ -824,9 +863,11 @@ MasterTaskItem = Backbone.View.extend({
 	 * We are listening for status checkbox, it updates the model and presist status to the DB
 	 */
 
-	assignTask: function(){
+	assignTask: function(e){
 		console.log('clicked edit');
 
+		selectedRowIndex = this.el.rowIndex;
+		console.log(' row index is '+ selectedRowIndex);
 		list_of_users=new Array();
 		//var view = new TaskDialog({model: new MasterTask()});
 
