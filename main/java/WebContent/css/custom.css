@@ -193,3 +193,9 @@ td {
 	width: 0px;
 	height: 0px;
 }
+
+#reset-button {
+	color: red;
+	font-weight: bold;
+	margin-right: 10px; 
+}

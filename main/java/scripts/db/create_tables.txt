@@ -176,3 +176,25 @@ CREATE EVENT reset_user_points
 DELIMITER ;
 
 # ==============================================
+
+
+# ========== Reset Stored Procedure ============
+
+DROP PROCEDURE IF EXISTS reset;
+
+DELIMITER $$
+
+CREATE PROCEDURE reset ()
+	BEGIN
+		update Tasks
+		set is_task_completed = false;
+		
+		update Users
+		set current_points = current_points + weekly_points;
+	END $$
+
+DELIMITER ;
+
+GRANT SELECT, INSERT, UPDATE ON mysql.proc TO 'tb_db_user'@'localhost';
+
+# ==============================================

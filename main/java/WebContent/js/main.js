@@ -1499,3 +1499,8 @@ function activeMyTasks(){
 	$('#my-tasks-title').addClass("active")
 	$('#master-title').removeClass("active")
 }
+
+function plusOneWeek() {
+	$.post('http://localhost:8080/TaskBuddy/site/reset');
+	location.reload();
+}
