@@ -24,6 +24,7 @@ public class Task {
 	private String taskRepetition;
 	private boolean isTaskMaster;
 	private int taskDueDuration;
+	private boolean isTaskOverdue;
 	
 	public int getTaskId() {
 		return taskId;
@@ -102,5 +103,11 @@ public class Task {
 	}
 	public void setTaskDueDuration(int taskDueDuration) {
 		this.taskDueDuration = taskDueDuration;
+	}
+	public boolean isTaskOverdue() {
+		return isTaskOverdue;
+	}
+	public void setTaskOverdue(boolean isTaskOverdue) {
+		this.isTaskOverdue = isTaskOverdue;
 	}
 }

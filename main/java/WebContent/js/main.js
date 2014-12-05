@@ -387,6 +387,7 @@ Task = Backbone.Model.extend({
 		taskDescription: '',
 		taskMaster: true,
 		taskDueDuration: 0,
+		taskOverdue: false,
 		taskRepetition: 'NoRepeat'
 	},
 
@@ -804,6 +805,7 @@ MasterTask = Backbone.Model.extend({
 		taskDescription: '',
 		taskMaster: true,
 		taskDueDuration: 0,
+		taskOverdue: false,
 		taskRepetition: 'NoRepeat'
 	},
 

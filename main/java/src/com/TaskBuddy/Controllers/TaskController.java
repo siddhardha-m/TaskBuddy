@@ -28,7 +28,7 @@ public class TaskController {
 	private static String selectSQL = "SELECT "
 			+ "task_id, task_title, task_description, task_original_point_value, task_updated_point_value, "
 			+ "task_created_by, task_created_date, task_due_date, is_task_completed, is_task_deleted, "
-			+ "task_repetition, is_task_master, task_due_duration "
+			+ "task_repetition, is_task_master, task_due_duration, is_task_overdue "
 			+ " FROM Tasks "
 			+ " WHERE is_task_deleted = false ";
 	
@@ -136,9 +136,9 @@ public class TaskController {
 	private static boolean insertTask(Task taskRow) throws SQLException {
 		
 		String sql = "INSERT INTO Tasks (task_title, task_description, task_original_point_value, " + 
-				"task_updated_point_value, task_created_by, task_created_date, task_due_date, " +
-				"is_task_completed, is_task_deleted, task_repetition, is_task_master, task_due_duration) " +
-				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				"task_updated_point_value, task_created_by, task_created_date, task_due_date, is_task_completed, " +
+				"is_task_deleted, task_repetition, is_task_master, task_due_duration, is_task_overdue) " +
+				"VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		ResultSet rs = null;
 		
 		try (
@@ -157,6 +157,7 @@ public class TaskController {
 			stmt.setString(10, taskRow.getTaskRepetition());
 			stmt.setBoolean(11, taskRow.isTaskMaster());
 			stmt.setInt(12, taskRow.getTaskDueDuration());
+			stmt.setBoolean(13, taskRow.isTaskOverdue());
 			
 			int affected_rows = stmt.executeUpdate();
 			
@@ -192,7 +193,7 @@ public class TaskController {
 				"task_title = ?, task_description = ?, task_original_point_value = ?, " +
 				"task_updated_point_value = ?, task_created_by = ?, task_created_date = ?, " +
 				"task_due_date = ?, is_task_completed = ?, is_task_deleted = ?, task_repetition = ?, " +
-				"is_task_master = ?, task_due_duration = ?" +
+				"is_task_master = ?, task_due_duration = ?, is_task_overdue = ?" +
 				" WHERE task_id = ?";
 		
 		try (
@@ -211,7 +212,8 @@ public class TaskController {
 			stmt.setString(10, taskRow.getTaskRepetition());
 			stmt.setBoolean(11, taskRow.isTaskMaster());
 			stmt.setInt(12, taskRow.getTaskDueDuration());
-			stmt.setInt(13, taskRow.getTaskId());
+			stmt.setBoolean(13, taskRow.isTaskOverdue());
+			stmt.setInt(14, taskRow.getTaskId());
 			
 			int affected_rows = stmt.executeUpdate();
 			
@@ -261,6 +263,7 @@ public class TaskController {
 		taskRow.setTaskRepetition(rs.getString("task_repetition"));
 		taskRow.setTaskMaster(rs.getBoolean("is_task_master"));
 		taskRow.setTaskDueDuration(rs.getInt("task_due_duration"));
+		taskRow.setTaskOverdue(rs.getBoolean("is_task_overdue"));
 		
 		return taskRow;
 	}

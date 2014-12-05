@@ -105,6 +105,7 @@ is_task_deleted boolean NOT NULL DEFAULT false,
 task_repetition varchar(10) NOT NULL DEFAULT 'NoRepeat',
 is_task_master boolean NOT NULL DEFAULT true,
 task_due_duration int NOT NULL,
+is_task_overdue boolean NOT NULL DEFAULT false,
 PRIMARY KEY (task_id),
 FOREIGN KEY (task_created_by) REFERENCES Users(user_id)
 );
@@ -191,6 +192,11 @@ CREATE PROCEDURE reset ()
 		
 		update Users
 		set current_points = current_points + weekly_points;
+		
+		update Tasks
+		set is_task_overdue = true
+		where is_task_master = false
+		and task_due_date <= (NOW() + INTERVAL 1 WEEK);
 	END $$
 
 DELIMITER ;

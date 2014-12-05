@@ -50,6 +50,7 @@ public class MasterTaskView {
 		taskViewRow.setTaskRepetition(taskRow.getTaskRepetition());
 		taskViewRow.setTaskMaster(taskRow.isTaskMaster());
 		taskViewRow.setTaskDueDuration(taskRow.getTaskDueDuration());
+		taskViewRow.setTaskOverdue(taskRow.isTaskOverdue());
 		taskViewRow.setUserId(userTaskRow.getUserId());
 		taskViewRow.setTaskAssignedDate(userTaskRow.getTaskAssignedDate());
 		taskViewRow.setTaskAssigned(userTaskRow.isTaskAssigned());
@@ -73,6 +74,7 @@ public class MasterTaskView {
 		taskRow.setTaskRepetition(taskViewRow.getTaskRepetition());
 		taskRow.setTaskMaster(taskViewRow.isTaskMaster());
 		taskRow.setTaskDueDuration(taskViewRow.getTaskDueDuration());
+		taskRow.setTaskOverdue(taskViewRow.isTaskOverdue());
 
 		return taskRow;
 	}
@@ -171,7 +173,7 @@ public class MasterTaskView {
 						TaskController.save(masterTask);
 					}
 				}
-			}else{
+			} else{
 				taskSaved = TaskController.save(taskRow);
 			}
 
@@ -180,7 +182,6 @@ public class MasterTaskView {
 			} else {
 				return false;
 			}
-
 
 		} catch (Exception e) {
 

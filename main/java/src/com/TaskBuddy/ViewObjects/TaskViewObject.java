@@ -24,6 +24,7 @@ public class TaskViewObject {
 	private String taskRepetition;
 	private boolean isTaskMaster;
 	private int taskDueDuration;
+	private boolean isTaskOverdue;
 	private int userId;
 	private Date taskAssignedDate;
 	private boolean isTaskAssigned;
@@ -105,6 +106,12 @@ public class TaskViewObject {
 	}
 	public void setTaskDueDuration(int taskDueDuration) {
 		this.taskDueDuration = taskDueDuration;
+	}
+	public boolean isTaskOverdue() {
+		return isTaskOverdue;
+	}
+	public void setTaskOverdue(boolean isTaskOverdue) {
+		this.isTaskOverdue = isTaskOverdue;
 	}
 	public int getUserId() {
 		return userId;
