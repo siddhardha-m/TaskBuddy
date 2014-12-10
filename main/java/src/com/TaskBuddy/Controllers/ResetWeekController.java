@@ -8,23 +8,24 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.TaskBuddy.db.ConnectionManager;
 
+
 /**
- * @author Siddhardha
+ * @author Sai
  *
- * Controller class to call reset stored procedure
+ * Controller class to call reset_week stored procedure
  *
  */
+
 @XmlRootElement
-public class ResetController {
-	
+public class ResetWeekController {
 	private static Connection conn = ConnectionManager.getInstance().getConnection();
 	
-	private static String SQL = "{CALL reset()}";
+	private static String SQL = "{CALL reset_week()}";
 	
-	private ResetController() {
+	private ResetWeekController() {
 	}
 	
-	public static boolean reset() throws SQLException {
+	public static boolean resetWeek() throws SQLException {
 		
 		String sql = SQL;
 		
@@ -37,4 +38,5 @@ public class ResetController {
 			return true;
 		}
 	}
+
 }
