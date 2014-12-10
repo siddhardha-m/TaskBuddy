@@ -707,7 +707,7 @@ TaskDialog = Backbone.View.extend({
 			if (null != assignedUser)
 				this.model.set({taskMaster: false});
 
-			console.log(" assigned User is "+ assignedUser);
+		//	console.log(" assigned User is "+ assignedUser);
 
 			tasks.create(this.model,{ wait: true });
 
@@ -1143,7 +1143,7 @@ app_router.on('route:defaultRoute', function (path) {
 
 
 function initilializeMyTasks(){
-	console.log( " my Tasks " + base_url);   
+//	console.log( " my Tasks " + base_url);   
 	$('#div1').hide();
 	$('#taskFilterList').show();
 
@@ -1317,7 +1317,12 @@ function activeMyTasks(){
 	$('#master-title').removeClass("active")
 }
 
-function plusOneWeek() {
+function advanceWeek() {
+	$.post('http://localhost:8080/TaskBuddy/site/advance');
+	location.reload();
+}
+
+function resetWeek(){
 	$.post('http://localhost:8080/TaskBuddy/site/reset');
 	location.reload();
 }
