@@ -194,7 +194,7 @@ td {
 	height: 0px;
 }
 
-#reset-button {
+#reset-btn, #advance-btn {
 	color: red;
 	font-weight: bold;
 	margin-right: 10px; 
