@@ -179,13 +179,13 @@ DELIMITER ;
 # ==============================================
 
 
-# ========== Reset Stored Procedure ============
+# ========== Advance Week Stored Procedure ============
 
-DROP PROCEDURE IF EXISTS reset;
+DROP PROCEDURE IF EXISTS advance_week;
 
 DELIMITER $$
 
-CREATE PROCEDURE reset ()
+CREATE PROCEDURE advance_week ()
 	BEGIN
 		update Tasks
 		set is_task_completed = false
@@ -198,6 +198,29 @@ CREATE PROCEDURE reset ()
 		set is_task_overdue = true
 		where is_task_master = false
 		and task_due_date <= (NOW() + INTERVAL 1 WEEK);
+	END $$
+
+DELIMITER ;
+
+GRANT SELECT, INSERT, UPDATE ON mysql.proc TO 'tb_db_user'@'localhost';
+
+# ==============================================
+
+# ========== Reset Week Stored Procedure ============
+
+DROP PROCEDURE IF EXISTS reset_week;
+
+DELIMITER $$
+
+CREATE PROCEDURE reset_week ()
+	BEGIN
+		
+		update Users
+		set current_points = current_points - weekly_points;
+		
+		update Tasks
+		set is_task_overdue = false;
+		
 	END $$
 
 DELIMITER ;
