@@ -188,7 +188,8 @@ DELIMITER $$
 CREATE PROCEDURE reset ()
 	BEGIN
 		update Tasks
-		set is_task_completed = false;
+		set is_task_completed = false
+		where is_task_master = true;
 		
 		update Users
 		set current_points = current_points + weekly_points;
