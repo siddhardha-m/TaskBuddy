@@ -7,20 +7,20 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 
-import com.TaskBuddy.Controllers.ResetController;
+import com.TaskBuddy.Controllers.AdvanceWeekController;
 
 /**
  * @author Siddhardha
  *
- * View class to call reset stored procedure
+ * View class to call advance_week stored procedure
  *
  */
-@Path("/reset")
-public class ResetView {
+@Path("/advance")
+public class AdvanceWeekView {
 	
-	private static final Logger log = Logger.getLogger(ResetView.class);
+	private static final Logger log = Logger.getLogger(AdvanceWeekView.class);
 	
-	public ResetView() {
+	public AdvanceWeekView() {
 	}
 	
 	/**
@@ -31,10 +31,10 @@ public class ResetView {
 	 */
 	@POST
 	@Produces({ MediaType.APPLICATION_JSON })
-	public static boolean reset() {
+	public static boolean advanceWeek() {
 		try {
 			
-			return ResetController.reset();
+			return AdvanceWeekController.advanceWeek();
 			
 		} catch (Exception e) {
 			
