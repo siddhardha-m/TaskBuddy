@@ -8,6 +8,8 @@
 <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 <link href="css/custom.css" rel="stylesheet">
 
+<script type="text/javascript" src="js/login.js"></script>
+
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 </head>
@@ -17,7 +19,7 @@
 		<div class="navbar-inner">
 			<div class="container-fluid">
 				<a class="brand" href="#">Task Buddy</a> 
-				<a href="home.html" class="btn pull-right"><i class="icon-off"></i>&nbsp;&nbsp;Logout</a>
+				<a href="javascript: fbLogout()" class="btn pull-right"><i class="icon-off"></i>&nbsp;&nbsp;Logout</a>
 				<a id="advance-btn" class="btn pull-right" onclick="advanceWeek()">+1 week</a>
 				<a id="reset-btn" class="btn pull-right" onclick="resetWeek()">Normal mode</a>
 			</div>
