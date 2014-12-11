@@ -153,7 +153,8 @@ CREATE EVENT reset_master_tasks
 	ON SCHEDULE EVERY 1 WEEK STARTS '2014-11-16 00:00:00' 
 	DO
 		update Tasks
-		set is_task_completed = false;
+		set is_task_completed = false
+		where is_task_master = true;
 
 # ==============================================
 
@@ -204,7 +205,8 @@ DELIMITER ;
 
 GRANT SELECT, INSERT, UPDATE ON mysql.proc TO 'tb_db_user'@'localhost';
 
-# ==============================================
+# =====================================================
+
 
 # ========== Reset Week Stored Procedure ============
 
@@ -227,4 +229,4 @@ DELIMITER ;
 
 GRANT SELECT, INSERT, UPDATE ON mysql.proc TO 'tb_db_user'@'localhost';
 
-# ==============================================
+# ===================================================
