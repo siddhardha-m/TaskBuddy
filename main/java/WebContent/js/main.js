@@ -1018,6 +1018,9 @@ MasterTaskDialog = Backbone.View.extend({
 			console.log(" assigned User is "+ assignedUser);
 
 			masterTasks.create(this.model,{ wait: true });
+			
+			masterTaskListView.render();
+
 
 			$('.success').fadeIn(400).delay(3000).fadeOut(400);
 		} else {
