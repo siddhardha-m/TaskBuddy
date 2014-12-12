@@ -942,7 +942,7 @@ MasterTaskDialog = Backbone.View.extend({
 	},
 	render: function(list_of_users) {
 
-		this.$el.html(this.template(this.model.toJSON() , list_of_users ));
+		this.$el.html(this.template(this.model.toJSON() ));
 		/*
 		 * We'll initialize datetime picker
 		 */
@@ -963,7 +963,7 @@ MasterTaskDialog = Backbone.View.extend({
 	},
 
 	show: function(list_of_users) {
-		$(document.body).append(this.render(list_of_users).el);
+		$(document.body).append(this.render().el);
 	},
 	close: function() {
 		this.remove();
@@ -1010,12 +1010,9 @@ MasterTaskDialog = Backbone.View.extend({
 			var repetition = getSelectedFilterOption();
 
 
-			this.model.set({userId: assignedUser, taskAssigned: true, taskCreatedBy: currentUserId});
+			this.model.set({userId: currentUserId, taskAssigned: true, taskCreatedBy: currentUserId});				this.model.set({taskMaster: false});
 
-			if (null != assignedUser)
-				this.model.set({taskMaster: false});
-
-			console.log(" assigned User is "+ assignedUser);
+			console.log(" assigned User is "+ currentUserId);
 
 			masterTasks.create(this.model,{ wait: true });
 			
@@ -1203,26 +1200,8 @@ $('#delete-user').click(function(e) {
  * Attaching to "Add Task" button
  */
 $('#add-task').click(function(e) {
-	list_of_users=new Array();
 	var view = new MasterTaskDialog({model: new MasterTask()});
-
-	$.ajax({
-		url: serverUrl + 'users',
-		success:function(result){
-
-			result.forEach(function(entry) {
-				var eachUser = {};
-				eachUser['userId'] = entry.userId;
-				eachUser['name'] = entry.userFirstName+" "+entry.userLastName;
-				list_of_users.push(eachUser);             	
-
-			});
-
-			view.show(list_of_users);
-
-		}
-	});
-
+    view.show();	
 	return false;
 
 });
